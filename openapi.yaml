@@ -1,0 +1,13 @@
+openapi: 3.0.0
+info:
+  title: Vehicle History API (MVP)
+  version: 0.1.0
+paths:
+  /api/v1/lookup:
+    post:
+      summary: Lookup by VIN or RENAVAM
+      requestBody:
+        required: true
+      responses:
+        '200':
+          description: successful lookup
