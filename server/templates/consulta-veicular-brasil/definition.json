@@ -1359,7 +1359,7 @@
                   "value": "{{false}}"
                 },
                 "autogenerateColumns": {
-                  "value": false
+                  "value": true
                 },
                 "visible": {
                   "value": "{{true}}"
@@ -1630,7 +1630,7 @@
                   "value": "{{false}}"
                 },
                 "autogenerateColumns": {
-                  "value": false
+                  "value": true
                 },
                 "visible": {
                   "value": "{{true}}"
@@ -1909,7 +1909,7 @@
                   "value": "{{false}}"
                 },
                 "autogenerateColumns": {
-                  "value": false
+                  "value": true
                 },
                 "visible": {
                   "value": "{{true}}"
@@ -2247,7 +2247,7 @@
                   "value": "{{false}}"
                 },
                 "autogenerateColumns": {
-                  "value": false
+                  "value": true
                 },
                 "visible": {
                   "value": "{{true}}"

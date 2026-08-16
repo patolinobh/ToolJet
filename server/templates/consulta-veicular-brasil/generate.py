@@ -524,7 +524,10 @@ def tabela(name, data_expr, columns, desktop, parent=None, mobile=None):
             "data": {"value": data_expr},
             "columns": {"value": cols},
             "useDynamicColumn": {"value": "{{false}}"},
-            "autogenerateColumns": {"value": False},
+            # True é obrigatório nas versões atuais do ToolJet: com o flag desligado,
+            # generateColumns retorna undefined quando os dados chegam e o widget quebra.
+            # Colunas explícitas (não-autogeradas) sempre persistem no merge.
+            "autogenerateColumns": {"value": True},
             "visible": {"value": "{{true}}"},
             "visibility": {"value": "{{true}}"},
             "loadingState": {"value": CARREGANDO},
