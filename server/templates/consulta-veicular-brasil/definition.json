@@ -1,0 +1,2786 @@
+{
+  "tooljet_database": [],
+  "app": [
+    {
+      "definition": {
+        "appV2": {
+          "id": "1ffa56fa-0919-5f76-8162-cf3d04b5c03f",
+          "type": "front-end",
+          "name": "Consulta veicular Brasil",
+          "slug": "1ffa56fa-0919-5f76-8162-cf3d04b5c03f",
+          "isPublic": false,
+          "isMaintenanceOn": false,
+          "icon": "shield",
+          "organizationId": "a81bad3e-3d37-5888-a0b3-7a02184f48ee",
+          "currentVersionId": null,
+          "userId": "0badb0cc-309d-5084-9986-112ea36e714d",
+          "workflowApiToken": null,
+          "workflowEnabled": false,
+          "createdAt": "2026-08-16T12:00:00.000Z",
+          "creationMode": "DEFAULT",
+          "updatedAt": "2026-08-16T12:00:00.000Z",
+          "editingVersion": {
+            "id": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+            "name": "v1",
+            "definition": null,
+            "globalSettings": {
+              "hideHeader": true,
+              "appInMaintenance": false,
+              "canvasMaxWidth": 100,
+              "canvasMaxWidthType": "%",
+              "canvasMaxHeight": 2400,
+              "canvasBackgroundColor": "#edeff5",
+              "backgroundFxQuery": "",
+              "appMode": "auto"
+            },
+            "pageSettings": {
+              "properties": {
+                "disableMenu": {
+                  "value": "{{true}}",
+                  "fxActive": false
+                }
+              }
+            },
+            "showViewerNavigation": false,
+            "homePageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+            "appId": "1ffa56fa-0919-5f76-8162-cf3d04b5c03f",
+            "currentEnvironmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
+            "promotedFrom": null,
+            "createdAt": "2026-08-16T12:00:00.000Z",
+            "updatedAt": "2026-08-16T12:00:00.000Z"
+          },
+          "components": [
+            {
+              "id": "2c39256c-49e9-589c-8e15-dddf52981fb2",
+              "name": "tituloApp",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='padding-top:6px'><div style='font-size:26px;font-weight:800;color:#1b1f31'>🚗 Consulta Veicular Brasil</div><div style='margin-top:4px;font-size:14px;color:#687076'>Situação legal, sinistros, leilões e valor de referência FIPE a partir do chassi ou do Renavam.</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "655e6316-d88f-59d9-9829-a230e1d60868",
+                  "type": "desktop",
+                  "top": 20,
+                  "left": 1,
+                  "width": 41,
+                  "height": 80,
+                  "componentId": "2c39256c-49e9-589c-8e15-dddf52981fb2",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "adc4bb74-5308-5561-a390-a1908d475b56",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 41,
+                  "height": 90,
+                  "componentId": "2c39256c-49e9-589c-8e15-dddf52981fb2",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "126c15ee-693a-52ea-95ac-e8c7951a7d08",
+              "name": "inputIdentificador",
+              "type": "TextInput",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "value": {
+                  "value": ""
+                },
+                "label": {
+                  "value": ""
+                },
+                "placeholder": {
+                  "value": "Chassi (17 caracteres) ou Renavam (9 a 11 dígitos)"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "tooltip": {
+                  "value": "Prefira o chassi: identifica o veículo de forma única em todas as bases."
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {
+                "mandatory": {
+                  "value": "{{false}}"
+                },
+                "regex": {
+                  "value": ""
+                },
+                "minLength": {
+                  "value": ""
+                },
+                "maxLength": {
+                  "value": ""
+                },
+                "customRule": {
+                  "value": ""
+                }
+              },
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "6f595ea9-84b6-5856-8a0c-327201a7e4ba",
+                  "type": "desktop",
+                  "top": 110,
+                  "left": 1,
+                  "width": 22,
+                  "height": 40,
+                  "componentId": "126c15ee-693a-52ea-95ac-e8c7951a7d08",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "0d5bd5d0-ee67-549b-953c-abc3484c3363",
+                  "type": "mobile",
+                  "top": 110,
+                  "left": 1,
+                  "width": 41,
+                  "height": 40,
+                  "componentId": "126c15ee-693a-52ea-95ac-e8c7951a7d08",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "0d33ae40-a485-5491-a2ac-9a045dcfb837",
+              "name": "botaoConsultar",
+              "type": "Button",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "Consultar"
+                },
+                "loadingState": {
+                  "value": "{{queries.executarConsulta.isLoading || queries.consultaProvedor.isLoading || queries.consultaDemo.isLoading}}",
+                  "fxActive": true
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                },
+                "tooltip": {
+                  "value": ""
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#3e63ddff"
+                },
+                "textColor": {
+                  "value": "#FFFFFF"
+                },
+                "borderRadius": {
+                  "value": "{{8}}"
+                },
+                "borderColor": {
+                  "value": "#ffffff00"
+                },
+                "loaderColor": {
+                  "value": "#FFFFFF"
+                },
+                "padding": {
+                  "value": "default"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "a4a1496e-6a53-53af-a08b-4cd5df16b22a",
+                  "type": "desktop",
+                  "top": 110,
+                  "left": 24,
+                  "width": 7,
+                  "height": 40,
+                  "componentId": "0d33ae40-a485-5491-a2ac-9a045dcfb837",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "c96443e6-5f8c-5cdc-b702-0d463c7830a1",
+                  "type": "mobile",
+                  "top": 155,
+                  "left": 1,
+                  "width": 20,
+                  "height": 40,
+                  "componentId": "0d33ae40-a485-5491-a2ac-9a045dcfb837",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "33bf616c-f3e5-5222-9017-18067638c773",
+              "name": "textoTipoDetectado",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='padding-top:10px;font-size:13px;color:#687076'>{{(() => { const e = (components.inputIdentificador.value || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); if (!e) return ''; if (e.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(e)) return '✔ Chassi detectado'; if (/^[0-9]{9,11}$/.test(e)) return '✔ Renavam detectado'; return '… identificador incompleto'; })()}}</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "66d1995f-692b-5bf2-b3a8-c33c63dceea5",
+                  "type": "desktop",
+                  "top": 110,
+                  "left": 32,
+                  "width": 10,
+                  "height": 40,
+                  "componentId": "33bf616c-f3e5-5222-9017-18067638c773",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "db2ec2b2-9dc9-539f-9241-b12b3950d583",
+                  "type": "mobile",
+                  "top": 155,
+                  "left": 22,
+                  "width": 20,
+                  "height": 40,
+                  "componentId": "33bf616c-f3e5-5222-9017-18067638c773",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "4cefe85b-6f5b-5f4a-b18f-382059378ee2",
+              "name": "textoErro",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#fef3f2;border:1px solid #fda29b;border-radius:8px;padding:10px 14px;color:#b42318;font-size:13px'>⚠️ {{variables.erroConsulta}}</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!!variables.erroConsulta}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "f4111ec4-3535-57cc-bec4-dd8d53e86070",
+                  "type": "desktop",
+                  "top": 158,
+                  "left": 1,
+                  "width": 41,
+                  "height": 40,
+                  "componentId": "4cefe85b-6f5b-5f4a-b18f-382059378ee2",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "33ff5330-33fb-5f39-8626-765b350eb0a7",
+                  "type": "mobile",
+                  "top": 205,
+                  "left": 1,
+                  "width": 41,
+                  "height": 50,
+                  "componentId": "4cefe85b-6f5b-5f4a-b18f-382059378ee2",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "9395aee4-52d1-599f-9ac9-291f166f4057",
+              "name": "bannerDemo",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#fffaeb;border:1px solid #fec84b;border-radius:8px;padding:10px 14px;color:#93370d;font-size:13px'>🧪 <b>Modo demonstração:</b> os dados exibidos são simulados. Configure as constantes <code>CONSULTA_VEICULAR_API_URL</code> e <code>CONSULTA_VEICULAR_API_KEY</code> no workspace para consultar um provedor real.</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!variables.erroConsulta && variables.modoDemo === true && !!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "0b7350df-a427-5c36-ab57-88190d83adb4",
+                  "type": "desktop",
+                  "top": 158,
+                  "left": 1,
+                  "width": 41,
+                  "height": 40,
+                  "componentId": "9395aee4-52d1-599f-9ac9-291f166f4057",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "87b1874d-4ef9-5c2f-80bf-4a23a873ad4e",
+                  "type": "mobile",
+                  "top": 205,
+                  "left": 1,
+                  "width": 41,
+                  "height": 60,
+                  "componentId": "9395aee4-52d1-599f-9ac9-291f166f4057",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "fb767aac-e1ad-52b4-96f4-5f79ddeaba52",
+              "name": "estadoVazio",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#ffffff;border:1px dashed #c1c8cd;border-radius:12px;padding:28px;text-align:center;color:#687076'><div style='font-size:34px'>🔎</div><div style='margin-top:8px;font-size:16px;font-weight:600;color:#1b1f31'>Informe um chassi ou Renavam para começar</div><div style='margin-top:6px;font-size:13px'>Exemplo de chassi: <code>9BWZZZ377VT004251</code> &nbsp;•&nbsp; Exemplo de Renavam: <code>12345678901</code></div><div style='margin-top:6px;font-size:13px'>A consulta retorna dados cadastrais, situação legal, restrições, histórico de sinistros e leilões, além do valor de referência na tabela FIPE.</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "a234047f-9dc3-5aa8-99db-9ce80e9edb77",
+                  "type": "desktop",
+                  "top": 210,
+                  "left": 1,
+                  "width": 41,
+                  "height": 140,
+                  "componentId": "fb767aac-e1ad-52b4-96f4-5f79ddeaba52",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "f8707ab2-52bf-55f3-b005-527d3cd0d839",
+                  "type": "mobile",
+                  "top": 260,
+                  "left": 1,
+                  "width": 41,
+                  "height": 160,
+                  "componentId": "fb767aac-e1ad-52b4-96f4-5f79ddeaba52",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "976edf11-7931-5396-b9a3-1e09718b3019",
+              "name": "cardVeiculo",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;height:100%;box-sizing:border-box'><div style='font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#687076'>Veículo</div><div style='margin-top:6px;font-size:18px;font-weight:700;color:#1b1f31;line-height:1.25'>{{(variables.resultado && variables.resultado.veiculo.marca) || '—'}} {{(variables.resultado && variables.resultado.veiculo.modelo) || ''}}</div><div style='margin-top:4px;font-size:12px;color:#687076'>Placa {{(variables.resultado && variables.resultado.veiculo.placa) || '—'}} • {{(variables.resultado && variables.resultado.veiculo.municipio) || '—'}}/{{(variables.resultado && variables.resultado.veiculo.uf) || '—'}}</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "c39b23bb-88fa-5c49-b2e5-1ca0e34d57e7",
+                  "type": "desktop",
+                  "top": 210,
+                  "left": 1,
+                  "width": 13,
+                  "height": 100,
+                  "componentId": "976edf11-7931-5396-b9a3-1e09718b3019",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "cd3bd3e7-db33-544d-84bd-5ea2fd2a52c0",
+                  "type": "mobile",
+                  "top": 210,
+                  "left": 1,
+                  "width": 13,
+                  "height": 100,
+                  "componentId": "976edf11-7931-5396-b9a3-1e09718b3019",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "36b6b34f-31ae-5a91-b389-03e04ce32bed",
+              "name": "cardAno",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;height:100%;box-sizing:border-box'><div style='font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#687076'>Ano / Cor / Combustível</div><div style='margin-top:6px;font-size:18px;font-weight:700;color:#1b1f31;line-height:1.25'>{{(variables.resultado && variables.resultado.veiculo.anoFabricacao) || '—'}}/{{(variables.resultado && variables.resultado.veiculo.anoModelo) || '—'}}</div><div style='margin-top:4px;font-size:12px;color:#687076'>{{(variables.resultado && variables.resultado.veiculo.cor) || '—'}} • {{(variables.resultado && variables.resultado.veiculo.combustivel) || '—'}}</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "8fbfa9a8-8535-5b3c-9a87-169b8ee7ed59",
+                  "type": "desktop",
+                  "top": 210,
+                  "left": 15,
+                  "width": 9,
+                  "height": 100,
+                  "componentId": "36b6b34f-31ae-5a91-b389-03e04ce32bed",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "ad01b399-25f0-5dae-83e5-3739964a1d6c",
+                  "type": "mobile",
+                  "top": 210,
+                  "left": 15,
+                  "width": 9,
+                  "height": 100,
+                  "componentId": "36b6b34f-31ae-5a91-b389-03e04ce32bed",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "a7b17a89-fd10-5f5a-8e43-98822bff5dce",
+              "name": "cardSituacao",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;height:100%;box-sizing:border-box'><div style='font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#687076'>Situação legal</div><div style='margin-top:6px;font-size:18px;font-weight:700;color:{{(variables.resultado && variables.resultado.situacaoLegal.status === 'Regular') ? '#12b76a' : (variables.resultado && variables.resultado.situacaoLegal.status === 'Com restrições') ? '#f79009' : '#f04438'}};line-height:1.25'>{{(variables.resultado && variables.resultado.situacaoLegal.status) || '—'}}</div><div style='margin-top:4px;font-size:12px;color:#687076'>{{(variables.resultado && variables.resultado.sinistros.indicador) ? 'Com sinistro' : 'Sem sinistro'}} • {{(variables.resultado && variables.resultado.leiloes.indicador) ? 'Com leilão' : 'Sem leilão'}}</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "404417dd-4de4-5034-b498-04bfc9e2f893",
+                  "type": "desktop",
+                  "top": 210,
+                  "left": 25,
+                  "width": 9,
+                  "height": 100,
+                  "componentId": "a7b17a89-fd10-5f5a-8e43-98822bff5dce",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "44f117cd-91b8-582d-8250-f4acc75ca8f4",
+                  "type": "mobile",
+                  "top": 210,
+                  "left": 25,
+                  "width": 9,
+                  "height": 100,
+                  "componentId": "a7b17a89-fd10-5f5a-8e43-98822bff5dce",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "21f5b2cd-0d5e-54e3-8205-879e1a1b6633",
+              "name": "cardFipe",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;height:100%;box-sizing:border-box'><div style='font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#687076'>Valor FIPE</div><div style='margin-top:6px;font-size:18px;font-weight:700;color:#3e63dd;line-height:1.25'>{{(variables.resultado && variables.resultado.fipe.valor) || '—'}}</div><div style='margin-top:4px;font-size:12px;color:#687076'>Ref. {{(variables.resultado && variables.resultado.fipe.mesReferencia) || '—'}}</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "f9d45537-0466-539d-8be7-acc8ccfdbcb3",
+                  "type": "desktop",
+                  "top": 210,
+                  "left": 35,
+                  "width": 7,
+                  "height": 100,
+                  "componentId": "21f5b2cd-0d5e-54e3-8205-879e1a1b6633",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "a04c0593-b44c-509b-acbd-e0731a59e6cc",
+                  "type": "mobile",
+                  "top": 210,
+                  "left": 35,
+                  "width": 7,
+                  "height": 100,
+                  "componentId": "21f5b2cd-0d5e-54e3-8205-879e1a1b6633",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "b122f126-b7e6-5d14-8185-43bd643ea36c",
+              "name": "abasResultado",
+              "type": "Tabs",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "tabs": {
+                  "value": "{{[{\"title\":\"Situação legal\",\"id\":\"0\"},{\"title\":\"Sinistros\",\"id\":\"1\"},{\"title\":\"Leilões\",\"id\":\"2\"},{\"title\":\"Tabela FIPE\",\"id\":\"3\"}]}}"
+                },
+                "defaultTab": {
+                  "value": "0"
+                },
+                "hideTabs": {
+                  "value": "{{false}}"
+                },
+                "renderOnlyActiveTab": {
+                  "value": "{{true}}"
+                },
+                "visibility": {
+                  "value": "{{!!variables.resultado}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "highlightColor": {
+                  "value": "#3e63ddff"
+                },
+                "visibility": {
+                  "value": "{{!!variables.resultado}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                },
+                "tabWidth": {
+                  "value": "auto"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "c11c34c4-945c-558d-91a9-9bc69485d293",
+                  "type": "desktop",
+                  "top": 320,
+                  "left": 1,
+                  "width": 41,
+                  "height": 500,
+                  "componentId": "b122f126-b7e6-5d14-8185-43bd643ea36c",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "75e5e62e-eafa-57cf-81fa-04e80e2d10b6",
+                  "type": "mobile",
+                  "top": 430,
+                  "left": 1,
+                  "width": 41,
+                  "height": 520,
+                  "componentId": "b122f126-b7e6-5d14-8185-43bd643ea36c",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "9d487245-5922-5a36-a184-98e4e74ed67c",
+              "name": "resumoSituacaoLegal",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-0",
+              "properties": {
+                "text": {
+                  "value": "<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:10px'><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Roubo / Furto</div><div style='margin-top:4px;font-weight:700;color:{{(variables.resultado && variables.resultado.situacaoLegal.rouboFurto.indicador) ? '#f04438' : '#12b76a'}}'>{{(variables.resultado && variables.resultado.situacaoLegal.rouboFurto.indicador) ? 'Consta ocorrência' : 'Nada consta'}}</div><div style='margin-top:4px;font-size:12px;color:#687076'>{{(variables.resultado && variables.resultado.situacaoLegal.rouboFurto.detalhes) || ''}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Gravame (SNG)</div><div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{(variables.resultado && variables.resultado.situacaoLegal.gravame.status) || '—'}}</div><div style='margin-top:4px;font-size:12px;color:#687076'>{{(variables.resultado && variables.resultado.situacaoLegal.gravame.financeira) || 'Sem financeira vinculada'}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>RENAJUD</div><div style='margin-top:4px;font-size:13px;color:#1b1f31'>{{(variables.resultado && variables.resultado.situacaoLegal.renajud) || '—'}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>IPVA</div><div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{(variables.resultado && variables.resultado.situacaoLegal.debitos.ipva) || '—'}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Licenciamento</div><div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{(variables.resultado && variables.resultado.situacaoLegal.debitos.licenciamento) || '—'}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Multas</div><div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{(variables.resultado && variables.resultado.situacaoLegal.debitos.multas) || '—'}}</div></div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "f3424d4b-c03b-5397-8e33-4ac416cedc49",
+                  "type": "desktop",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 170,
+                  "componentId": "9d487245-5922-5a36-a184-98e4e74ed67c",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "daee83de-bb74-59ae-af24-587fbe073ebb",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 230,
+                  "componentId": "9d487245-5922-5a36-a184-98e4e74ed67c",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "a0750e5a-a999-5ff3-9f63-d28c64a88cef",
+              "name": "tituloRestricoes",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-0",
+              "properties": {
+                "text": {
+                  "value": "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Restrições registradas <span style='color:#687076;font-weight:400'>({{((variables.resultado && variables.resultado.situacaoLegal.restricoes) || []).length}})</span></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "ae0dc411-0481-530e-9488-a46b54428f9d",
+                  "type": "desktop",
+                  "top": 185,
+                  "left": 1,
+                  "width": 39,
+                  "height": 30,
+                  "componentId": "a0750e5a-a999-5ff3-9f63-d28c64a88cef",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "160202e9-d18d-5ed9-b207-d47f42be5704",
+                  "type": "mobile",
+                  "top": 245,
+                  "left": 1,
+                  "width": 39,
+                  "height": 30,
+                  "componentId": "a0750e5a-a999-5ff3-9f63-d28c64a88cef",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "c41f804e-ad2a-5449-a7cd-d6f147478ca4",
+              "name": "tabelaRestricoes",
+              "type": "Table",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-0",
+              "properties": {
+                "title": {
+                  "value": "Table"
+                },
+                "data": {
+                  "value": "{{((variables.resultado && variables.resultado.situacaoLegal.restricoes) || [])}}"
+                },
+                "columns": {
+                  "value": [
+                    {
+                      "id": "44a35e04-d1e7-5a02-996a-a50a25fadd1f",
+                      "name": "Tipo",
+                      "key": "tipo",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "9faa431e-a8ce-5491-85b2-1549dfc66cd1",
+                      "name": "Descrição",
+                      "key": "descricao",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "e6a99634-5245-5793-9462-9a00384780df",
+                      "name": "Órgão",
+                      "key": "orgao",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    }
+                  ]
+                },
+                "useDynamicColumn": {
+                  "value": "{{false}}"
+                },
+                "autogenerateColumns": {
+                  "value": false
+                },
+                "visible": {
+                  "value": "{{true}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.executarConsulta.isLoading || queries.consultaProvedor.isLoading || queries.consultaDemo.isLoading}}"
+                },
+                "rowsPerPage": {
+                  "value": "{{10}}"
+                },
+                "enablePagination": {
+                  "value": "{{true}}"
+                },
+                "serverSidePagination": {
+                  "value": "{{false}}"
+                },
+                "displaySearchBox": {
+                  "value": "{{false}}"
+                },
+                "showFilterButton": {
+                  "value": "{{false}}"
+                },
+                "showDownloadButton": {
+                  "value": "{{true}}"
+                },
+                "showBulkUpdateActions": {
+                  "value": "{{false}}"
+                },
+                "showBulkSelector": {
+                  "value": "{{false}}"
+                },
+                "highlightSelectedRow": {
+                  "value": "{{false}}"
+                },
+                "allowSelection": {
+                  "value": "{{false}}"
+                },
+                "hideColumnSelectorButton": {
+                  "value": "{{true}}"
+                },
+                "showAddNewRowButton": {
+                  "value": "{{false}}"
+                },
+                "enabledSort": {
+                  "value": "{{true}}"
+                },
+                "columnSizes": {
+                  "value": {}
+                },
+                "actions": {
+                  "value": []
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                },
+                "tableType": {
+                  "value": "table-classic"
+                },
+                "cellSize": {
+                  "value": "regular"
+                },
+                "contentWrap": {
+                  "value": "{{true}}"
+                },
+                "columnHeaderWrap": {
+                  "value": "fixed"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "b16c46be-2667-5b47-8730-29bbdd232361",
+                  "type": "desktop",
+                  "top": 220,
+                  "left": 1,
+                  "width": 39,
+                  "height": 250,
+                  "componentId": "c41f804e-ad2a-5449-a7cd-d6f147478ca4",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "0687efc4-7d81-5063-90ad-f046613b6683",
+                  "type": "mobile",
+                  "top": 280,
+                  "left": 1,
+                  "width": 39,
+                  "height": 220,
+                  "componentId": "c41f804e-ad2a-5449-a7cd-d6f147478ca4",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "f6cee0bf-a849-5cb2-a239-2d22b427b786",
+              "name": "indicadorSinistros",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-1",
+              "properties": {
+                "text": {
+                  "value": "<div style='background:{{(variables.resultado && variables.resultado.sinistros.indicador) ? '#fef3f2' : '#ecfdf3'}};border:1px solid {{(variables.resultado && variables.resultado.sinistros.indicador) ? '#fda29b' : '#a6f4c5'}};border-radius:8px;padding:10px 14px;font-size:13px;color:{{(variables.resultado && variables.resultado.sinistros.indicador) ? '#b42318' : '#027a48'}}'>{{(variables.resultado && variables.resultado.sinistros.indicador) ? '⚠️ Constam registros de sinistro para este veículo.' : '✅ Nada consta: não há registro de sinistro indenizado para este veículo.'}}</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "46447fec-e6e6-512e-a453-a02d4b2f9c2c",
+                  "type": "desktop",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 45,
+                  "componentId": "f6cee0bf-a849-5cb2-a239-2d22b427b786",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "3dd00907-561e-51db-abf4-8ff3165a52d7",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 45,
+                  "componentId": "f6cee0bf-a849-5cb2-a239-2d22b427b786",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "a5bf67d2-b619-5d4b-8dc4-e18a1b9019c5",
+              "name": "tabelaSinistros",
+              "type": "Table",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-1",
+              "properties": {
+                "title": {
+                  "value": "Table"
+                },
+                "data": {
+                  "value": "{{((variables.resultado && variables.resultado.sinistros.ocorrencias) || [])}}"
+                },
+                "columns": {
+                  "value": [
+                    {
+                      "id": "a05f7f32-0686-57f6-a18c-ba1faf743887",
+                      "name": "Data",
+                      "key": "data",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "83798ffe-203d-5565-af3b-5a56067c6957",
+                      "name": "Tipo",
+                      "key": "tipo",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "c7fa09ad-28b3-5f75-b977-6108abd5810f",
+                      "name": "Gravidade",
+                      "key": "gravidade",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "db104df6-a1dc-58c1-9025-2e6b3079bbdd",
+                      "name": "UF",
+                      "key": "uf",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "01bf6b4b-556c-5698-92e1-2257e2dc0d5a",
+                      "name": "Descrição",
+                      "key": "descricao",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    }
+                  ]
+                },
+                "useDynamicColumn": {
+                  "value": "{{false}}"
+                },
+                "autogenerateColumns": {
+                  "value": false
+                },
+                "visible": {
+                  "value": "{{true}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.executarConsulta.isLoading || queries.consultaProvedor.isLoading || queries.consultaDemo.isLoading}}"
+                },
+                "rowsPerPage": {
+                  "value": "{{10}}"
+                },
+                "enablePagination": {
+                  "value": "{{true}}"
+                },
+                "serverSidePagination": {
+                  "value": "{{false}}"
+                },
+                "displaySearchBox": {
+                  "value": "{{false}}"
+                },
+                "showFilterButton": {
+                  "value": "{{false}}"
+                },
+                "showDownloadButton": {
+                  "value": "{{true}}"
+                },
+                "showBulkUpdateActions": {
+                  "value": "{{false}}"
+                },
+                "showBulkSelector": {
+                  "value": "{{false}}"
+                },
+                "highlightSelectedRow": {
+                  "value": "{{false}}"
+                },
+                "allowSelection": {
+                  "value": "{{false}}"
+                },
+                "hideColumnSelectorButton": {
+                  "value": "{{true}}"
+                },
+                "showAddNewRowButton": {
+                  "value": "{{false}}"
+                },
+                "enabledSort": {
+                  "value": "{{true}}"
+                },
+                "columnSizes": {
+                  "value": {}
+                },
+                "actions": {
+                  "value": []
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                },
+                "tableType": {
+                  "value": "table-classic"
+                },
+                "cellSize": {
+                  "value": "regular"
+                },
+                "contentWrap": {
+                  "value": "{{true}}"
+                },
+                "columnHeaderWrap": {
+                  "value": "fixed"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "ed2a9c11-5251-59e6-9328-368a25bb56b9",
+                  "type": "desktop",
+                  "top": 65,
+                  "left": 1,
+                  "width": 39,
+                  "height": 400,
+                  "componentId": "a5bf67d2-b619-5d4b-8dc4-e18a1b9019c5",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "7595582d-4930-5ce7-96df-ef2359750583",
+                  "type": "mobile",
+                  "top": 65,
+                  "left": 1,
+                  "width": 39,
+                  "height": 350,
+                  "componentId": "a5bf67d2-b619-5d4b-8dc4-e18a1b9019c5",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "f03252f3-ed5d-5aac-ac43-30703b1c4034",
+              "name": "indicadorLeiloes",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-2",
+              "properties": {
+                "text": {
+                  "value": "<div style='background:{{(variables.resultado && variables.resultado.leiloes.indicador) ? '#fffaeb' : '#ecfdf3'}};border:1px solid {{(variables.resultado && variables.resultado.leiloes.indicador) ? '#fec84b' : '#a6f4c5'}};border-radius:8px;padding:10px 14px;font-size:13px;color:{{(variables.resultado && variables.resultado.leiloes.indicador) ? '#93370d' : '#027a48'}}'>{{(variables.resultado && variables.resultado.leiloes.indicador) ? '⚠️ Este veículo possui passagem por leilão.' : '✅ Nada consta: não há registro de passagem por leilão.'}}</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "922288b9-8ce1-5866-add3-5ba60d1c994c",
+                  "type": "desktop",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 45,
+                  "componentId": "f03252f3-ed5d-5aac-ac43-30703b1c4034",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "c093add7-d3ed-5791-904a-7b89e7e695b6",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 45,
+                  "componentId": "f03252f3-ed5d-5aac-ac43-30703b1c4034",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "5367d4b4-ceac-57cb-9297-fac8c1706d6b",
+              "name": "tabelaLeiloes",
+              "type": "Table",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-2",
+              "properties": {
+                "title": {
+                  "value": "Table"
+                },
+                "data": {
+                  "value": "{{((variables.resultado && variables.resultado.leiloes.ocorrencias) || [])}}"
+                },
+                "columns": {
+                  "value": [
+                    {
+                      "id": "76263d21-f990-59d8-9455-e8b59409e707",
+                      "name": "Data",
+                      "key": "data",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "86344047-2fad-5f32-9627-85fb34697d19",
+                      "name": "Leiloeiro",
+                      "key": "leiloeiro",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "fd544f39-675d-543b-b30a-7d484fcc40bb",
+                      "name": "Comitente",
+                      "key": "comitente",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "0d26d0a0-fccd-57e1-8f35-2d8c2400eb50",
+                      "name": "Lote",
+                      "key": "lote",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "834960fe-c494-5f46-9d8a-a7e9b0f7fda9",
+                      "name": "Condição",
+                      "key": "condicao",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "d99e294c-7ba6-5515-8538-72fab4eb0d25",
+                      "name": "Nota de avaliação",
+                      "key": "notaAvaliacao",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    }
+                  ]
+                },
+                "useDynamicColumn": {
+                  "value": "{{false}}"
+                },
+                "autogenerateColumns": {
+                  "value": false
+                },
+                "visible": {
+                  "value": "{{true}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.executarConsulta.isLoading || queries.consultaProvedor.isLoading || queries.consultaDemo.isLoading}}"
+                },
+                "rowsPerPage": {
+                  "value": "{{10}}"
+                },
+                "enablePagination": {
+                  "value": "{{true}}"
+                },
+                "serverSidePagination": {
+                  "value": "{{false}}"
+                },
+                "displaySearchBox": {
+                  "value": "{{false}}"
+                },
+                "showFilterButton": {
+                  "value": "{{false}}"
+                },
+                "showDownloadButton": {
+                  "value": "{{true}}"
+                },
+                "showBulkUpdateActions": {
+                  "value": "{{false}}"
+                },
+                "showBulkSelector": {
+                  "value": "{{false}}"
+                },
+                "highlightSelectedRow": {
+                  "value": "{{false}}"
+                },
+                "allowSelection": {
+                  "value": "{{false}}"
+                },
+                "hideColumnSelectorButton": {
+                  "value": "{{true}}"
+                },
+                "showAddNewRowButton": {
+                  "value": "{{false}}"
+                },
+                "enabledSort": {
+                  "value": "{{true}}"
+                },
+                "columnSizes": {
+                  "value": {}
+                },
+                "actions": {
+                  "value": []
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                },
+                "tableType": {
+                  "value": "table-classic"
+                },
+                "cellSize": {
+                  "value": "regular"
+                },
+                "contentWrap": {
+                  "value": "{{true}}"
+                },
+                "columnHeaderWrap": {
+                  "value": "fixed"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "cecff46c-0f59-5adc-b8d9-6b0e04ce93f5",
+                  "type": "desktop",
+                  "top": 65,
+                  "left": 1,
+                  "width": 39,
+                  "height": 400,
+                  "componentId": "5367d4b4-ceac-57cb-9297-fac8c1706d6b",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "a15f95b1-8204-5d1c-a73c-c9e9d5c9509b",
+                  "type": "mobile",
+                  "top": 65,
+                  "left": 1,
+                  "width": 39,
+                  "height": 350,
+                  "componentId": "5367d4b4-ceac-57cb-9297-fac8c1706d6b",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "d6578cc9-8217-5a7d-a90c-23f31ddee355",
+              "name": "resumoFipe",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "text": {
+                  "value": "<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:10px'><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Código FIPE</div><div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{(variables.resultado && variables.resultado.fipe.codigoFipe) || '—'}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Valor de referência</div><div style='margin-top:4px;font-weight:700;font-size:17px;color:#3e63dd'>{{(variables.resultado && variables.resultado.fipe.valor) || '—'}}</div></div><div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'><div style='font-size:11px;text-transform:uppercase;color:#687076'>Mês de referência</div><div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{(variables.resultado && variables.resultado.fipe.mesReferencia) || '—'}}</div></div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "60f6457e-6473-5ef6-8779-17047b3f0e6b",
+                  "type": "desktop",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 90,
+                  "componentId": "d6578cc9-8217-5a7d-a90c-23f31ddee355",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "580ef5a9-fe6e-5ecc-bd67-dc19697ea2b4",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 140,
+                  "componentId": "d6578cc9-8217-5a7d-a90c-23f31ddee355",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "183502ff-0016-5bac-a5b2-f0bb4e20a4cb",
+              "name": "tituloHistoricoFipe",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "text": {
+                  "value": "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Histórico de valores (12 meses)</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "de0efaa4-f2b9-5ab4-89fa-fda42a651587",
+                  "type": "desktop",
+                  "top": 105,
+                  "left": 1,
+                  "width": 39,
+                  "height": 30,
+                  "componentId": "183502ff-0016-5bac-a5b2-f0bb4e20a4cb",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "26cc4fb7-2433-5d14-a96b-428de6015705",
+                  "type": "mobile",
+                  "top": 155,
+                  "left": 1,
+                  "width": 39,
+                  "height": 30,
+                  "componentId": "183502ff-0016-5bac-a5b2-f0bb4e20a4cb",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "5c332f4d-3d4f-55c6-a563-4c016f120d05",
+              "name": "tabelaHistoricoFipe",
+              "type": "Table",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "title": {
+                  "value": "Table"
+                },
+                "data": {
+                  "value": "{{((variables.resultado && variables.resultado.fipe.historico) || [])}}"
+                },
+                "columns": {
+                  "value": [
+                    {
+                      "id": "7cd74c2f-299f-56a1-af51-425828a1e295",
+                      "name": "Mês de referência",
+                      "key": "mes",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "c9c62ab3-b233-5efb-b2b2-6b864647151c",
+                      "name": "Valor",
+                      "key": "valor",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    }
+                  ]
+                },
+                "useDynamicColumn": {
+                  "value": "{{false}}"
+                },
+                "autogenerateColumns": {
+                  "value": false
+                },
+                "visible": {
+                  "value": "{{true}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.executarConsulta.isLoading || queries.consultaProvedor.isLoading || queries.consultaDemo.isLoading}}"
+                },
+                "rowsPerPage": {
+                  "value": "{{10}}"
+                },
+                "enablePagination": {
+                  "value": "{{true}}"
+                },
+                "serverSidePagination": {
+                  "value": "{{false}}"
+                },
+                "displaySearchBox": {
+                  "value": "{{false}}"
+                },
+                "showFilterButton": {
+                  "value": "{{false}}"
+                },
+                "showDownloadButton": {
+                  "value": "{{true}}"
+                },
+                "showBulkUpdateActions": {
+                  "value": "{{false}}"
+                },
+                "showBulkSelector": {
+                  "value": "{{false}}"
+                },
+                "highlightSelectedRow": {
+                  "value": "{{false}}"
+                },
+                "allowSelection": {
+                  "value": "{{false}}"
+                },
+                "hideColumnSelectorButton": {
+                  "value": "{{true}}"
+                },
+                "showAddNewRowButton": {
+                  "value": "{{false}}"
+                },
+                "enabledSort": {
+                  "value": "{{true}}"
+                },
+                "columnSizes": {
+                  "value": {}
+                },
+                "actions": {
+                  "value": []
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                },
+                "tableType": {
+                  "value": "table-classic"
+                },
+                "cellSize": {
+                  "value": "regular"
+                },
+                "contentWrap": {
+                  "value": "{{true}}"
+                },
+                "columnHeaderWrap": {
+                  "value": "fixed"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "6519e28e-eb2a-543f-bacd-77aea18c1a2e",
+                  "type": "desktop",
+                  "top": 140,
+                  "left": 1,
+                  "width": 39,
+                  "height": 330,
+                  "componentId": "5c332f4d-3d4f-55c6-a563-4c016f120d05",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "51e1ad08-98e9-50a6-bcdf-c39499a4ff41",
+                  "type": "mobile",
+                  "top": 190,
+                  "left": 1,
+                  "width": 39,
+                  "height": 300,
+                  "componentId": "5c332f4d-3d4f-55c6-a563-4c016f120d05",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "6947870a-22cd-5119-a014-0434489cb3b0",
+              "name": "rodapeInfo",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;font-size:12px;color:#687076;line-height:1.6'><b style='color:#1b1f31'>Como conectar um provedor real</b><br/>1. Contrate um provedor de consulta veicular (Infosimples, API Brasil, Checkpro, Olho no Carro etc.).<br/>2. Em <b>Workspace settings → Workspace constants</b>, crie a constante <code>CONSULTA_VEICULAR_API_URL</code> com a URL do endpoint de consulta e o secret <code>CONSULTA_VEICULAR_API_KEY</code> com sua chave.<br/>3. Ajuste o mapeamento de campos na transformação da query <code>consultaProvedor</code> conforme a resposta do seu provedor.<br/><br/>⚖️ Os dados de situação legal têm origem nas bases oficiais (Senatran/Detran, SNG, RENAJUD) intermediadas pelo provedor contratado. O valor FIPE é obtido da API pública Parallelum quando o código FIPE está disponível. Este aplicativo tem caráter informativo e não substitui a certidão oficial do Detran.</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "4d17feec-6cf1-54b8-9168-e15915465f3e",
+                  "type": "desktop",
+                  "top": 835,
+                  "left": 1,
+                  "width": 41,
+                  "height": 130,
+                  "componentId": "6947870a-22cd-5119-a014-0434489cb3b0",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "68703a11-fa94-5818-b7b6-8992afb88c06",
+                  "type": "mobile",
+                  "top": 965,
+                  "left": 1,
+                  "width": 41,
+                  "height": 190,
+                  "componentId": "6947870a-22cd-5119-a014-0434489cb3b0",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "id": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "name": "Consulta",
+              "handle": "consulta",
+              "index": 1,
+              "disabled": false,
+              "hidden": false,
+              "icon": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "autoComputeLayout": true,
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "pageGroupIndex": null,
+              "pageGroupId": null,
+              "isPageGroup": false
+            }
+          ],
+          "events": [
+            {
+              "id": "2ec4cd37-26f9-534f-8807-beb621c37c98",
+              "name": "onClick",
+              "index": 0,
+              "event": {
+                "eventId": "onClick",
+                "actionId": "run-query",
+                "queryId": "3dfdbdb1-0365-52bf-a032-320d74a8e71f",
+                "queryName": "executarConsulta",
+                "parameters": {}
+              },
+              "sourceId": "0d33ae40-a485-5491-a2ac-9a045dcfb837",
+              "target": "component",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "03d154d2-11cc-5771-b2ff-ccd4c1d7f185",
+              "name": "onEnterPressed",
+              "index": 0,
+              "event": {
+                "eventId": "onEnterPressed",
+                "actionId": "run-query",
+                "queryId": "3dfdbdb1-0365-52bf-a032-320d74a8e71f",
+                "queryName": "executarConsulta",
+                "parameters": {}
+              },
+              "sourceId": "126c15ee-693a-52ea-95ac-e8c7951a7d08",
+              "target": "component",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ],
+          "dataQueries": [
+            {
+              "id": "3dfdbdb1-0365-52bf-a032-320d74a8e71f",
+              "name": "executarConsulta",
+              "options": {
+                "code": "// Orquestra a consulta veicular: valida a entrada, decide entre chassi e\n// Renavam, escolhe o modo (provedor real ou demonstração) e consolida o\n// resultado no formato canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi com 17 caracteres (sem as letras I, O e Q) ou um Renavam com 9 a 11 dígitos.'\n  );\n  return null;\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\nconst apiConfigurada =\n  typeof constants !== 'undefined' &&\n  constants &&\n  constants.CONSULTA_VEICULAR_API_URL &&\n  String(constants.CONSULTA_VEICULAR_API_URL).indexOf('http') === 0;\nawait actions.setVariable('modoDemo', !apiConfigurada);\n\nlet resultado = null;\ntry {\n  if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = queries.consultaProvedor.getData();\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo });\n    resultado = queries.consultaDemo.getData();\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE do veículo.\nif (apiConfigurada && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nreturn resultado;\n",
+                "parameters": [],
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "3d5fb3a7-72aa-5726-b984-5a30aceaad13",
+              "name": "consultaDemo",
+              "options": {
+                "code": "// Modo demonstração: gera um laudo veicular simulado e determinístico a\n// partir do identificador informado, seguindo o mesmo contrato de dados do\n// provedor real. Permite explorar o app sem contratar uma API paga.\nconst id = (parameters && parameters.identificador) || variables.identificadorConsulta || '9BWZZZ377VT004251';\nconst tipo = (parameters && parameters.tipo) || variables.tipoConsulta || 'chassi';\n\nlet h = 7;\nfor (let i = 0; i < id.length; i++) {\n  h = ((h * 31 + id.charCodeAt(i)) & 0x7fffffff) >>> 0;\n}\nconst pick = (arr, salto) => arr[Math.floor(h / (salto + 1)) % arr.length];\n\nconst catalogo = [\n  { marca: 'Volkswagen', modelo: 'T-Cross 1.4 TSI Highline', codigoFipe: '005526-3', combustivel: 'Gasolina', valorBase: 128500 },\n  { marca: 'Fiat', modelo: 'Argo Drive 1.3 Firefly', codigoFipe: '001513-5', combustivel: 'Flex', valorBase: 78900 },\n  { marca: 'Chevrolet', modelo: 'Onix Plus Premier 1.0 Turbo', codigoFipe: '004496-3', combustivel: 'Flex', valorBase: 96400 },\n  { marca: 'Toyota', modelo: 'Corolla XEi 2.0', codigoFipe: '002110-0', combustivel: 'Flex', valorBase: 142300 },\n  { marca: 'Hyundai', modelo: 'HB20 Comfort 1.0 TGDI', codigoFipe: '015324-9', combustivel: 'Flex', valorBase: 84700 },\n  { marca: 'Jeep', modelo: 'Compass Longitude T270', codigoFipe: '017105-0', combustivel: 'Flex', valorBase: 165800 },\n];\nconst cores = ['Prata', 'Preto', 'Branco', 'Cinza', 'Vermelho', 'Azul'];\nconst locais = [\n  { municipio: 'São Paulo', uf: 'SP' },\n  { municipio: 'Belo Horizonte', uf: 'MG' },\n  { municipio: 'Curitiba', uf: 'PR' },\n  { municipio: 'Rio de Janeiro', uf: 'RJ' },\n  { municipio: 'Porto Alegre', uf: 'RS' },\n  { municipio: 'Salvador', uf: 'BA' },\n];\n\nconst item = pick(catalogo, 3);\nconst cor = pick(cores, 5);\nconst local = pick(locais, 7);\nconst anoFabricacao = 2015 + (h % 10);\nconst anoModelo = anoFabricacao + (h % 2);\n\nconst temGravame = h % 3 === 0;\nconst temSinistro = h % 4 === 0;\nconst temLeilao = h % 5 === 0;\nconst temRestricaoJudicial = h % 9 === 0;\nconst rouboFurto = h % 13 === 0;\nconst idadeVeiculo = Math.max(1, 2026 - anoModelo);\nconst brl = (n) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });\n\n// Depreciação simples de 7% ao ano sobre o valor base do catálogo.\nconst valorAtual = Math.round(item.valorBase * Math.pow(0.93, idadeVeiculo));\n\nconst meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];\nconst agora = new Date();\nconst historico = [];\nfor (let i = 11; i >= 0; i--) {\n  const d = new Date(agora.getFullYear(), agora.getMonth() - i, 1);\n  const oscilacao = 1 + (((h >> (i % 16)) % 7) - 3) / 100;\n  historico.push({\n    mes: meses[d.getMonth()] + ' de ' + d.getFullYear(),\n    valor: brl(Math.round(valorAtual * Math.pow(0.994, i) * oscilacao)),\n  });\n}\n\nconst restricoes = [];\nif (temGravame) {\n  restricoes.push({\n    tipo: 'Alienação fiduciária',\n    descricao: 'Veículo financiado com gravame ativo registrado no SNG.',\n    orgao: 'Banco Demo S.A.',\n  });\n}\nif (temRestricaoJudicial) {\n  restricoes.push({\n    tipo: 'RENAJUD',\n    descricao: 'Restrição judicial de transferência inserida via sistema RENAJUD.',\n    orgao: 'TJ' + local.uf,\n  });\n}\nif (rouboFurto) {\n  restricoes.push({\n    tipo: 'Roubo/Furto',\n    descricao: 'Registro de ocorrência de roubo ou furto vigente na base nacional.',\n    orgao: 'SSP-' + local.uf,\n  });\n}\n\nconst sinistros = temSinistro\n  ? [\n      {\n        data: '14/03/' + (anoModelo + 2),\n        tipo: pick(['Colisão', 'Enchente/alagamento', 'Incêndio', 'Capotamento'], 11),\n        gravidade: pick(['Pequena monta', 'Média monta', 'Grande monta'], 13),\n        uf: local.uf,\n        descricao: 'Sinistro indenizado registrado por seguradora no período de vigência da apólice.',\n      },\n    ]\n  : [];\n\nconst leiloes = temLeilao\n  ? [\n      {\n        data: '09/08/' + (anoModelo + 3),\n        leiloeiro: 'Leilões Demo Ltda.',\n        comitente: 'Seguradora Demo S.A.',\n        lote: String(1000 + (h % 900)),\n        condicao: pick(['Batido', 'Sucata aproveitável', 'Conservado', 'Sinistrado com recuperação'], 17),\n        notaAvaliacao: String(1 + (h % 5)) + ' / 5',\n      },\n    ]\n  : [];\n\nconst status = rouboFurto || temRestricaoJudicial ? 'Alerta' : restricoes.length > 0 ? 'Com restrições' : 'Regular';\n\nconst digitos = String(h).padStart(11, '3').slice(0, 11);\nconst chassi = tipo === 'chassi' ? id : '9BW' + digitos.slice(0, 6) + 'T' + digitos.slice(4, 11);\nconst renavam = tipo === 'renavam' ? id : digitos;\n\nreturn {\n  veiculo: {\n    chassi: chassi,\n    renavam: renavam,\n    placa: pick(['ABC', 'BRA', 'RIO', 'SPX', 'MGV'], 19) + digitos.slice(2, 3) + pick(['A', 'B', 'C', 'D', 'E'], 23) + digitos.slice(5, 7),\n    marca: item.marca,\n    modelo: item.modelo,\n    anoFabricacao: anoFabricacao,\n    anoModelo: anoModelo,\n    cor: cor,\n    combustivel: item.combustivel,\n    municipio: local.municipio,\n    uf: local.uf,\n    codigoFipe: item.codigoFipe,\n    procedencia: 'Nacional',\n    tipo: 'Automóvel',\n    situacao: status === 'Regular' ? 'Em circulação' : 'Em circulação com apontamentos',\n  },\n  situacaoLegal: {\n    status: status,\n    rouboFurto: {\n      indicador: rouboFurto,\n      detalhes: rouboFurto\n        ? 'Constam registros de roubo ou furto para este veículo.'\n        : 'Nada consta na base nacional de roubos e furtos.',\n    },\n    gravame: {\n      status: temGravame ? 'Ativo' : 'Sem gravame',\n      financeira: temGravame ? 'Banco Demo S.A.' : null,\n      dataInclusao: temGravame ? '02/05/' + (anoModelo + 1) : null,\n    },\n    debitos: {\n      ipva: h % 6 === 0 ? brl(800 + (h % 1400)) : 'Sem débitos',\n      licenciamento: h % 7 === 0 ? brl(160) : 'Em dia',\n      multas: h % 5 === 0 ? brl(190 + (h % 900)) : 'Sem multas',\n    },\n    renajud: temRestricaoJudicial\n      ? 'Constam restrições judiciais ativas (RENAJUD).'\n      : 'Nada consta no RENAJUD.',\n    restricoes: restricoes,\n  },\n  sinistros: {\n    indicador: temSinistro,\n    ocorrencias: sinistros,\n  },\n  leiloes: {\n    indicador: temLeilao,\n    ocorrencias: leiloes,\n  },\n  fipe: {\n    codigoFipe: item.codigoFipe,\n    valor: brl(valorAtual),\n    mesReferencia: meses[agora.getMonth()] + ' de ' + agora.getFullYear(),\n    historico: historico,\n  },\n  metadados: {\n    fonte: 'Dados simulados — modo demonstração',\n    modoDemo: true,\n    consultadoEm: agora.toLocaleString('pt-BR'),\n  },\n};\n",
+                "parameters": [
+                  {
+                    "name": "identificador",
+                    "defaultValue": ""
+                  },
+                  {
+                    "name": "tipo",
+                    "defaultValue": "chassi"
+                  }
+                ],
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "1d72537c-c69f-5987-97d1-304071b2d607",
+              "name": "consultaProvedor",
+              "options": {
+                "method": "post",
+                "url": "{{constants.CONSULTA_VEICULAR_API_URL}}",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "Content-Type",
+                    "application/json"
+                  ],
+                  [
+                    "Authorization",
+                    "Bearer {{secrets.CONSULTA_VEICULAR_API_KEY}}"
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": "{{({ tipo: variables.tipoConsulta, identificador: variables.identificadorConsulta, chassi: variables.tipoConsulta === 'chassi' ? variables.identificadorConsulta : null, renavam: variables.tipoConsulta === 'renavam' ? variables.identificadorConsulta : null })}}",
+                "body_toggle": true,
+                "transformationLanguage": "javascript",
+                "enableTransformation": true,
+                "transformation": "// Normaliza a resposta do provedor de consulta veicular para o contrato\n// canônico do app. Ajuste os campos abaixo conforme o provedor contratado\n// (Infosimples, API Brasil, Checkpro, Olho no Carro etc.).\nconst raiz = (data && (data.dados || data.data || data.resultado || data.response)) || data || {};\nconst v = raiz.veiculo || raiz.dadosVeiculo || raiz;\nconst legal = raiz.situacaoLegal || raiz.situacao_legal || raiz.restricoes || {};\nconst sin = raiz.sinistros || raiz.sinistro || {};\nconst lei = raiz.leiloes || raiz.leilao || {};\nconst fipe = raiz.fipe || raiz.tabelaFipe || {};\n\nconst texto = (valor, padrao) => {\n  if (valor === undefined || valor === null || valor === '') return padrao;\n  return String(valor);\n};\nconst lista = (valor) => (Array.isArray(valor) ? valor : []);\n\nconst restricoes = lista(legal.restricoes || raiz.listaRestricoes).map((r) => ({\n  tipo: texto(r.tipo || r.nome || r.restricao, 'Restrição'),\n  descricao: texto(r.descricao || r.detalhe || r.observacao, '—'),\n  orgao: texto(r.orgao || r.origem, '—'),\n}));\n\nconst ocorrenciasSinistro = lista(sin.ocorrencias || sin.registros).map((s) => ({\n  data: texto(s.data || s.dataOcorrencia, '—'),\n  tipo: texto(s.tipo || s.natureza, '—'),\n  gravidade: texto(s.gravidade || s.monta, '—'),\n  uf: texto(s.uf || s.estado, '—'),\n  descricao: texto(s.descricao || s.detalhe, '—'),\n}));\n\nconst ocorrenciasLeilao = lista(lei.ocorrencias || lei.registros).map((l) => ({\n  data: texto(l.data || l.dataLeilao, '—'),\n  leiloeiro: texto(l.leiloeiro, '—'),\n  comitente: texto(l.comitente || l.seguradora, '—'),\n  lote: texto(l.lote, '—'),\n  condicao: texto(l.condicao || l.condicaoGeral || l.situacao, '—'),\n  notaAvaliacao: texto(l.notaAvaliacao || l.nota, '—'),\n}));\n\nconst indicadorSinistro = sin.indicador !== undefined ? !!sin.indicador : ocorrenciasSinistro.length > 0;\nconst indicadorLeilao = lei.indicador !== undefined ? !!lei.indicador : ocorrenciasLeilao.length > 0;\nconst temAlerta = !!(legal.rouboFurto && (legal.rouboFurto.indicador || legal.rouboFurto === true));\n\nreturn {\n  veiculo: {\n    chassi: texto(v.chassi || v.vin, variables.tipoConsulta === 'chassi' ? variables.identificadorConsulta : '—'),\n    renavam: texto(v.renavam, variables.tipoConsulta === 'renavam' ? variables.identificadorConsulta : '—'),\n    placa: texto(v.placa, '—'),\n    marca: texto(v.marca || v.fabricante, '—'),\n    modelo: texto(v.modelo || v.versao, '—'),\n    anoFabricacao: texto(v.anoFabricacao || v.ano_fabricacao, '—'),\n    anoModelo: texto(v.anoModelo || v.ano_modelo || v.ano, ''),\n    cor: texto(v.cor, '—'),\n    combustivel: texto(v.combustivel, '—'),\n    codigoCombustivel: v.codigoCombustivel || v.codigo_combustivel || null,\n    municipio: texto(v.municipio || v.cidade, '—'),\n    uf: texto(v.uf || v.estado, '—'),\n    codigoFipe: texto(v.codigoFipe || v.codigo_fipe || fipe.codigoFipe || fipe.codigo, ''),\n    procedencia: texto(v.procedencia, '—'),\n    tipo: texto(v.tipo || v.tipoVeiculo, '—'),\n    situacao: texto(v.situacao || legal.situacao, '—'),\n  },\n  situacaoLegal: {\n    status: texto(legal.status, temAlerta ? 'Alerta' : restricoes.length > 0 ? 'Com restrições' : 'Regular'),\n    rouboFurto: {\n      indicador: temAlerta,\n      detalhes: texto(\n        legal.rouboFurto && legal.rouboFurto.detalhes,\n        temAlerta ? 'Constam registros de roubo ou furto.' : 'Nada consta na base de roubos e furtos.'\n      ),\n    },\n    gravame: {\n      status: texto(legal.gravame && legal.gravame.status, 'Não informado'),\n      financeira: (legal.gravame && legal.gravame.financeira) || null,\n      dataInclusao: (legal.gravame && legal.gravame.dataInclusao) || null,\n    },\n    debitos: {\n      ipva: texto(legal.debitos && legal.debitos.ipva, 'Não informado'),\n      licenciamento: texto(legal.debitos && legal.debitos.licenciamento, 'Não informado'),\n      multas: texto(legal.debitos && legal.debitos.multas, 'Não informado'),\n    },\n    renajud: texto(legal.renajud, 'Não informado'),\n    restricoes: restricoes,\n  },\n  sinistros: { indicador: indicadorSinistro, ocorrencias: ocorrenciasSinistro },\n  leiloes: { indicador: indicadorLeilao, ocorrencias: ocorrenciasLeilao },\n  fipe: {\n    codigoFipe: texto(fipe.codigoFipe || fipe.codigo, ''),\n    valor: texto(fipe.valor || fipe.valorAtual, ''),\n    mesReferencia: texto(fipe.mesReferencia || fipe.referencia, ''),\n    historico: lista(fipe.historico).map((hst) => ({\n      mes: texto(hst.mes || hst.mesReferencia, '—'),\n      valor: texto(hst.valor, '—'),\n    })),\n  },\n  metadados: {\n    fonte: texto(raiz.fonte || (raiz.metadados && raiz.metadados.fonte), 'Provedor de consulta veicular'),\n    modoDemo: false,\n    consultadoEm: new Date().toLocaleString('pt-BR'),\n  },\n};\n",
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "b65e58e7-4ce4-5953-9602-4940d6290330",
+              "name": "consultarFipe",
+              "options": {
+                "method": "get",
+                "url": "{{'https://parallelum.com.br/fipe/api/v2/cars/' + ((variables.fipeParams && variables.fipeParams.codigo) || '') + '/years/' + ((variables.fipeParams && variables.fipeParams.anoCodigo) || '')}}",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": null,
+                "body_toggle": false,
+                "transformationLanguage": "javascript",
+                "enableTransformation": true,
+                "transformation": "// Normaliza a resposta da API pública da FIPE (Parallelum, v2).\nif (!data || !data.price) {\n  return null;\n}\nreturn {\n  codigoFipe: data.codeFipe,\n  valor: data.price,\n  mesReferencia: data.referenceMonth,\n  marca: data.brand,\n  modelo: data.model,\n  anoModelo: data.modelYear,\n  combustivel: data.fuel,\n};\n",
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ],
+          "dataSources": [
+            {
+              "id": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "name": "restapidefault",
+              "kind": "restapi",
+              "type": "static",
+              "pluginId": null,
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "organizationId": null,
+              "scope": "local",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "name": "runjsdefault",
+              "kind": "runjs",
+              "type": "static",
+              "pluginId": null,
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "organizationId": null,
+              "scope": "local",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ],
+          "appVersions": [
+            {
+              "id": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "name": "v1",
+              "definition": null,
+              "globalSettings": {
+                "hideHeader": true,
+                "appInMaintenance": false,
+                "canvasMaxWidth": 100,
+                "canvasMaxWidthType": "%",
+                "canvasMaxHeight": 2400,
+                "canvasBackgroundColor": "#edeff5",
+                "backgroundFxQuery": "",
+                "appMode": "auto"
+              },
+              "pageSettings": {
+                "properties": {
+                  "disableMenu": {
+                    "value": "{{true}}",
+                    "fxActive": false
+                  }
+                }
+              },
+              "showViewerNavigation": false,
+              "homePageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "appId": "1ffa56fa-0919-5f76-8162-cf3d04b5c03f",
+              "currentEnvironmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
+              "promotedFrom": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ],
+          "appEnvironments": [
+            {
+              "id": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
+              "organizationId": "a81bad3e-3d37-5888-a0b3-7a02184f48ee",
+              "name": "development",
+              "isDefault": false,
+              "priority": 1,
+              "enabled": true,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "e605c4ab-3aa8-5271-aa56-a69a00cb9a92",
+              "organizationId": "a81bad3e-3d37-5888-a0b3-7a02184f48ee",
+              "name": "staging",
+              "isDefault": false,
+              "priority": 2,
+              "enabled": true,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "4869815a-29b4-5b5d-a0cf-39db7d295a56",
+              "organizationId": "a81bad3e-3d37-5888-a0b3-7a02184f48ee",
+              "name": "production",
+              "isDefault": true,
+              "priority": 3,
+              "enabled": true,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ],
+          "dataSourceOptions": [
+            {
+              "id": "39dea2b4-29ca-5196-9630-f449b5aa2ff5",
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "environmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "8c251448-fe4c-515c-90bb-45bff40d9086",
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "environmentId": "e605c4ab-3aa8-5271-aa56-a69a00cb9a92",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "e02bb0b6-7e21-5515-b75d-ee064e3b054c",
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "environmentId": "4869815a-29b4-5b5d-a0cf-39db7d295a56",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "c6e0172f-7c1a-5a17-9970-9e6a71f1b910",
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "environmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "db481a0c-6bb0-55fe-b0da-14341e12b803",
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "environmentId": "e605c4ab-3aa8-5271-aa56-a69a00cb9a92",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "3b3d3d45-1025-584f-bf6e-e80df9436f5f",
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "environmentId": "4869815a-29b4-5b5d-a0cf-39db7d295a56",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            }
+          ],
+          "schemaDetails": {
+            "multiPages": true,
+            "multiEnv": true,
+            "globalDataSources": true
+          }
+        }
+      }
+    }
+  ],
+  "tooljet_version": "3.0.17-cloud-lts"
+}
