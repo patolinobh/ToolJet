@@ -1,7 +1,8 @@
 # Consulta Veicular Brasil
 
-Template ToolJet para consulta completa de veículos brasileiros a partir do **chassi**
-(preferencial) ou do **Renavam**. A aplicação apresenta:
+Template ToolJet para consulta completa de veículos brasileiros a partir do **chassi/VIN**
+(preferencial), do **Renavam** ou da **placa** (padrão antigo ou Mercosul). A aplicação
+apresenta:
 
 - **Dados cadastrais** — marca, modelo, ano de fabricação/modelo, cor, combustível,
   placa, município/UF, procedência e código FIPE;
@@ -19,7 +20,13 @@ A interface tem um único campo de busca. O tipo do identificador é detectado
 automaticamente na query `executarConsulta` (Run JavaScript):
 
 - **Chassi (VIN)** — 17 caracteres alfanuméricos, sem as letras `I`, `O` e `Q`;
-- **Renavam** — 9 a 11 dígitos.
+- **Renavam** — 9 a 11 dígitos;
+- **Placa antiga** — 3 letras + 4 dígitos (`ABC1234`, com ou sem hífen);
+- **Placa Mercosul** — 3 letras + dígito + letra + 2 dígitos (`ABC1D23`).
+
+Ao consultar um provedor real, o corpo da requisição informa o campo preenchido
+(`chassi`, `renavam` ou `placa` + `padraoPlaca`), permitindo rotear para o endpoint
+correto do provedor.
 
 O orquestrador então decide entre dois modos:
 

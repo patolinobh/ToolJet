@@ -32,9 +32,10 @@ Q_FIPE = uid("q-consultarFipe")
 # Códigos JavaScript das queries
 # ---------------------------------------------------------------------------
 
-CODE_ORQUESTRADOR = r"""// Orquestra a consulta veicular: valida a entrada, decide entre chassi e
-// Renavam, escolhe o modo (provedor real ou demonstração) e consolida o
-// resultado no formato canônico usado por toda a interface.
+CODE_ORQUESTRADOR = r"""// Orquestra a consulta veicular: valida a entrada, detecta o tipo de
+// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o
+// modo (provedor real ou demonstração) e consolida o resultado no formato
+// canônico usado por toda a interface.
 const bruto = components.inputIdentificador.value || '';
 const entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
@@ -43,21 +44,29 @@ await actions.setVariable('resultado', null);
 
 const somenteDigitos = /^[0-9]+$/.test(entrada);
 let tipo = null;
+let subtipo = null;
 if (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {
   tipo = 'chassi';
 } else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {
   tipo = 'renavam';
+} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {
+  tipo = 'placa';
+  subtipo = 'antiga';
+} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {
+  tipo = 'placa';
+  subtipo = 'mercosul';
 }
 
 if (!tipo) {
   await actions.setVariable(
     'erroConsulta',
-    'Identificador inválido. Informe um chassi com 17 caracteres (sem as letras I, O e Q) ou um Renavam com 9 a 11 dígitos.'
+    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'
   );
   return null;
 }
 
 await actions.setVariable('tipoConsulta', tipo);
+await actions.setVariable('subtipoPlaca', subtipo);
 await actions.setVariable('identificadorConsulta', entrada);
 
 const apiConfigurada =
@@ -73,7 +82,7 @@ try {
     await queries.consultaProvedor.run();
     resultado = queries.consultaProvedor.getData();
   } else {
-    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo });
+    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });
     resultado = queries.consultaDemo.getData();
   }
 } catch (erro) {
@@ -120,6 +129,7 @@ CODE_DEMO = r"""// Modo demonstração: gera um laudo veicular simulado e determ
 // provedor real. Permite explorar o app sem contratar uma API paga.
 const id = (parameters && parameters.identificador) || variables.identificadorConsulta || '9BWZZZ377VT004251';
 const tipo = (parameters && parameters.tipo) || variables.tipoConsulta || 'chassi';
+const subtipo = (parameters && parameters.subtipo) || variables.subtipoPlaca || null;
 
 let h = 7;
 for (let i = 0; i < id.length; i++) {
@@ -227,12 +237,17 @@ const status = rouboFurto || temRestricaoJudicial ? 'Alerta' : restricoes.length
 const digitos = String(h).padStart(11, '3').slice(0, 11);
 const chassi = tipo === 'chassi' ? id : '9BW' + digitos.slice(0, 6) + 'T' + digitos.slice(4, 11);
 const renavam = tipo === 'renavam' ? id : digitos;
+const placaGerada =
+  pick(['ABC', 'BRA', 'RIO', 'SPX', 'MGV'], 19) + digitos.slice(2, 3) + pick(['A', 'B', 'C', 'D', 'E'], 23) + digitos.slice(5, 7);
+// Placa informada pelo usuário prevalece; padrão antigo é exibido com hífen.
+const placa =
+  tipo === 'placa' ? (subtipo === 'antiga' ? id.slice(0, 3) + '-' + id.slice(3) : id) : placaGerada;
 
 return {
   veiculo: {
     chassi: chassi,
     renavam: renavam,
-    placa: pick(['ABC', 'BRA', 'RIO', 'SPX', 'MGV'], 19) + digitos.slice(2, 3) + pick(['A', 'B', 'C', 'D', 'E'], 23) + digitos.slice(5, 7),
+    placa: placa,
     marca: item.marca,
     modelo: item.modelo,
     anoFabricacao: anoFabricacao,
@@ -338,7 +353,7 @@ return {
   veiculo: {
     chassi: texto(v.chassi || v.vin, variables.tipoConsulta === 'chassi' ? variables.identificadorConsulta : '—'),
     renavam: texto(v.renavam, variables.tipoConsulta === 'renavam' ? variables.identificadorConsulta : '—'),
-    placa: texto(v.placa, '—'),
+    placa: texto(v.placa, variables.tipoConsulta === 'placa' ? variables.identificadorConsulta : '—'),
     marca: texto(v.marca || v.fabricante, '—'),
     modelo: texto(v.modelo || v.versao, '—'),
     anoFabricacao: texto(v.anoFabricacao || v.ano_fabricacao, '—'),
@@ -586,7 +601,7 @@ components.append(
         "<div style='padding-top:6px'>"
         "<div style='font-size:26px;font-weight:800;color:#1b1f31'>🚗 Consulta Veicular Brasil</div>"
         "<div style='margin-top:4px;font-size:14px;color:#687076'>"
-        "Situação legal, sinistros, leilões e valor de referência FIPE a partir do chassi ou do Renavam."
+        "Situação legal, sinistros, leilões e valor de referência FIPE a partir do chassi/VIN, do Renavam ou da placa (antiga ou Mercosul)."
         "</div></div>",
         (1, 20, 41, 80),
         (1, 10, 41, 90),
@@ -602,7 +617,7 @@ components.append(
         properties={
             "value": {"value": ""},
             "label": {"value": ""},
-            "placeholder": {"value": "Chassi (17 caracteres) ou Renavam (9 a 11 dígitos)"},
+            "placeholder": {"value": "Chassi (17 caract.), Renavam (9–11 dígitos) ou placa (ABC1234 / ABC1D23)"},
             "visibility": {"value": "{{true}}"},
             "disabledState": {"value": "{{false}}"},
             "loadingState": {"value": "{{false}}"},
@@ -652,6 +667,8 @@ DETECTA = (
     "if (!e) return ''; "
     "if (e.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(e)) return '✔ Chassi detectado'; "
     "if (/^[0-9]{9,11}$/.test(e)) return '✔ Renavam detectado'; "
+    "if (/^[A-Z]{3}[0-9]{4}$/.test(e)) return '✔ Placa antiga detectada'; "
+    "if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(e)) return '✔ Placa Mercosul detectada'; "
     "return '… identificador incompleto'; })()}}"
 )
 components.append(
@@ -693,9 +710,10 @@ components.append(
         "<div style='background:#ffffff;border:1px dashed #c1c8cd;border-radius:12px;padding:28px;"
         "text-align:center;color:#687076'>"
         "<div style='font-size:34px'>🔎</div>"
-        "<div style='margin-top:8px;font-size:16px;font-weight:600;color:#1b1f31'>Informe um chassi ou Renavam para começar</div>"
-        "<div style='margin-top:6px;font-size:13px'>Exemplo de chassi: <code>9BWZZZ377VT004251</code> &nbsp;•&nbsp; "
-        "Exemplo de Renavam: <code>12345678901</code></div>"
+        "<div style='margin-top:8px;font-size:16px;font-weight:600;color:#1b1f31'>Informe um chassi/VIN, Renavam ou placa para começar</div>"
+        "<div style='margin-top:6px;font-size:13px'>Chassi: <code>9BWZZZ377VT004251</code> &nbsp;•&nbsp; "
+        "Renavam: <code>12345678901</code> &nbsp;•&nbsp; "
+        "Placa antiga: <code>ABC-1234</code> &nbsp;•&nbsp; Placa Mercosul: <code>ABC1D23</code></div>"
         "<div style='margin-top:6px;font-size:13px'>A consulta retorna dados cadastrais, situação legal, "
         "restrições, histórico de sinistros e leilões, além do valor de referência na tabela FIPE.</div></div>",
         (1, 210, 41, 140),
@@ -998,6 +1016,7 @@ data_queries = [
             "parameters": [
                 {"name": "identificador", "defaultValue": ""},
                 {"name": "tipo", "defaultValue": "chassi"},
+                {"name": "subtipo", "defaultValue": ""},
             ],
             "runOnPageLoad": False,
             "showSuccessNotification": False,
@@ -1023,7 +1042,9 @@ data_queries = [
             "json_body": (
                 "{{({ tipo: variables.tipoConsulta, identificador: variables.identificadorConsulta, "
                 "chassi: variables.tipoConsulta === 'chassi' ? variables.identificadorConsulta : null, "
-                "renavam: variables.tipoConsulta === 'renavam' ? variables.identificadorConsulta : null })}}"
+                "renavam: variables.tipoConsulta === 'renavam' ? variables.identificadorConsulta : null, "
+                "placa: variables.tipoConsulta === 'placa' ? variables.identificadorConsulta : null, "
+                "padraoPlaca: variables.subtipoPlaca || null })}}"
             ),
             "body_toggle": True,
             "transformationLanguage": "javascript",
@@ -1239,7 +1260,7 @@ definition = {
 
 manifest = {
     "name": "Consulta veicular Brasil",
-    "description": "Consulte a situação completa de um veículo brasileiro a partir do chassi ou do Renavam: dados cadastrais, situação legal (roubo/furto, gravame, RENAJUD, débitos), sinistros, leilões e valor de referência na tabela FIPE.",
+    "description": "Consulte a situação completa de um veículo brasileiro a partir do chassi/VIN, do Renavam ou da placa (antiga ou Mercosul): dados cadastrais, situação legal (roubo/furto, gravame, RENAJUD, débitos), sinistros, leilões e valor de referência na tabela FIPE.",
     "widgets": ["Table", "Tabs"],
     "sources": [
         {"name": "RestAPI", "id": "restapi"},
