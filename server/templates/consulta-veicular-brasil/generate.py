@@ -25,6 +25,7 @@ DS_RUNJS = uid("ds-runjs")
 
 Q_ORQUESTRADOR = uid("q-executarConsulta")
 Q_PROVEDOR = uid("q-consultaProvedor")
+Q_APIBRASIL = uid("q-consultaApiBrasil")
 Q_DEMO = uid("q-consultaDemo")
 Q_FIPE = uid("q-consultarFipe")
 
@@ -69,16 +70,30 @@ await actions.setVariable('tipoConsulta', tipo);
 await actions.setVariable('subtipoPlaca', subtipo);
 await actions.setVariable('identificadorConsulta', entrada);
 
-const apiConfigurada =
-  typeof constants !== 'undefined' &&
-  constants &&
-  constants.CONSULTA_VEICULAR_API_URL &&
-  String(constants.CONSULTA_VEICULAR_API_URL).indexOf('http') === 0;
+const urlProvedor =
+  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL
+    ? String(constants.CONSULTA_VEICULAR_API_URL)
+    : '';
+const apiConfigurada = urlProvedor.indexOf('http') === 0;
+// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado
+// (headers Bearer + DeviceToken; consulta somente por placa).
+const modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;
 await actions.setVariable('modoDemo', !apiConfigurada);
+
+if (modoApiBrasil && tipo !== 'placa') {
+  await actions.setVariable(
+    'erroConsulta',
+    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'
+  );
+  return null;
+}
 
 let resultado = null;
 try {
-  if (apiConfigurada) {
+  if (modoApiBrasil) {
+    await queries.consultaApiBrasil.run();
+    resultado = queries.consultaApiBrasil.getData();
+  } else if (apiConfigurada) {
     await queries.consultaProvedor.run();
     resultado = queries.consultaProvedor.getData();
   } else {
@@ -102,8 +117,9 @@ if (!resultado || !resultado.veiculo) {
 }
 
 // Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API
-// pública Parallelum) quando o provedor devolve o código FIPE do veículo.
-if (apiConfigurada && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {
+// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.
+const semValorFipe = !(resultado.fipe && resultado.fipe.valor);
+if (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {
   try {
     await actions.setVariable('fipeParams', {
       codigo: String(resultado.veiculo.codigoFipe).trim(),
@@ -403,6 +419,106 @@ return {
   },
   metadados: {
     fonte: texto(raiz.fonte || (raiz.metadados && raiz.metadados.fonte), 'Provedor de consulta veicular'),
+    modoDemo: false,
+    consultadoEm: new Date().toLocaleString('pt-BR'),
+  },
+};
+"""
+
+TRANSFORM_APIBRASIL = r"""// Normaliza a resposta da APIBrasil (API Placa Dados — Fase 1) para o
+// contrato canônico do app. A resposta usual tem o formato
+// { error, message, response: { chassi, marca, modelo, ano, anoModelo, cor,
+//   municipio, uf, situacao, extra: {...}, fipe: { dados: [{ codigo_fipe,
+//   texto_valor, mes_referencia, texto_marca, texto_modelo }] } } }.
+if (data && data.error === true) {
+  throw new Error(data.message || 'A APIBrasil retornou erro para esta consulta.');
+}
+const raiz = (data && (data.response || data.dados)) || data || {};
+const v = raiz.veiculo || raiz;
+const extra = v.extra || raiz.extra || {};
+const fipeBruto = raiz.fipe && (raiz.fipe.dados || raiz.fipe);
+const fipeItem = (Array.isArray(fipeBruto) ? fipeBruto[0] : fipeBruto) || {};
+
+const texto = (valor, padrao) => {
+  if (valor === undefined || valor === null || valor === '') return padrao;
+  return String(valor);
+};
+
+// Situação SINESP/base estadual: "Sem restrição", "Roubo/Furto" etc.
+const situacao = texto(v.situacao || extra.situacao_veiculo, '');
+const situacaoMin = situacao.toLowerCase();
+let indicadorRouboFurto = null;
+if (situacaoMin.indexOf('roubo') !== -1 || situacaoMin.indexOf('furto') !== -1) indicadorRouboFurto = true;
+else if (situacaoMin.indexOf('sem restri') !== -1 || situacaoMin.indexOf('circula') !== -1) indicadorRouboFurto = false;
+
+// Restrições genéricas dos agregados (restricao_1..restricao_4 e afins).
+const restricoes = [];
+[v, extra].forEach((origem) => {
+  Object.keys(origem || {}).forEach((chave) => {
+    if (/^restricao/i.test(chave)) {
+      const valor = texto(origem[chave], '');
+      if (valor && !/^sem restri/i.test(valor) && valor !== '0') {
+        restricoes.push({ tipo: valor, descricao: 'Apontamento retornado pela base consultada.', orgao: '—' });
+      }
+    }
+  });
+});
+
+return {
+  veiculo: {
+    chassi: texto(v.chassi || extra.chassi, '—'),
+    renavam: texto(v.renavam || extra.renavam, '—'),
+    placa: texto(v.placa, variables.identificadorConsulta),
+    marca: texto(v.marca || v.MARCA || fipeItem.texto_marca, '—'),
+    modelo: texto(v.modelo || v.MODELO || fipeItem.texto_modelo, '—'),
+    anoFabricacao: texto(v.ano || v.anoFabricacao || extra.ano_fabricacao, '—'),
+    anoModelo: texto(v.anoModelo || v.ano_modelo || extra.ano_modelo || fipeItem.ano_modelo, ''),
+    cor: texto(v.cor || extra.cor_veiculo, '—'),
+    combustivel: texto(v.combustivel || extra.combustivel || fipeItem.combustivel, '—'),
+    codigoCombustivel: null,
+    municipio: texto(v.municipio || extra.municipio, '—'),
+    uf: texto(v.uf || extra.uf || extra.uf_placa, '—'),
+    codigoFipe: texto(fipeItem.codigo_fipe || fipeItem.codigoFipe || v.codigo_fipe, ''),
+    procedencia: texto(v.procedencia || extra.procedencia, '—'),
+    tipo: texto(v.tipo_veiculo || extra.tipo_veiculo || v.segmento, '—'),
+    situacao: texto(situacao, '—'),
+  },
+  situacaoLegal: {
+    status: indicadorRouboFurto || restricoes.length > 0 ? 'Com restrições' : indicadorRouboFurto === false ? 'Regular' : 'Verificação parcial',
+    rouboFurto: {
+      indicador: indicadorRouboFurto,
+      detalhes:
+        indicadorRouboFurto === true
+          ? 'Constam registros de roubo ou furto na base consultada.'
+          : indicadorRouboFurto === false
+          ? 'Nada consta na base consultada.'
+          : 'Indicador não retornado pelo plano atual do provedor.',
+    },
+    gravame: {
+      status: texto(extra.gravame || v.gravame, 'Não informado'),
+      financeira: null,
+      dataInclusao: null,
+    },
+    debitos: {
+      ipva: 'Não informado',
+      licenciamento: 'Não informado',
+      multas: 'Não informado',
+    },
+    renajud: 'Não informado',
+    restricoes: restricoes,
+  },
+  // Fase 1 (APIBrasil): indicadores de sinistro e leilão não são cobertos —
+  // ficam como null para a interface exibir o estado "não coberto".
+  sinistros: { indicador: null, ocorrencias: [] },
+  leiloes: { indicador: null, ocorrencias: [] },
+  fipe: {
+    codigoFipe: texto(fipeItem.codigo_fipe || fipeItem.codigoFipe, ''),
+    valor: texto(fipeItem.texto_valor || fipeItem.valor, ''),
+    mesReferencia: texto(fipeItem.mes_referencia || fipeItem.mesReferencia, ''),
+    historico: [],
+  },
+  metadados: {
+    fonte: 'APIBrasil — API Placa Dados (Fase 1)',
     modoDemo: false,
     consultadoEm: new Date().toLocaleString('pt-BR'),
   },
@@ -744,7 +860,8 @@ components.append(
 )
 STATUS_COR = (
     f"{{{{({R} && {R}.situacaoLegal.status === 'Regular') ? '#12b76a' : "
-    f"({R} && {R}.situacaoLegal.status === 'Com restrições') ? '#f79009' : '#f04438'}}}}"
+    f"({R} && {R}.situacaoLegal.status === 'Com restrições') ? '#f79009' : "
+    f"({R} && {R}.situacaoLegal.status === 'Verificação parcial') ? '#475467' : '#f04438'}}}}"
 )
 components.append(
     card(
@@ -754,8 +871,8 @@ components.append(
         (25, 210, 9, 100),
         cor_valor=STATUS_COR,
         subtitulo_expr=(
-            f"{{{{({R} && {R}.sinistros.indicador) ? 'Com sinistro' : 'Sem sinistro'}}}} • "
-            f"{{{{({R} && {R}.leiloes.indicador) ? 'Com leilão' : 'Sem leilão'}}}}"
+            f"{{{{({R} ? {R}.sinistros.indicador : null) === true ? 'Com sinistro' : ({R} ? {R}.sinistros.indicador : null) === false ? 'Sem sinistro' : 'Sinistro n/d'}}}} • "
+            f"{{{{({R} ? {R}.leiloes.indicador : null) === true ? 'Com leilão' : ({R} ? {R}.leiloes.indicador : null) === false ? 'Sem leilão' : 'Leilão n/d'}}}}"
         ),
     )
 )
@@ -800,8 +917,8 @@ KV = (
     # Roubo e furto
     "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'>"
     "<div style='font-size:11px;text-transform:uppercase;color:#687076'>Roubo / Furto</div>"
-    f"<div style='margin-top:4px;font-weight:700;color:{{{{({R} && {R}.situacaoLegal.rouboFurto.indicador) ? '#f04438' : '#12b76a'}}}}'>"
-    f"{{{{({R} && {R}.situacaoLegal.rouboFurto.indicador) ? 'Consta ocorrência' : 'Nada consta'}}}}</div>"
+    f"<div style='margin-top:4px;font-weight:700;color:{{{{({R} ? {R}.situacaoLegal.rouboFurto.indicador : null) === true ? '#f04438' : ({R} ? {R}.situacaoLegal.rouboFurto.indicador : null) === false ? '#12b76a' : '#475467'}}}}'>"
+    f"{{{{({R} ? {R}.situacaoLegal.rouboFurto.indicador : null) === true ? 'Consta ocorrência' : ({R} ? {R}.situacaoLegal.rouboFurto.indicador : null) === false ? 'Nada consta' : 'Não verificado'}}}}</div>"
     f"<div style='margin-top:4px;font-size:12px;color:#687076'>{{{{({R} && {R}.situacaoLegal.rouboFurto.detalhes) || ''}}}}</div></div>"
     # Gravame
     "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;padding:12px'>"
@@ -846,14 +963,15 @@ components.append(
     )
 )
 
+SIN = f"({R} ? {R}.sinistros.indicador : null)"
 components.append(
     texto_html(
         "indicadorSinistros",
-        f"<div style='background:{{{{({R} && {R}.sinistros.indicador) ? '#fef3f2' : '#ecfdf3'}}}};"
-        f"border:1px solid {{{{({R} && {R}.sinistros.indicador) ? '#fda29b' : '#a6f4c5'}}}};"
+        f"<div style='background:{{{{{SIN} === true ? '#fef3f2' : {SIN} === false ? '#ecfdf3' : '#f2f4f7'}}}};"
+        f"border:1px solid {{{{{SIN} === true ? '#fda29b' : {SIN} === false ? '#a6f4c5' : '#d0d5dd'}}}};"
         "border-radius:8px;padding:10px 14px;font-size:13px;"
-        f"color:{{{{({R} && {R}.sinistros.indicador) ? '#b42318' : '#027a48'}}}}'>"
-        f"{{{{({R} && {R}.sinistros.indicador) ? '⚠️ Constam registros de sinistro para este veículo.' : '✅ Nada consta: não há registro de sinistro indenizado para este veículo.'}}}}"
+        f"color:{{{{{SIN} === true ? '#b42318' : {SIN} === false ? '#027a48' : '#475467'}}}}'>"
+        f"{{{{{SIN} === true ? '⚠️ Constam registros de sinistro para este veículo.' : {SIN} === false ? '✅ Nada consta: não há registro de sinistro indenizado para este veículo.' : 'ℹ️ Indicador de sinistro não coberto pelo provedor atual (disponível na Fase 2, com provedor completo).'}}}}"
         "</div>",
         (1, 10, 39, 45),
         parent=f"{TABS_ID}-1",
@@ -870,14 +988,15 @@ components.append(
     )
 )
 
+LEI = f"({R} ? {R}.leiloes.indicador : null)"
 components.append(
     texto_html(
         "indicadorLeiloes",
-        f"<div style='background:{{{{({R} && {R}.leiloes.indicador) ? '#fffaeb' : '#ecfdf3'}}}};"
-        f"border:1px solid {{{{({R} && {R}.leiloes.indicador) ? '#fec84b' : '#a6f4c5'}}}};"
+        f"<div style='background:{{{{{LEI} === true ? '#fffaeb' : {LEI} === false ? '#ecfdf3' : '#f2f4f7'}}}};"
+        f"border:1px solid {{{{{LEI} === true ? '#fec84b' : {LEI} === false ? '#a6f4c5' : '#d0d5dd'}}}};"
         "border-radius:8px;padding:10px 14px;font-size:13px;"
-        f"color:{{{{({R} && {R}.leiloes.indicador) ? '#93370d' : '#027a48'}}}}'>"
-        f"{{{{({R} && {R}.leiloes.indicador) ? '⚠️ Este veículo possui passagem por leilão.' : '✅ Nada consta: não há registro de passagem por leilão.'}}}}"
+        f"color:{{{{{LEI} === true ? '#93370d' : {LEI} === false ? '#027a48' : '#475467'}}}}'>"
+        f"{{{{{LEI} === true ? '⚠️ Este veículo possui passagem por leilão.' : {LEI} === false ? '✅ Nada consta: não há registro de passagem por leilão.' : 'ℹ️ Indicador de leilão não coberto pelo provedor atual (disponível na Fase 2, com provedor completo).'}}}}"
         "</div>",
         (1, 10, 39, 45),
         parent=f"{TABS_ID}-2",
@@ -946,10 +1065,13 @@ components.append(
         "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;"
         "font-size:12px;color:#687076;line-height:1.6'>"
         "<b style='color:#1b1f31'>Como conectar um provedor real</b><br/>"
-        "1. Contrate um provedor de consulta veicular (Infosimples, API Brasil, Checkpro, Olho no Carro etc.).<br/>"
-        "2. Em <b>Workspace settings → Workspace constants</b>, crie a constante <code>CONSULTA_VEICULAR_API_URL</code> "
-        "com a URL do endpoint de consulta e o secret <code>CONSULTA_VEICULAR_API_KEY</code> com sua chave.<br/>"
-        "3. Ajuste o mapeamento de campos na transformação da query <code>consultaProvedor</code> conforme a resposta do seu provedor.<br/><br/>"
+        "<b>Fase 1 — APIBrasil (grátis para validar; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a "
+        "<i>API Placa Dados</i> e, em <b>Workspace settings → Workspace constants</b>, crie a constante "
+        "<code>CONSULTA_VEICULAR_API_URL</code> = <code>https://gateway.apibrasil.io/api/v2/vehicles/dados</code> e os secrets "
+        "<code>APIBRASIL_BEARER_TOKEN</code> e <code>APIBRASIL_DEVICE_TOKEN</code>.<br/>"
+        "<b>Fase 2 — provedor completo (sinistro/leilão):</b> contrate um agregador (Olho no Carro, Checkcred, Consultar Placa etc.), "
+        "aponte <code>CONSULTA_VEICULAR_API_URL</code> para o endpoint dele com o secret <code>CONSULTA_VEICULAR_API_KEY</code> "
+        "e ajuste o mapeamento na transformação da query <code>consultaProvedor</code>.<br/><br/>"
         "⚖️ Os dados de situação legal têm origem nas bases oficiais (Senatran/Detran, SNG, RENAJUD) intermediadas pelo provedor contratado. "
         "O valor FIPE é obtido da API pública Parallelum quando o código FIPE está disponível. "
         "Este aplicativo tem caráter informativo e não substitui a certidão oficial do Detran."
@@ -1050,6 +1172,33 @@ data_queries = [
             "transformationLanguage": "javascript",
             "enableTransformation": True,
             "transformation": TRANSFORM_PROVEDOR,
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_APIBRASIL,
+        "name": "consultaApiBrasil",
+        "options": {
+            "method": "post",
+            "url": "{{constants.CONSULTA_VEICULAR_API_URL}}",
+            "url_params": [["", ""]],
+            "headers": [
+                ["Content-Type", "application/json"],
+                ["Authorization", "Bearer {{secrets.APIBRASIL_BEARER_TOKEN}}"],
+                ["DeviceToken", "{{secrets.APIBRASIL_DEVICE_TOKEN}}"],
+            ],
+            "body": [["", ""]],
+            "json_body": "{{({ placa: variables.identificadorConsulta })}}",
+            "body_toggle": True,
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": TRANSFORM_APIBRASIL,
             "runOnPageLoad": False,
             "showSuccessNotification": False,
             "notificationDuration": 5000,

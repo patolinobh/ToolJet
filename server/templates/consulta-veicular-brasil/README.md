@@ -41,14 +41,37 @@ identifica claramente que os dados são fictícios.
 ### 2. Modo provedor real
 
 As bases oficiais (Senatran/Detran, SNG, RENAJUD, seguradoras) não expõem API
-pública de consulta por chassi — o acesso é feito por provedores comerciais, como
-Infosimples, API Brasil, Checkpro ou Olho no Carro. Para conectar o seu:
+pública de consulta por chassi — o acesso é feito por provedores comerciais. O
+template adota uma estratégia **em duas fases**:
 
-1. Em **Workspace settings → Workspace constants**, crie:
-   - Constante `CONSULTA_VEICULAR_API_URL` — URL do endpoint de consulta do provedor;
-   - Secret `CONSULTA_VEICULAR_API_KEY` — chave de API (enviada como `Bearer` no
-     cabeçalho `Authorization`).
-2. Ajuste a transformação da query `consultaProvedor` para mapear a resposta do seu
+#### Fase 1 — APIBrasil (validação sem custo; consulta por placa)
+
+A [APIBrasil](https://apibrasil.io) oferece a *API Placa Dados* com plano
+gratuito (100 consultas/dia), retornando dados cadastrais reais + valor FIPE a
+partir da placa. Para ativar:
+
+1. Crie uma conta em `app.apibrasil.io`, ative a **API Placa Dados** e copie o
+   `BearerToken` e o `DeviceToken`;
+2. Em **Workspace settings → Workspace constants**, crie:
+   - Constante `CONSULTA_VEICULAR_API_URL` = `https://gateway.apibrasil.io/api/v2/vehicles/dados`;
+   - Secret `APIBRASIL_BEARER_TOKEN` — valor do BearerToken;
+   - Secret `APIBRASIL_DEVICE_TOKEN` — valor do DeviceToken.
+
+Quando a URL contém `apibrasil`, o app usa automaticamente a query
+`consultaApiBrasil` (adaptador dedicado). Limitações da fase: a consulta real é
+**somente por placa** (chassi/Renavam exibem orientação), e os indicadores de
+sinistro/leilão aparecem como "não coberto pelo provedor atual".
+
+#### Fase 2 — agregador completo (sinistro, leilão, gravame, débitos)
+
+Contrate um agregador B2B (Olho no Carro, Checkcred, Consultar Placa,
+AvaliService etc.) e:
+
+1. Em **Workspace settings → Workspace constants**, aponte
+   `CONSULTA_VEICULAR_API_URL` para o endpoint do agregador e crie o secret
+   `CONSULTA_VEICULAR_API_KEY` (enviado como `Bearer` no cabeçalho
+   `Authorization`);
+2. Ajuste a transformação da query `consultaProvedor` para mapear a resposta do
    provedor no contrato canônico abaixo (a transformação já cobre os apelidos de
    campo mais comuns).
 
@@ -96,7 +119,7 @@ Toda a interface lê a variável de página `resultado`, definida pelo orquestra
     "restricoes": [{ "tipo": "...", "descricao": "...", "orgao": "..." }]
   },
   "sinistros": {
-    "indicador": true,
+    "indicador": true,  // true | false | null (null = não coberto pelo provedor atual)
     "ocorrencias": [{ "data": "...", "tipo": "...", "gravidade": "...", "uf": "...", "descricao": "..." }]
   },
   "leiloes": {
@@ -117,9 +140,10 @@ Toda a interface lê a variável de página `resultado`, definida pelo orquestra
 
 | Query | Tipo | Função |
 | --- | --- | --- |
-| `executarConsulta` | Run JavaScript | Orquestrador: valida a entrada, detecta chassi/Renavam, escolhe o modo, dispara a consulta FIPE e publica `variables.resultado`. |
+| `executarConsulta` | Run JavaScript | Orquestrador: valida a entrada, detecta o tipo, escolhe o modo (APIBrasil / provedor genérico / demo), dispara a consulta FIPE e publica `variables.resultado`. |
 | `consultaDemo` | Run JavaScript | Gera o laudo simulado determinístico (modo demonstração). |
-| `consultaProvedor` | REST API | `POST {{constants.CONSULTA_VEICULAR_API_URL}}` com o identificador; transformação normaliza a resposta para o contrato canônico. |
+| `consultaApiBrasil` | REST API | Fase 1: `POST` na APIBrasil (*API Placa Dados*) com headers `Authorization: Bearer` + `DeviceToken`; transformação normaliza para o contrato canônico. |
+| `consultaProvedor` | REST API | Fase 2: `POST {{constants.CONSULTA_VEICULAR_API_URL}}` com o identificador; transformação normaliza a resposta para o contrato canônico. |
 | `consultarFipe` | REST API | `GET` na API pública da FIPE por código FIPE + ano-modelo. |
 
 Aviso legal: o aplicativo tem caráter informativo e não substitui a certidão
