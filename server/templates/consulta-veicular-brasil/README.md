@@ -30,13 +30,24 @@ correto do provedor.
 
 O orquestrador então decide entre dois modos:
 
-### 1. Modo demonstração (padrão)
+### 1. Modo gratuito (padrão)
 
-Sem nenhuma configuração, o app roda com a query `consultaDemo`, que gera um laudo
-**simulado e determinístico** (o mesmo identificador sempre produz o mesmo
-resultado), cobrindo cenários variados: veículo regular, com gravame, com restrição
-judicial, com sinistro, com leilão e com ocorrência de roubo/furto. Um banner
-identifica claramente que os dados são fictícios.
+Sem nenhuma configuração, o app já entrega **dados reais gratuitos** em duas frentes:
+
+- **Consulta por chassi** — decodificação real do VIN: tabela WMI embutida com os
+  fabricantes mais comuns no Brasil/Mercosul (9BW = VW Brasil, 9BD = Fiat, 9BG =
+  Chevrolet…), país de origem, ano-modelo pela 10ª posição, complementados pela
+  base pública [NHTSA vPIC](https://vpic.nhtsa.dot.gov/api/) (gratuita, sem
+  cadastro). Situação legal, sinistros e leilões aparecem como "não coberto na
+  consulta gratuita" — nunca como falso "nada consta".
+- **Aba Tabela FIPE** — avaliação oficial gratuita com seleção marca → modelo →
+  ano (API pública Parallelum v1), retornando valor vigente, código FIPE e mês de
+  referência.
+
+**Consulta por placa ou Renavam** não tem fonte gratuita legítima no Brasil; nesses
+casos o app roda a query `consultaDemo`, que gera um laudo **simulado e
+determinístico** cobrindo cenários variados, com um banner identificando claramente
+que os dados são fictícios.
 
 ### 2. Modo provedor real
 
@@ -44,11 +55,11 @@ As bases oficiais (Senatran/Detran, SNG, RENAJUD, seguradoras) não expõem API
 pública de consulta por chassi — o acesso é feito por provedores comerciais. O
 template adota uma estratégia **em duas fases**:
 
-#### Fase 1 — APIBrasil (validação sem custo; consulta por placa)
+#### Fase 1 — APIBrasil (pago; consulta por placa)
 
-A [APIBrasil](https://apibrasil.io) oferece a *API Placa Dados* com plano
-gratuito (100 consultas/dia), retornando dados cadastrais reais + valor FIPE a
-partir da placa. Para ativar:
+A [APIBrasil](https://apibrasil.io) oferece a *API Placa Dados* (planos pagos por
+volume de requisições), retornando dados cadastrais reais + valor FIPE a partir
+da placa. Para ativar:
 
 1. Crie uma conta em `app.apibrasil.io`, ative a **API Placa Dados** e copie o
    `BearerToken` e o `DeviceToken`;
@@ -140,8 +151,10 @@ Toda a interface lê a variável de página `resultado`, definida pelo orquestra
 
 | Query | Tipo | Função |
 | --- | --- | --- |
-| `executarConsulta` | Run JavaScript | Orquestrador: valida a entrada, detecta o tipo, escolhe o modo (APIBrasil / provedor genérico / demo), dispara a consulta FIPE e publica `variables.resultado`. |
-| `consultaDemo` | Run JavaScript | Gera o laudo simulado determinístico (modo demonstração). |
+| `executarConsulta` | Run JavaScript | Orquestrador: valida a entrada, detecta o tipo, escolhe o modo (gratuito / APIBrasil / provedor genérico / demo), decodifica chassi (WMI local), dispara consultas e publica `variables.resultado`. |
+| `decodificarVin` | REST API | Modo gratuito: `GET` na base pública NHTSA vPIC (`DecodeVinValues`) para decodificar o chassi. |
+| `fipeMarcas` / `fipeModelos` / `fipeAnos` / `fipeValorSelecao` | REST API | Aba Tabela FIPE: navegação marca → modelo → ano e valor oficial vigente (API pública Parallelum v1). |
+| `consultaDemo` | Run JavaScript | Gera o laudo simulado determinístico (placa/Renavam sem provedor configurado). |
 | `consultaApiBrasil` | REST API | Fase 1: `POST` na APIBrasil (*API Placa Dados*) com headers `Authorization: Bearer` + `DeviceToken`; transformação normaliza para o contrato canônico. |
 | `consultaProvedor` | REST API | Fase 2: `POST {{constants.CONSULTA_VEICULAR_API_URL}}` com o identificador; transformação normaliza a resposta para o contrato canônico. |
 | `consultarFipe` | REST API | `GET` na API pública da FIPE por código FIPE + ano-modelo. |

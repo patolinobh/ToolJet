@@ -599,6 +599,97 @@
               ]
             },
             {
+              "id": "3fc2d207-413b-5652-8370-5cc21d1bf445",
+              "name": "bannerGratuito",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#eef4ff;border:1px solid #b2ccff;border-radius:8px;padding:10px 14px;color:#1d4ed8;font-size:13px'>🆓 <b>Modo gratuito:</b> chassi decodificado com dados reais (padrão VIN + base NHTSA vPIC) e tabela FIPE oficial na aba correspondente. Situação legal, sinistros e leilões requerem um provedor pago.</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{!variables.erroConsulta && variables.modoGratuito === true && !!variables.resultado}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "d48b42f9-6d60-5e6d-b482-705f16cdeee3",
+                  "type": "desktop",
+                  "top": 158,
+                  "left": 1,
+                  "width": 41,
+                  "height": 40,
+                  "componentId": "3fc2d207-413b-5652-8370-5cc21d1bf445",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "a168c21e-50db-5a47-b310-264881aca1c2",
+                  "type": "mobile",
+                  "top": 205,
+                  "left": 1,
+                  "width": 41,
+                  "height": 60,
+                  "componentId": "3fc2d207-413b-5652-8370-5cc21d1bf445",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
               "id": "fb767aac-e1ad-52b4-96f4-5f79ddeaba52",
               "name": "estadoVazio",
               "type": "Text",
@@ -1114,7 +1205,7 @@
                   "top": 320,
                   "left": 1,
                   "width": 41,
-                  "height": 500,
+                  "height": 560,
                   "componentId": "b122f126-b7e6-5d14-8185-43bd643ea36c",
                   "dimensionUnit": "count",
                   "updatedAt": "2026-08-16T12:00:00.000Z"
@@ -1125,7 +1216,7 @@
                   "top": 430,
                   "left": 1,
                   "width": 41,
-                  "height": 520,
+                  "height": 740,
                   "componentId": "b122f126-b7e6-5d14-8185-43bd643ea36c",
                   "dimensionUnit": "count",
                   "updatedAt": "2026-08-16T12:00:00.000Z"
@@ -2029,6 +2120,425 @@
               ]
             },
             {
+              "id": "dc4b3a0f-dfb4-55b1-b2ce-5d2447b23f62",
+              "name": "tituloFipeLive",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "text": {
+                  "value": "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Avaliação FIPE oficial <span style='color:#687076;font-weight:400'>(gratuita — selecione marca, modelo e ano)</span></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "27b6067b-8f7b-50fe-905e-6bee67043952",
+                  "type": "desktop",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 30,
+                  "componentId": "dc4b3a0f-dfb4-55b1-b2ce-5d2447b23f62",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "9644015c-8439-50c0-803b-898a38126921",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 39,
+                  "height": 30,
+                  "componentId": "dc4b3a0f-dfb4-55b1-b2ce-5d2447b23f62",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "199f0c8f-dadd-5cd3-a53c-2e9b4db84a42",
+              "name": "selectMarcaFipe",
+              "type": "DropDown",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "label": {
+                  "value": ""
+                },
+                "placeholder": {
+                  "value": "Marca"
+                },
+                "value": {
+                  "value": "{{}}"
+                },
+                "values": {
+                  "value": "{{(queries.fipeMarcas.data || []).map(m => m.codigo)}}"
+                },
+                "display_values": {
+                  "value": "{{(queries.fipeMarcas.data || []).map(m => m.nome)}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.fipeMarcas.isLoading}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "fb4e9f53-dadc-541d-8a01-ac7c325783ce",
+                  "type": "desktop",
+                  "top": 45,
+                  "left": 1,
+                  "width": 13,
+                  "height": 40,
+                  "componentId": "199f0c8f-dadd-5cd3-a53c-2e9b4db84a42",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "347c8777-96ea-5e1b-8b3c-98791e8cfa99",
+                  "type": "mobile",
+                  "top": 45,
+                  "left": 1,
+                  "width": 39,
+                  "height": 40,
+                  "componentId": "199f0c8f-dadd-5cd3-a53c-2e9b4db84a42",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "b9cdcd86-e541-5328-93b2-15a387e71e69",
+              "name": "selectModeloFipe",
+              "type": "DropDown",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "label": {
+                  "value": ""
+                },
+                "placeholder": {
+                  "value": "Modelo"
+                },
+                "value": {
+                  "value": "{{}}"
+                },
+                "values": {
+                  "value": "{{(queries.fipeModelos.data || []).map(m => m.codigo)}}"
+                },
+                "display_values": {
+                  "value": "{{(queries.fipeModelos.data || []).map(m => m.nome)}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.fipeModelos.isLoading}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "67e383a9-0653-5337-9dbf-cf0d308ff150",
+                  "type": "desktop",
+                  "top": 45,
+                  "left": 15,
+                  "width": 15,
+                  "height": 40,
+                  "componentId": "b9cdcd86-e541-5328-93b2-15a387e71e69",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "9648c366-58b8-5f32-a03f-10dd05b121eb",
+                  "type": "mobile",
+                  "top": 90,
+                  "left": 1,
+                  "width": 39,
+                  "height": 40,
+                  "componentId": "b9cdcd86-e541-5328-93b2-15a387e71e69",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "b8016b9e-afd2-5b7a-94be-315a58db7f34",
+              "name": "selectAnoFipe",
+              "type": "DropDown",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "label": {
+                  "value": ""
+                },
+                "placeholder": {
+                  "value": "Ano"
+                },
+                "value": {
+                  "value": "{{}}"
+                },
+                "values": {
+                  "value": "{{(queries.fipeAnos.data || []).map(a => a.codigo)}}"
+                },
+                "display_values": {
+                  "value": "{{(queries.fipeAnos.data || []).map(a => a.nome)}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.fipeAnos.isLoading}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "2ee02f69-b91d-58c5-aa1e-379b7fbeb5fc",
+                  "type": "desktop",
+                  "top": 45,
+                  "left": 31,
+                  "width": 9,
+                  "height": 40,
+                  "componentId": "b8016b9e-afd2-5b7a-94be-315a58db7f34",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "1d865c50-dea3-5a9b-b150-4bc3b1d7adb1",
+                  "type": "mobile",
+                  "top": 135,
+                  "left": 1,
+                  "width": 39,
+                  "height": 40,
+                  "componentId": "b8016b9e-afd2-5b7a-94be-315a58db7f34",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "aba3b26b-4d59-5990-90fd-62a273f80a09",
+              "name": "resultadoFipeLive",
+              "type": "Text",
+              "pageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
+              "parent": "b122f126-b7e6-5d14-8185-43bd643ea36c-3",
+              "properties": {
+                "text": {
+                  "value": "<div style='background:#eef4ff;border:1px solid #b2ccff;border-radius:10px;padding:14px 16px'>{{(queries.fipeValorSelecao.data && queries.fipeValorSelecao.data.valor) ? ('<span style=\"font-size:22px;font-weight:800;color:#1d4ed8\">' + queries.fipeValorSelecao.data.valor + '</span> <span style=\"color:#475467;font-size:13px\">— ' + queries.fipeValorSelecao.data.marca + ' ' + queries.fipeValorSelecao.data.modelo + ' ' + queries.fipeValorSelecao.data.anoModelo + ' • Código FIPE ' + queries.fipeValorSelecao.data.codigoFipe + ' • Ref. ' + queries.fipeValorSelecao.data.mesReferencia + '</span>') : '<span style=\"color:#687076;font-size:13px\">Selecione marca, modelo e ano acima para consultar o valor oficial da tabela FIPE.</span>'}}</div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "8ff6242c-523f-5daa-9a5b-dcb69b9d46bb",
+                  "type": "desktop",
+                  "top": 95,
+                  "left": 1,
+                  "width": 39,
+                  "height": 70,
+                  "componentId": "aba3b26b-4d59-5990-90fd-62a273f80a09",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "ff391e06-b9c4-5a41-a821-f2b19e2aeae3",
+                  "type": "mobile",
+                  "top": 180,
+                  "left": 1,
+                  "width": 39,
+                  "height": 90,
+                  "componentId": "aba3b26b-4d59-5990-90fd-62a273f80a09",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
               "id": "d6578cc9-8217-5a7d-a90c-23f31ddee355",
               "name": "resumoFipe",
               "type": "Text",
@@ -2098,7 +2608,7 @@
                 {
                   "id": "60f6457e-6473-5ef6-8779-17047b3f0e6b",
                   "type": "desktop",
-                  "top": 10,
+                  "top": 175,
                   "left": 1,
                   "width": 39,
                   "height": 90,
@@ -2109,7 +2619,7 @@
                 {
                   "id": "580ef5a9-fe6e-5ecc-bd67-dc19697ea2b4",
                   "type": "mobile",
-                  "top": 10,
+                  "top": 280,
                   "left": 1,
                   "width": 39,
                   "height": 140,
@@ -2189,7 +2699,7 @@
                 {
                   "id": "de0efaa4-f2b9-5ab4-89fa-fda42a651587",
                   "type": "desktop",
-                  "top": 105,
+                  "top": 270,
                   "left": 1,
                   "width": 39,
                   "height": 30,
@@ -2200,7 +2710,7 @@
                 {
                   "id": "26cc4fb7-2433-5d14-a96b-428de6015705",
                   "type": "mobile",
-                  "top": 155,
+                  "top": 425,
                   "left": 1,
                   "width": 39,
                   "height": 30,
@@ -2345,10 +2855,10 @@
                 {
                   "id": "6519e28e-eb2a-543f-bacd-77aea18c1a2e",
                   "type": "desktop",
-                  "top": 140,
+                  "top": 305,
                   "left": 1,
                   "width": 39,
-                  "height": 330,
+                  "height": 245,
                   "componentId": "5c332f4d-3d4f-55c6-a563-4c016f120d05",
                   "dimensionUnit": "count",
                   "updatedAt": "2026-08-16T12:00:00.000Z"
@@ -2356,10 +2866,10 @@
                 {
                   "id": "51e1ad08-98e9-50a6-bcdf-c39499a4ff41",
                   "type": "mobile",
-                  "top": 190,
+                  "top": 460,
                   "left": 1,
                   "width": 39,
-                  "height": 300,
+                  "height": 250,
                   "componentId": "5c332f4d-3d4f-55c6-a563-4c016f120d05",
                   "dimensionUnit": "count",
                   "updatedAt": "2026-08-16T12:00:00.000Z"
@@ -2374,7 +2884,7 @@
               "parent": null,
               "properties": {
                 "text": {
-                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;font-size:12px;color:#687076;line-height:1.6'><b style='color:#1b1f31'>Como conectar um provedor real</b><br/><b>Fase 1 — APIBrasil (grátis para validar; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a <i>API Placa Dados</i> e, em <b>Workspace settings → Workspace constants</b>, crie a constante <code>CONSULTA_VEICULAR_API_URL</code> = <code>https://gateway.apibrasil.io/api/v2/vehicles/dados</code> e os secrets <code>APIBRASIL_BEARER_TOKEN</code> e <code>APIBRASIL_DEVICE_TOKEN</code>.<br/><b>Fase 2 — provedor completo (sinistro/leilão):</b> contrate um agregador (Olho no Carro, Checkcred, Consultar Placa etc.), aponte <code>CONSULTA_VEICULAR_API_URL</code> para o endpoint dele com o secret <code>CONSULTA_VEICULAR_API_KEY</code> e ajuste o mapeamento na transformação da query <code>consultaProvedor</code>.<br/><br/>⚖️ Os dados de situação legal têm origem nas bases oficiais (Senatran/Detran, SNG, RENAJUD) intermediadas pelo provedor contratado. O valor FIPE é obtido da API pública Parallelum quando o código FIPE está disponível. Este aplicativo tem caráter informativo e não substitui a certidão oficial do Detran.</div>"
+                  "value": "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;font-size:12px;color:#687076;line-height:1.6'><b style='color:#1b1f31'>Fontes de dados</b><br/><b>Modo gratuito (padrão):</b> chassi decodificado com dados reais (padrão VIN/WMI + base pública NHTSA vPIC) e valores oficiais da tabela FIPE na aba correspondente (API pública Parallelum). Placa e Renavam usam dados simulados até haver provedor configurado.<br/><b>Fase 1 — APIBrasil (pago; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a <i>API Placa Dados</i> e, em <b>Workspace settings → Workspace constants</b>, crie a constante <code>CONSULTA_VEICULAR_API_URL</code> = <code>https://gateway.apibrasil.io/api/v2/vehicles/dados</code> e os secrets <code>APIBRASIL_BEARER_TOKEN</code> e <code>APIBRASIL_DEVICE_TOKEN</code>.<br/><b>Fase 2 — provedor completo (sinistro/leilão):</b> contrate um agregador (Olho no Carro, Checkcred, Consultar Placa etc.), aponte <code>CONSULTA_VEICULAR_API_URL</code> para o endpoint dele com o secret <code>CONSULTA_VEICULAR_API_KEY</code> e ajuste o mapeamento na transformação da query <code>consultaProvedor</code>.<br/><br/>⚖️ Os dados de situação legal têm origem nas bases oficiais (Senatran/Detran, SNG, RENAJUD) intermediadas pelo provedor contratado. O valor FIPE é obtido da API pública Parallelum quando o código FIPE está disponível. Este aplicativo tem caráter informativo e não substitui a certidão oficial do Detran.</div>"
                 },
                 "textFormat": {
                   "value": "html"
@@ -2436,7 +2946,7 @@
                 {
                   "id": "4d17feec-6cf1-54b8-9168-e15915465f3e",
                   "type": "desktop",
-                  "top": 835,
+                  "top": 895,
                   "left": 1,
                   "width": 41,
                   "height": 130,
@@ -2447,7 +2957,7 @@
                 {
                   "id": "68703a11-fa94-5818-b7b6-8992afb88c06",
                   "type": "mobile",
-                  "top": 965,
+                  "top": 1185,
                   "left": 1,
                   "width": 41,
                   "height": 190,
@@ -2495,6 +3005,57 @@
               "updatedAt": "2026-08-16T12:00:00.000Z"
             },
             {
+              "id": "7c2f5683-3113-5b9e-87b9-aa751db83839",
+              "name": "onSelect",
+              "index": 0,
+              "event": {
+                "eventId": "onSelect",
+                "actionId": "run-query",
+                "queryId": "01a3ce49-12e9-5531-8fbb-67c0cbf77d69",
+                "queryName": "fipeModelos",
+                "parameters": {}
+              },
+              "sourceId": "199f0c8f-dadd-5cd3-a53c-2e9b4db84a42",
+              "target": "component",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "8e5e31f5-d781-57ad-a3cf-9d10dff37eec",
+              "name": "onSelect",
+              "index": 0,
+              "event": {
+                "eventId": "onSelect",
+                "actionId": "run-query",
+                "queryId": "f15af566-d0a6-5d8f-b02c-8f25212c42b9",
+                "queryName": "fipeAnos",
+                "parameters": {}
+              },
+              "sourceId": "b9cdcd86-e541-5328-93b2-15a387e71e69",
+              "target": "component",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "6cef084e-4914-5ce2-a914-cfc00330a712",
+              "name": "onSelect",
+              "index": 0,
+              "event": {
+                "eventId": "onSelect",
+                "actionId": "run-query",
+                "queryId": "d88dceaf-bee7-5795-91ef-a27d54379169",
+                "queryName": "fipeValorSelecao",
+                "parameters": {}
+              },
+              "sourceId": "b8016b9e-afd2-5b7a-94be-315a58db7f34",
+              "target": "component",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
               "id": "03d154d2-11cc-5771-b2ff-ccd4c1d7f185",
               "name": "onEnterPressed",
               "index": 0,
@@ -2517,7 +3078,7 @@
               "id": "3dfdbdb1-0365-52bf-a032-320d74a8e71f",
               "name": "executarConsulta",
               "options": {
-                "code": "// Orquestra a consulta veicular: valida a entrada, detecta o tipo de\n// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o\n// modo (provedor real ou demonstração) e consolida o resultado no formato\n// canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nlet subtipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'antiga';\n} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'mercosul';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'\n  );\n  return null;\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('subtipoPlaca', subtipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\nconst urlProvedor =\n  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL\n    ? String(constants.CONSULTA_VEICULAR_API_URL)\n    : '';\nconst apiConfigurada = urlProvedor.indexOf('http') === 0;\n// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado\n// (headers Bearer + DeviceToken; consulta somente por placa).\nconst modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;\nawait actions.setVariable('modoDemo', !apiConfigurada);\n\nif (modoApiBrasil && tipo !== 'placa') {\n  await actions.setVariable(\n    'erroConsulta',\n    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'\n  );\n  return null;\n}\n\nlet resultado = null;\ntry {\n  if (modoApiBrasil) {\n    await queries.consultaApiBrasil.run();\n    resultado = queries.consultaApiBrasil.getData();\n  } else if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = queries.consultaProvedor.getData();\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });\n    resultado = queries.consultaDemo.getData();\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.\nconst semValorFipe = !(resultado.fipe && resultado.fipe.valor);\nif (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nreturn resultado;\n",
+                "code": "// Orquestra a consulta veicular: valida a entrada, detecta o tipo de\n// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o\n// modo (provedor real ou demonstração) e consolida o resultado no formato\n// canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nlet subtipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'antiga';\n} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'mercosul';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'\n  );\n  return null;\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('subtipoPlaca', subtipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\nconst urlProvedor =\n  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL\n    ? String(constants.CONSULTA_VEICULAR_API_URL)\n    : '';\nconst apiConfigurada = urlProvedor.indexOf('http') === 0;\n// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado\n// (headers Bearer + DeviceToken; consulta somente por placa).\nconst modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;\n// Modo gratuito: sem provedor configurado, um chassi é decodificado com dados\n// reais (tabela WMI local + NHTSA vPIC); placa/Renavam caem no modo demo.\nconst modoGratuito = !apiConfigurada && tipo === 'chassi';\nawait actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);\nawait actions.setVariable('modoGratuito', modoGratuito);\n\nif (modoGratuito) {\n  // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.\n  const TABELA_WMI = {\n    '9BW': ['Volkswagen', 'Brasil'], '9BD': ['Fiat', 'Brasil'], '9BG': ['Chevrolet', 'Brasil'],\n    '9BF': ['Ford', 'Brasil'], '9BR': ['Toyota', 'Brasil'], '93H': ['Honda', 'Brasil'],\n    '93Y': ['Renault', 'Brasil'], '9BM': ['Mercedes-Benz', 'Brasil'], '95P': ['CAOA/Hyundai', 'Brasil'],\n    '9BH': ['Hyundai', 'Brasil'], '93X': ['Mitsubishi', 'Brasil'], '94D': ['Nissan', 'Brasil'],\n    '8AW': ['Volkswagen', 'Argentina'], '8AP': ['Fiat', 'Argentina'], '8AG': ['Chevrolet', 'Argentina'],\n    '8AF': ['Ford', 'Argentina'], '8A1': ['Renault', 'Argentina'], '8AJ': ['Toyota', 'Argentina'],\n    '9C2': ['Honda Motos', 'Brasil'], '9C6': ['Yamaha', 'Brasil'], '9CD': ['Suzuki Motos', 'Brasil'],\n    '9BS': ['Scania', 'Brasil'], '953': ['VW Caminhões', 'Brasil'], '9BV': ['Volvo', 'Brasil'],\n    '988': ['Jeep/Stellantis', 'Brasil'], '98R': ['Chery/CAOA', 'Brasil'], '95Y': ['BYD', 'Brasil'],\n  };\n  const PAIS_POR_INICIAL = {\n    '9': 'Brasil', '8': 'América do Sul', '3': 'México/América do Norte', '1': 'EUA', '4': 'EUA',\n    '5': 'EUA', '2': 'Canadá', 'W': 'Alemanha', 'J': 'Japão', 'K': 'Coreia do Sul', 'L': 'China',\n    'S': 'Reino Unido', 'V': 'França/Espanha', 'Z': 'Itália', 'Y': 'Suécia/Finlândia', 'T': 'Europa Central',\n  };\n  const MAPA_ANO = {\n    A: 1980, B: 1981, C: 1982, D: 1983, E: 1984, F: 1985, G: 1986, H: 1987, J: 1988, K: 1989,\n    L: 1990, M: 1991, N: 1992, P: 1993, R: 1994, S: 1995, T: 1996, V: 1997, W: 1998, X: 1999,\n    Y: 2000, 1: 2001, 2: 2002, 3: 2003, 4: 2004, 5: 2005, 6: 2006, 7: 2007, 8: 2008, 9: 2009,\n  };\n  const wmi = entrada.slice(0, 3);\n  const local = TABELA_WMI[wmi] || null;\n  const pais = local ? local[1] : PAIS_POR_INICIAL[entrada[0]] || 'Não identificado';\n  let anoLocal = MAPA_ANO[entrada[9]] !== undefined ? MAPA_ANO[entrada[9]] : null;\n  if (anoLocal) {\n    const anoAtual = new Date().getFullYear();\n    while (anoLocal + 30 <= anoAtual + 1) anoLocal += 30;\n  }\n\n  let vpic = null;\n  try {\n    await queries.decodificarVin.run();\n    vpic = queries.decodificarVin.getData();\n  } catch (erro) {\n    // vPIC é complementar; a decodificação local cobre fabricante, país e ano.\n  }\n  vpic = vpic || {};\n\n  const naoVerificado = 'Não coberto na consulta gratuita';\n  const resultadoGratuito = {\n    veiculo: {\n      chassi: entrada,\n      renavam: '—',\n      placa: '—',\n      marca: vpic.marca || (local ? local[0] : '—'),\n      modelo: vpic.modelo || (vpic.fabricante && vpic.fabricante !== vpic.marca ? vpic.fabricante : '—'),\n      anoFabricacao: '—',\n      anoModelo: vpic.anoModelo || anoLocal || '—',\n      cor: '—',\n      combustivel: vpic.combustivel || '—',\n      codigoCombustivel: null,\n      municipio: '—',\n      uf: '—',\n      codigoFipe: '',\n      procedencia: pais,\n      tipo: vpic.tipoVeiculo || '—',\n      situacao: 'Estrutura do chassi válida (decodificação WMI/vPIC)',\n    },\n    situacaoLegal: {\n      status: 'Verificação parcial',\n      rouboFurto: { indicador: null, detalhes: naoVerificado + ' — requer provedor com acesso às bases oficiais.' },\n      gravame: { status: naoVerificado, financeira: null, dataInclusao: null },\n      debitos: { ipva: naoVerificado, licenciamento: naoVerificado, multas: naoVerificado },\n      renajud: naoVerificado,\n      restricoes: [],\n    },\n    sinistros: { indicador: null, ocorrencias: [] },\n    leiloes: { indicador: null, ocorrencias: [] },\n    fipe: { codigoFipe: '', valor: '', mesReferencia: '', historico: [] },\n    metadados: {\n      fonte: 'Decodificação gratuita do chassi (tabela WMI + NHTSA vPIC)',\n      modoDemo: false,\n      consultadoEm: new Date().toLocaleString('pt-BR'),\n    },\n  };\n  await actions.setVariable('resultado', resultadoGratuito);\n  return resultadoGratuito;\n}\n\nif (modoApiBrasil && tipo !== 'placa') {\n  await actions.setVariable(\n    'erroConsulta',\n    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'\n  );\n  return null;\n}\n\nlet resultado = null;\ntry {\n  if (modoApiBrasil) {\n    await queries.consultaApiBrasil.run();\n    resultado = queries.consultaApiBrasil.getData();\n  } else if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = queries.consultaProvedor.getData();\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });\n    resultado = queries.consultaDemo.getData();\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.\nconst semValorFipe = !(resultado.fipe && resultado.fipe.valor);\nif (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nreturn resultado;\n",
                 "parameters": [],
                 "runOnPageLoad": false,
                 "showSuccessNotification": false,
@@ -2635,6 +3196,196 @@
                 "transformationLanguage": "javascript",
                 "enableTransformation": true,
                 "transformation": "// Normaliza a resposta da APIBrasil (API Placa Dados — Fase 1) para o\n// contrato canônico do app. A resposta usual tem o formato\n// { error, message, response: { chassi, marca, modelo, ano, anoModelo, cor,\n//   municipio, uf, situacao, extra: {...}, fipe: { dados: [{ codigo_fipe,\n//   texto_valor, mes_referencia, texto_marca, texto_modelo }] } } }.\nif (data && data.error === true) {\n  throw new Error(data.message || 'A APIBrasil retornou erro para esta consulta.');\n}\nconst raiz = (data && (data.response || data.dados)) || data || {};\nconst v = raiz.veiculo || raiz;\nconst extra = v.extra || raiz.extra || {};\nconst fipeBruto = raiz.fipe && (raiz.fipe.dados || raiz.fipe);\nconst fipeItem = (Array.isArray(fipeBruto) ? fipeBruto[0] : fipeBruto) || {};\n\nconst texto = (valor, padrao) => {\n  if (valor === undefined || valor === null || valor === '') return padrao;\n  return String(valor);\n};\n\n// Situação SINESP/base estadual: \"Sem restrição\", \"Roubo/Furto\" etc.\nconst situacao = texto(v.situacao || extra.situacao_veiculo, '');\nconst situacaoMin = situacao.toLowerCase();\nlet indicadorRouboFurto = null;\nif (situacaoMin.indexOf('roubo') !== -1 || situacaoMin.indexOf('furto') !== -1) indicadorRouboFurto = true;\nelse if (situacaoMin.indexOf('sem restri') !== -1 || situacaoMin.indexOf('circula') !== -1) indicadorRouboFurto = false;\n\n// Restrições genéricas dos agregados (restricao_1..restricao_4 e afins).\nconst restricoes = [];\n[v, extra].forEach((origem) => {\n  Object.keys(origem || {}).forEach((chave) => {\n    if (/^restricao/i.test(chave)) {\n      const valor = texto(origem[chave], '');\n      if (valor && !/^sem restri/i.test(valor) && valor !== '0') {\n        restricoes.push({ tipo: valor, descricao: 'Apontamento retornado pela base consultada.', orgao: '—' });\n      }\n    }\n  });\n});\n\nreturn {\n  veiculo: {\n    chassi: texto(v.chassi || extra.chassi, '—'),\n    renavam: texto(v.renavam || extra.renavam, '—'),\n    placa: texto(v.placa, variables.identificadorConsulta),\n    marca: texto(v.marca || v.MARCA || fipeItem.texto_marca, '—'),\n    modelo: texto(v.modelo || v.MODELO || fipeItem.texto_modelo, '—'),\n    anoFabricacao: texto(v.ano || v.anoFabricacao || extra.ano_fabricacao, '—'),\n    anoModelo: texto(v.anoModelo || v.ano_modelo || extra.ano_modelo || fipeItem.ano_modelo, ''),\n    cor: texto(v.cor || extra.cor_veiculo, '—'),\n    combustivel: texto(v.combustivel || extra.combustivel || fipeItem.combustivel, '—'),\n    codigoCombustivel: null,\n    municipio: texto(v.municipio || extra.municipio, '—'),\n    uf: texto(v.uf || extra.uf || extra.uf_placa, '—'),\n    codigoFipe: texto(fipeItem.codigo_fipe || fipeItem.codigoFipe || v.codigo_fipe, ''),\n    procedencia: texto(v.procedencia || extra.procedencia, '—'),\n    tipo: texto(v.tipo_veiculo || extra.tipo_veiculo || v.segmento, '—'),\n    situacao: texto(situacao, '—'),\n  },\n  situacaoLegal: {\n    status: indicadorRouboFurto || restricoes.length > 0 ? 'Com restrições' : indicadorRouboFurto === false ? 'Regular' : 'Verificação parcial',\n    rouboFurto: {\n      indicador: indicadorRouboFurto,\n      detalhes:\n        indicadorRouboFurto === true\n          ? 'Constam registros de roubo ou furto na base consultada.'\n          : indicadorRouboFurto === false\n          ? 'Nada consta na base consultada.'\n          : 'Indicador não retornado pelo plano atual do provedor.',\n    },\n    gravame: {\n      status: texto(extra.gravame || v.gravame, 'Não informado'),\n      financeira: null,\n      dataInclusao: null,\n    },\n    debitos: {\n      ipva: 'Não informado',\n      licenciamento: 'Não informado',\n      multas: 'Não informado',\n    },\n    renajud: 'Não informado',\n    restricoes: restricoes,\n  },\n  // Fase 1 (APIBrasil): indicadores de sinistro e leilão não são cobertos —\n  // ficam como null para a interface exibir o estado \"não coberto\".\n  sinistros: { indicador: null, ocorrencias: [] },\n  leiloes: { indicador: null, ocorrencias: [] },\n  fipe: {\n    codigoFipe: texto(fipeItem.codigo_fipe || fipeItem.codigoFipe, ''),\n    valor: texto(fipeItem.texto_valor || fipeItem.valor, ''),\n    mesReferencia: texto(fipeItem.mes_referencia || fipeItem.mesReferencia, ''),\n    historico: [],\n  },\n  metadados: {\n    fonte: 'APIBrasil — API Placa Dados (Fase 1)',\n    modoDemo: false,\n    consultadoEm: new Date().toLocaleString('pt-BR'),\n  },\n};\n",
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "6a7b1134-bee3-54df-af68-e5bc3b8e32c5",
+              "name": "decodificarVin",
+              "options": {
+                "method": "get",
+                "url": "{{'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/' + (variables.identificadorConsulta || '') + '?format=json'}}",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": null,
+                "body_toggle": false,
+                "transformationLanguage": "javascript",
+                "enableTransformation": true,
+                "transformation": "// Normaliza a resposta do NHTSA vPIC (DecodeVinValues).\nconst linha = (data && data.Results && data.Results[0]) || {};\nconst texto = (v) => (v === undefined || v === null ? '' : String(v).trim());\nreturn {\n  marca: texto(linha.Make),\n  fabricante: texto(linha.Manufacturer),\n  modelo: texto(linha.Model),\n  anoModelo: texto(linha.ModelYear),\n  paisFabrica: texto(linha.PlantCountry),\n  tipoVeiculo: texto(linha.VehicleType),\n  combustivel: texto(linha.FuelTypePrimary),\n};\n",
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "1de9d537-92f2-5287-baad-6afe8bf8e072",
+              "name": "fipeMarcas",
+              "options": {
+                "method": "get",
+                "url": "https://parallelum.com.br/fipe/api/v1/carros/marcas",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": null,
+                "body_toggle": false,
+                "transformationLanguage": "javascript",
+                "enableTransformation": false,
+                "transformation": null,
+                "runOnPageLoad": true,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "01a3ce49-12e9-5531-8fbb-67c0cbf77d69",
+              "name": "fipeModelos",
+              "options": {
+                "method": "get",
+                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos'}}",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": null,
+                "body_toggle": false,
+                "transformationLanguage": "javascript",
+                "enableTransformation": true,
+                "transformation": "return (data && data.modelos) || [];\n",
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "f15af566-d0a6-5d8f-b02c-8f25212c42b9",
+              "name": "fipeAnos",
+              "options": {
+                "method": "get",
+                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos'}}",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": null,
+                "body_toggle": false,
+                "transformationLanguage": "javascript",
+                "enableTransformation": false,
+                "transformation": null,
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "d88dceaf-bee7-5795-91ef-a27d54379169",
+              "name": "fipeValorSelecao",
+              "options": {
+                "method": "get",
+                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos/' + components.selectAnoFipe.value}}",
+                "url_params": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "headers": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "body": [
+                  [
+                    "",
+                    ""
+                  ]
+                ],
+                "json_body": null,
+                "body_toggle": false,
+                "transformationLanguage": "javascript",
+                "enableTransformation": true,
+                "transformation": "// Normaliza a resposta da FIPE (Parallelum v1).\nif (!data || !data.Valor) return null;\nreturn {\n  valor: data.Valor,\n  marca: data.Marca,\n  modelo: data.Modelo,\n  anoModelo: data.AnoModelo,\n  combustivel: data.Combustivel,\n  codigoFipe: data.CodigoFipe,\n  mesReferencia: data.MesReferencia,\n};\n",
                 "runOnPageLoad": false,
                 "showSuccessNotification": false,
                 "notificationDuration": 5000

@@ -28,6 +28,11 @@ Q_PROVEDOR = uid("q-consultaProvedor")
 Q_APIBRASIL = uid("q-consultaApiBrasil")
 Q_DEMO = uid("q-consultaDemo")
 Q_FIPE = uid("q-consultarFipe")
+Q_DECODE_VIN = uid("q-decodificarVin")
+Q_FIPE_MARCAS = uid("q-fipeMarcas")
+Q_FIPE_MODELOS = uid("q-fipeModelos")
+Q_FIPE_ANOS = uid("q-fipeAnos")
+Q_FIPE_VALOR = uid("q-fipeValorSelecao")
 
 # ---------------------------------------------------------------------------
 # Códigos JavaScript das queries
@@ -78,7 +83,93 @@ const apiConfigurada = urlProvedor.indexOf('http') === 0;
 // Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado
 // (headers Bearer + DeviceToken; consulta somente por placa).
 const modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;
-await actions.setVariable('modoDemo', !apiConfigurada);
+// Modo gratuito: sem provedor configurado, um chassi é decodificado com dados
+// reais (tabela WMI local + NHTSA vPIC); placa/Renavam caem no modo demo.
+const modoGratuito = !apiConfigurada && tipo === 'chassi';
+await actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);
+await actions.setVariable('modoGratuito', modoGratuito);
+
+if (modoGratuito) {
+  // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.
+  const TABELA_WMI = {
+    '9BW': ['Volkswagen', 'Brasil'], '9BD': ['Fiat', 'Brasil'], '9BG': ['Chevrolet', 'Brasil'],
+    '9BF': ['Ford', 'Brasil'], '9BR': ['Toyota', 'Brasil'], '93H': ['Honda', 'Brasil'],
+    '93Y': ['Renault', 'Brasil'], '9BM': ['Mercedes-Benz', 'Brasil'], '95P': ['CAOA/Hyundai', 'Brasil'],
+    '9BH': ['Hyundai', 'Brasil'], '93X': ['Mitsubishi', 'Brasil'], '94D': ['Nissan', 'Brasil'],
+    '8AW': ['Volkswagen', 'Argentina'], '8AP': ['Fiat', 'Argentina'], '8AG': ['Chevrolet', 'Argentina'],
+    '8AF': ['Ford', 'Argentina'], '8A1': ['Renault', 'Argentina'], '8AJ': ['Toyota', 'Argentina'],
+    '9C2': ['Honda Motos', 'Brasil'], '9C6': ['Yamaha', 'Brasil'], '9CD': ['Suzuki Motos', 'Brasil'],
+    '9BS': ['Scania', 'Brasil'], '953': ['VW Caminhões', 'Brasil'], '9BV': ['Volvo', 'Brasil'],
+    '988': ['Jeep/Stellantis', 'Brasil'], '98R': ['Chery/CAOA', 'Brasil'], '95Y': ['BYD', 'Brasil'],
+  };
+  const PAIS_POR_INICIAL = {
+    '9': 'Brasil', '8': 'América do Sul', '3': 'México/América do Norte', '1': 'EUA', '4': 'EUA',
+    '5': 'EUA', '2': 'Canadá', 'W': 'Alemanha', 'J': 'Japão', 'K': 'Coreia do Sul', 'L': 'China',
+    'S': 'Reino Unido', 'V': 'França/Espanha', 'Z': 'Itália', 'Y': 'Suécia/Finlândia', 'T': 'Europa Central',
+  };
+  const MAPA_ANO = {
+    A: 1980, B: 1981, C: 1982, D: 1983, E: 1984, F: 1985, G: 1986, H: 1987, J: 1988, K: 1989,
+    L: 1990, M: 1991, N: 1992, P: 1993, R: 1994, S: 1995, T: 1996, V: 1997, W: 1998, X: 1999,
+    Y: 2000, 1: 2001, 2: 2002, 3: 2003, 4: 2004, 5: 2005, 6: 2006, 7: 2007, 8: 2008, 9: 2009,
+  };
+  const wmi = entrada.slice(0, 3);
+  const local = TABELA_WMI[wmi] || null;
+  const pais = local ? local[1] : PAIS_POR_INICIAL[entrada[0]] || 'Não identificado';
+  let anoLocal = MAPA_ANO[entrada[9]] !== undefined ? MAPA_ANO[entrada[9]] : null;
+  if (anoLocal) {
+    const anoAtual = new Date().getFullYear();
+    while (anoLocal + 30 <= anoAtual + 1) anoLocal += 30;
+  }
+
+  let vpic = null;
+  try {
+    await queries.decodificarVin.run();
+    vpic = queries.decodificarVin.getData();
+  } catch (erro) {
+    // vPIC é complementar; a decodificação local cobre fabricante, país e ano.
+  }
+  vpic = vpic || {};
+
+  const naoVerificado = 'Não coberto na consulta gratuita';
+  const resultadoGratuito = {
+    veiculo: {
+      chassi: entrada,
+      renavam: '—',
+      placa: '—',
+      marca: vpic.marca || (local ? local[0] : '—'),
+      modelo: vpic.modelo || (vpic.fabricante && vpic.fabricante !== vpic.marca ? vpic.fabricante : '—'),
+      anoFabricacao: '—',
+      anoModelo: vpic.anoModelo || anoLocal || '—',
+      cor: '—',
+      combustivel: vpic.combustivel || '—',
+      codigoCombustivel: null,
+      municipio: '—',
+      uf: '—',
+      codigoFipe: '',
+      procedencia: pais,
+      tipo: vpic.tipoVeiculo || '—',
+      situacao: 'Estrutura do chassi válida (decodificação WMI/vPIC)',
+    },
+    situacaoLegal: {
+      status: 'Verificação parcial',
+      rouboFurto: { indicador: null, detalhes: naoVerificado + ' — requer provedor com acesso às bases oficiais.' },
+      gravame: { status: naoVerificado, financeira: null, dataInclusao: null },
+      debitos: { ipva: naoVerificado, licenciamento: naoVerificado, multas: naoVerificado },
+      renajud: naoVerificado,
+      restricoes: [],
+    },
+    sinistros: { indicador: null, ocorrencias: [] },
+    leiloes: { indicador: null, ocorrencias: [] },
+    fipe: { codigoFipe: '', valor: '', mesReferencia: '', historico: [] },
+    metadados: {
+      fonte: 'Decodificação gratuita do chassi (tabela WMI + NHTSA vPIC)',
+      modoDemo: false,
+      consultadoEm: new Date().toLocaleString('pt-BR'),
+    },
+  };
+  await actions.setVariable('resultado', resultadoGratuito);
+  return resultadoGratuito;
+}
 
 if (modoApiBrasil && tipo !== 'placa') {
   await actions.setVariable(
@@ -822,6 +913,19 @@ components.append(
 
 components.append(
     texto_html(
+        "bannerGratuito",
+        "<div style='background:#eef4ff;border:1px solid #b2ccff;border-radius:8px;padding:10px 14px;"
+        "color:#1d4ed8;font-size:13px'>🆓 <b>Modo gratuito:</b> chassi decodificado com dados reais "
+        "(padrão VIN + base NHTSA vPIC) e tabela FIPE oficial na aba correspondente. Situação legal, "
+        "sinistros e leilões requerem um provedor pago.</div>",
+        (1, 158, 41, 40),
+        (1, 205, 41, 60),
+        visibility="{{!variables.erroConsulta && variables.modoGratuito === true && !!variables.resultado}}",
+    )
+)
+
+components.append(
+    texto_html(
         "estadoVazio",
         "<div style='background:#ffffff;border:1px dashed #c1c8cd;border-radius:12px;padding:28px;"
         "text-align:center;color:#687076'>"
@@ -891,8 +995,8 @@ components.append(
 abas = component(
     "abasResultado",
     "Tabs",
-    (1, 320, 41, 500),
-    (1, 430, 41, 520),
+    (1, 320, 41, 560),
+    (1, 430, 41, 740),
     properties={
         "tabs": {
             "value": '{{[{"title":"Situação legal","id":"0"},{"title":"Sinistros","id":"1"},{"title":"Leilões","id":"2"},{"title":"Tabela FIPE","id":"3"}]}}'
@@ -1020,6 +1124,88 @@ components.append(
     )
 )
 
+def dropdown_fipe(name, placeholder, values_expr, display_expr, loading_expr, desktop, mobile):
+    return component(
+        name,
+        "DropDown",
+        desktop,
+        mobile,
+        parent=f"{TABS_ID}-3",
+        properties={
+            "label": {"value": ""},
+            "placeholder": {"value": placeholder},
+            "value": {"value": "{{}}"},
+            "values": {"value": values_expr},
+            "display_values": {"value": display_expr},
+            "loadingState": {"value": loading_expr},
+            "visibility": {"value": "{{true}}"},
+            "disabledState": {"value": "{{false}}"},
+        },
+        styles={"borderRadius": {"value": "8"}},
+    )
+
+
+components.append(
+    texto_html(
+        "tituloFipeLive",
+        "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Avaliação FIPE oficial "
+        "<span style='color:#687076;font-weight:400'>(gratuita — selecione marca, modelo e ano)</span></div>",
+        (1, 10, 39, 30),
+        (1, 10, 39, 30),
+        parent=f"{TABS_ID}-3",
+    )
+)
+components.append(
+    dropdown_fipe(
+        "selectMarcaFipe",
+        "Marca",
+        "{{(queries.fipeMarcas.data || []).map(m => m.codigo)}}",
+        "{{(queries.fipeMarcas.data || []).map(m => m.nome)}}",
+        "{{queries.fipeMarcas.isLoading}}",
+        (1, 45, 13, 40),
+        (1, 45, 39, 40),
+    )
+)
+components.append(
+    dropdown_fipe(
+        "selectModeloFipe",
+        "Modelo",
+        "{{(queries.fipeModelos.data || []).map(m => m.codigo)}}",
+        "{{(queries.fipeModelos.data || []).map(m => m.nome)}}",
+        "{{queries.fipeModelos.isLoading}}",
+        (15, 45, 15, 40),
+        (1, 90, 39, 40),
+    )
+)
+components.append(
+    dropdown_fipe(
+        "selectAnoFipe",
+        "Ano",
+        "{{(queries.fipeAnos.data || []).map(a => a.codigo)}}",
+        "{{(queries.fipeAnos.data || []).map(a => a.nome)}}",
+        "{{queries.fipeAnos.isLoading}}",
+        (31, 45, 9, 40),
+        (1, 135, 39, 40),
+    )
+)
+components.append(
+    texto_html(
+        "resultadoFipeLive",
+        "<div style='background:#eef4ff;border:1px solid #b2ccff;border-radius:10px;padding:14px 16px'>"
+        "{{(queries.fipeValorSelecao.data && queries.fipeValorSelecao.data.valor) ? "
+        "('<span style=\"font-size:22px;font-weight:800;color:#1d4ed8\">' + queries.fipeValorSelecao.data.valor + '</span>"
+        " <span style=\"color:#475467;font-size:13px\">— ' + queries.fipeValorSelecao.data.marca + ' ' + "
+        "queries.fipeValorSelecao.data.modelo + ' ' + queries.fipeValorSelecao.data.anoModelo + "
+        "' • Código FIPE ' + queries.fipeValorSelecao.data.codigoFipe + ' • Ref. ' + "
+        "queries.fipeValorSelecao.data.mesReferencia + '</span>') : "
+        "'<span style=\"color:#687076;font-size:13px\">Selecione marca, modelo e ano acima para consultar o valor oficial da tabela FIPE.</span>'}}"
+        "</div>",
+        (1, 95, 39, 70),
+        (1, 180, 39, 90),
+        parent=f"{TABS_ID}-3",
+    )
+)
+
 components.append(
     texto_html(
         "resumoFipe",
@@ -1034,8 +1220,8 @@ components.append(
         "<div style='font-size:11px;text-transform:uppercase;color:#687076'>Mês de referência</div>"
         f"<div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{{{({R} && {R}.fipe.mesReferencia) || '—'}}}}</div></div>"
         "</div>",
-        (1, 10, 39, 90),
-        (1, 10, 39, 140),
+        (1, 175, 39, 90),
+        (1, 280, 39, 140),
         parent=f"{TABS_ID}-3",
     )
 )
@@ -1043,8 +1229,8 @@ components.append(
     texto_html(
         "tituloHistoricoFipe",
         "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Histórico de valores (12 meses)</div>",
-        (1, 105, 39, 30),
-        (1, 155, 39, 30),
+        (1, 270, 39, 30),
+        (1, 425, 39, 30),
         parent=f"{TABS_ID}-3",
     )
 )
@@ -1053,9 +1239,9 @@ components.append(
         "tabelaHistoricoFipe",
         f"{{{{(({R} && {R}.fipe.historico) || [])}}}}",
         [("Mês de referência", "mes"), ("Valor", "valor")],
-        (1, 140, 39, 330),
+        (1, 305, 39, 245),
         parent=f"{TABS_ID}-3",
-        mobile=(1, 190, 39, 300),
+        mobile=(1, 460, 39, 250),
     )
 )
 
@@ -1064,8 +1250,11 @@ components.append(
         "rodapeInfo",
         "<div style='background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;padding:14px 16px;"
         "font-size:12px;color:#687076;line-height:1.6'>"
-        "<b style='color:#1b1f31'>Como conectar um provedor real</b><br/>"
-        "<b>Fase 1 — APIBrasil (grátis para validar; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a "
+        "<b style='color:#1b1f31'>Fontes de dados</b><br/>"
+        "<b>Modo gratuito (padrão):</b> chassi decodificado com dados reais (padrão VIN/WMI + base pública NHTSA vPIC) "
+        "e valores oficiais da tabela FIPE na aba correspondente (API pública Parallelum). Placa e Renavam usam dados "
+        "simulados até haver provedor configurado.<br/>"
+        "<b>Fase 1 — APIBrasil (pago; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a "
         "<i>API Placa Dados</i> e, em <b>Workspace settings → Workspace constants</b>, crie a constante "
         "<code>CONSULTA_VEICULAR_API_URL</code> = <code>https://gateway.apibrasil.io/api/v2/vehicles/dados</code> e os secrets "
         "<code>APIBRASIL_BEARER_TOKEN</code> e <code>APIBRASIL_DEVICE_TOKEN</code>.<br/>"
@@ -1076,8 +1265,8 @@ components.append(
         "O valor FIPE é obtido da API pública Parallelum quando o código FIPE está disponível. "
         "Este aplicativo tem caráter informativo e não substitui a certidão oficial do Detran."
         "</div>",
-        (1, 835, 41, 130),
-        (1, 965, 41, 190),
+        (1, 895, 41, 130),
+        (1, 1185, 41, 190),
     )
 )
 
@@ -1209,6 +1398,146 @@ data_queries = [
         "updatedAt": TS,
     },
     {
+        "id": Q_DECODE_VIN,
+        "name": "decodificarVin",
+        "options": {
+            "method": "get",
+            "url": "{{'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/' + (variables.identificadorConsulta || '') + '?format=json'}}",
+            "url_params": [["", ""]],
+            "headers": [["", ""]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": (
+                "// Normaliza a resposta do NHTSA vPIC (DecodeVinValues).\n"
+                "const linha = (data && data.Results && data.Results[0]) || {};\n"
+                "const texto = (v) => (v === undefined || v === null ? '' : String(v).trim());\n"
+                "return {\n"
+                "  marca: texto(linha.Make),\n"
+                "  fabricante: texto(linha.Manufacturer),\n"
+                "  modelo: texto(linha.Model),\n"
+                "  anoModelo: texto(linha.ModelYear),\n"
+                "  paisFabrica: texto(linha.PlantCountry),\n"
+                "  tipoVeiculo: texto(linha.VehicleType),\n"
+                "  combustivel: texto(linha.FuelTypePrimary),\n"
+                "};\n"
+            ),
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_FIPE_MARCAS,
+        "name": "fipeMarcas",
+        "options": {
+            "method": "get",
+            "url": "https://parallelum.com.br/fipe/api/v1/carros/marcas",
+            "url_params": [["", ""]],
+            "headers": [["", ""]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": False,
+            "transformation": None,
+            "runOnPageLoad": True,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_FIPE_MODELOS,
+        "name": "fipeModelos",
+        "options": {
+            "method": "get",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos'}}",
+            "url_params": [["", ""]],
+            "headers": [["", ""]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": "return (data && data.modelos) || [];\n",
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_FIPE_ANOS,
+        "name": "fipeAnos",
+        "options": {
+            "method": "get",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos'}}",
+            "url_params": [["", ""]],
+            "headers": [["", ""]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": False,
+            "transformation": None,
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_FIPE_VALOR,
+        "name": "fipeValorSelecao",
+        "options": {
+            "method": "get",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos/' + components.selectAnoFipe.value}}",
+            "url_params": [["", ""]],
+            "headers": [["", ""]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": (
+                "// Normaliza a resposta da FIPE (Parallelum v1).\n"
+                "if (!data || !data.Valor) return null;\n"
+                "return {\n"
+                "  valor: data.Valor,\n"
+                "  marca: data.Marca,\n"
+                "  modelo: data.Modelo,\n"
+                "  anoModelo: data.AnoModelo,\n"
+                "  combustivel: data.Combustivel,\n"
+                "  codigoFipe: data.CodigoFipe,\n"
+                "  mesReferencia: data.MesReferencia,\n"
+                "};\n"
+            ),
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
         "id": Q_FIPE,
         "name": "consultarFipe",
         "options": {
@@ -1254,6 +1583,57 @@ events = [
             "parameters": {},
         },
         "sourceId": COMP_BY_NAME["botaoConsultar"]["id"],
+        "target": "component",
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": uid("event-marca-fipe"),
+        "name": "onSelect",
+        "index": 0,
+        "event": {
+            "eventId": "onSelect",
+            "actionId": "run-query",
+            "queryId": Q_FIPE_MODELOS,
+            "queryName": "fipeModelos",
+            "parameters": {},
+        },
+        "sourceId": COMP_BY_NAME["selectMarcaFipe"]["id"],
+        "target": "component",
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": uid("event-modelo-fipe"),
+        "name": "onSelect",
+        "index": 0,
+        "event": {
+            "eventId": "onSelect",
+            "actionId": "run-query",
+            "queryId": Q_FIPE_ANOS,
+            "queryName": "fipeAnos",
+            "parameters": {},
+        },
+        "sourceId": COMP_BY_NAME["selectModeloFipe"]["id"],
+        "target": "component",
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": uid("event-ano-fipe"),
+        "name": "onSelect",
+        "index": 0,
+        "event": {
+            "eventId": "onSelect",
+            "actionId": "run-query",
+            "queryId": Q_FIPE_VALOR,
+            "queryName": "fipeValorSelecao",
+            "parameters": {},
+        },
+        "sourceId": COMP_BY_NAME["selectAnoFipe"]["id"],
         "target": "component",
         "appVersionId": VERSION_ID,
         "createdAt": TS,
