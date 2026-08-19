@@ -33,6 +33,9 @@ Q_FIPE_MARCAS = uid("q-fipeMarcas")
 Q_FIPE_MODELOS = uid("q-fipeModelos")
 Q_FIPE_ANOS = uid("q-fipeAnos")
 Q_FIPE_VALOR = uid("q-fipeValorSelecao")
+Q_SEL_MARCA = uid("q-aoSelecionarMarcaFipe")
+Q_SEL_MODELO = uid("q-aoSelecionarModeloFipe")
+Q_SEL_ANO = uid("q-aoSelecionarAnoFipe")
 
 # ---------------------------------------------------------------------------
 # Códigos JavaScript das queries
@@ -47,6 +50,7 @@ const entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
 await actions.setVariable('erroConsulta', '');
 await actions.setVariable('resultado', null);
+await actions.setVariable('fipeAuto', null);
 
 const somenteDigitos = /^[0-9]+$/.test(entrada);
 let tipo = null;
@@ -167,6 +171,64 @@ if (modoGratuito) {
       consultadoEm: new Date().toLocaleString('pt-BR'),
     },
   };
+  // Avaliação FIPE automática: tenta casar a marca/modelo/ano decodificados
+  // do chassi com a tabela FIPE oficial e já preenche a aba correspondente.
+  // A seleção manual nos dropdowns continua disponível para ajustes.
+  try {
+    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    let marcas = queries.fipeMarcas.getData();
+    if (!marcas || !marcas.length) {
+      await queries.fipeMarcas.run();
+      marcas = queries.fipeMarcas.getData() || [];
+    }
+    const alvoMarca = norm(resultadoGratuito.veiculo.marca);
+    const marcaFipe =
+      alvoMarca.length > 2
+        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)
+        : null;
+    if (marcaFipe) {
+      await actions.setVariable('fipeAuto', { marca: String(marcaFipe.codigo) });
+      await queries.fipeModelos.run();
+      const modelos = queries.fipeModelos.getData() || [];
+      const alvoModelo = norm(vpic.modelo);
+      const modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;
+      if (modeloFipe) {
+        await actions.setVariable('fipeAuto', {
+          marca: String(marcaFipe.codigo),
+          modelo: String(modeloFipe.codigo),
+        });
+        await queries.fipeAnos.run();
+        const anos = queries.fipeAnos.getData() || [];
+        const alvoAno = String(resultadoGratuito.veiculo.anoModelo || '');
+        const anoFipe = alvoAno
+          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)
+          : null;
+        if (anoFipe) {
+          await actions.setVariable('fipeAuto', {
+            marca: String(marcaFipe.codigo),
+            modelo: String(modeloFipe.codigo),
+            ano: String(anoFipe.codigo),
+          });
+          await queries.fipeValorSelecao.run();
+          const fipeOficial = queries.fipeValorSelecao.getData();
+          if (fipeOficial && fipeOficial.valor) {
+            resultadoGratuito.fipe = {
+              codigoFipe: fipeOficial.codigoFipe,
+              valor: fipeOficial.valor,
+              mesReferencia: fipeOficial.mesReferencia,
+              historico: [],
+            };
+            resultadoGratuito.veiculo.codigoFipe = fipeOficial.codigoFipe;
+            resultadoGratuito.metadados.fonte =
+              'Decodificação gratuita do chassi (WMI + NHTSA vPIC) + tabela FIPE oficial';
+          }
+        }
+      }
+    }
+  } catch (erro) {
+    // A sugestão FIPE é complementar; o usuário pode selecionar manualmente na aba.
+  }
+
   await actions.setVariable('resultado', resultadoGratuito);
   return resultadoGratuito;
 }
@@ -722,7 +784,7 @@ def texto_html(name, html, desktop, mobile=None, parent=None, visibility="{{true
     )
 
 
-def tabela(name, data_expr, columns, desktop, parent=None, mobile=None):
+def tabela(name, data_expr, columns, desktop, parent=None, mobile=None, visibility="{{true}}"):
     cols = []
     for i, (col_name, key) in enumerate(columns):
         cols.append(
@@ -750,8 +812,8 @@ def tabela(name, data_expr, columns, desktop, parent=None, mobile=None):
             # generateColumns retorna undefined quando os dados chegam e o widget quebra.
             # Colunas explícitas (não-autogeradas) sempre persistem no merge.
             "autogenerateColumns": {"value": True},
-            "visible": {"value": "{{true}}"},
-            "visibility": {"value": "{{true}}"},
+            "visible": {"value": visibility},
+            "visibility": {"value": visibility},
             "loadingState": {"value": CARREGANDO},
             "rowsPerPage": {"value": "{{10}}"},
             "enablePagination": {"value": "{{true}}"},
@@ -1124,7 +1186,7 @@ components.append(
     )
 )
 
-def dropdown_fipe(name, placeholder, values_expr, display_expr, loading_expr, desktop, mobile):
+def dropdown_fipe(name, placeholder, values_expr, display_expr, loading_expr, value_expr, desktop, mobile):
     return component(
         name,
         "DropDown",
@@ -1134,7 +1196,7 @@ def dropdown_fipe(name, placeholder, values_expr, display_expr, loading_expr, de
         properties={
             "label": {"value": ""},
             "placeholder": {"value": placeholder},
-            "value": {"value": "{{}}"},
+            "value": {"value": value_expr},
             "values": {"value": values_expr},
             "display_values": {"value": display_expr},
             "loadingState": {"value": loading_expr},
@@ -1162,6 +1224,7 @@ components.append(
         "{{(queries.fipeMarcas.data || []).map(m => m.codigo)}}",
         "{{(queries.fipeMarcas.data || []).map(m => m.nome)}}",
         "{{queries.fipeMarcas.isLoading}}",
+        "{{(variables.fipeAuto && variables.fipeAuto.marca) || ''}}",
         (1, 45, 13, 40),
         (1, 45, 39, 40),
     )
@@ -1173,6 +1236,7 @@ components.append(
         "{{(queries.fipeModelos.data || []).map(m => m.codigo)}}",
         "{{(queries.fipeModelos.data || []).map(m => m.nome)}}",
         "{{queries.fipeModelos.isLoading}}",
+        "{{(variables.fipeAuto && variables.fipeAuto.modelo) || ''}}",
         (15, 45, 15, 40),
         (1, 90, 39, 40),
     )
@@ -1184,6 +1248,7 @@ components.append(
         "{{(queries.fipeAnos.data || []).map(a => a.codigo)}}",
         "{{(queries.fipeAnos.data || []).map(a => a.nome)}}",
         "{{queries.fipeAnos.isLoading}}",
+        "{{(variables.fipeAuto && variables.fipeAuto.ano) || ''}}",
         (31, 45, 9, 40),
         (1, 135, 39, 40),
     )
@@ -1232,6 +1297,7 @@ components.append(
         (1, 270, 39, 30),
         (1, 425, 39, 30),
         parent=f"{TABS_ID}-3",
+        visibility="{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}",
     )
 )
 components.append(
@@ -1242,6 +1308,7 @@ components.append(
         (1, 305, 39, 245),
         parent=f"{TABS_ID}-3",
         mobile=(1, 460, 39, 250),
+        visibility="{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}",
     )
 )
 
@@ -1461,7 +1528,7 @@ data_queries = [
         "name": "fipeModelos",
         "options": {
             "method": "get",
-            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos'}}",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos'}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1484,7 +1551,7 @@ data_queries = [
         "name": "fipeAnos",
         "options": {
             "method": "get",
-            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos'}}",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos'}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1507,7 +1574,7 @@ data_queries = [
         "name": "fipeValorSelecao",
         "options": {
             "method": "get",
-            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos/' + components.selectAnoFipe.value}}",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos/' + ((variables.fipeAuto && variables.fipeAuto.ano) || '')}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1533,6 +1600,72 @@ data_queries = [
             "notificationDuration": 5000,
         },
         "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_SEL_MARCA,
+        "name": "aoSelecionarMarcaFipe",
+        "options": {
+            "code": (
+                "// Seleção manual de marca: atualiza a fonte de verdade e carrega os modelos.\n"
+                "await actions.setVariable('fipeAuto', { marca: String(components.selectMarcaFipe.value || '') });\n"
+                "await queries.fipeModelos.run();\n"
+            ),
+            "parameters": [],
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RUNJS,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_SEL_MODELO,
+        "name": "aoSelecionarModeloFipe",
+        "options": {
+            "code": (
+                "// Seleção manual de modelo: preserva a marca e carrega os anos.\n"
+                "const atual = variables.fipeAuto || {};\n"
+                "await actions.setVariable('fipeAuto', {\n"
+                "  marca: String(atual.marca || components.selectMarcaFipe.value || ''),\n"
+                "  modelo: String(components.selectModeloFipe.value || ''),\n"
+                "});\n"
+                "await queries.fipeAnos.run();\n"
+            ),
+            "parameters": [],
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RUNJS,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_SEL_ANO,
+        "name": "aoSelecionarAnoFipe",
+        "options": {
+            "code": (
+                "// Seleção manual de ano: completa a cadeia e busca o valor oficial.\n"
+                "const atual = variables.fipeAuto || {};\n"
+                "await actions.setVariable('fipeAuto', {\n"
+                "  marca: String(atual.marca || components.selectMarcaFipe.value || ''),\n"
+                "  modelo: String(atual.modelo || components.selectModeloFipe.value || ''),\n"
+                "  ano: String(components.selectAnoFipe.value || ''),\n"
+                "});\n"
+                "await queries.fipeValorSelecao.run();\n"
+            ),
+            "parameters": [],
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RUNJS,
         "appVersionId": VERSION_ID,
         "createdAt": TS,
         "updatedAt": TS,
@@ -1595,8 +1728,8 @@ events = [
         "event": {
             "eventId": "onSelect",
             "actionId": "run-query",
-            "queryId": Q_FIPE_MODELOS,
-            "queryName": "fipeModelos",
+            "queryId": Q_SEL_MARCA,
+            "queryName": "aoSelecionarMarcaFipe",
             "parameters": {},
         },
         "sourceId": COMP_BY_NAME["selectMarcaFipe"]["id"],
@@ -1612,8 +1745,8 @@ events = [
         "event": {
             "eventId": "onSelect",
             "actionId": "run-query",
-            "queryId": Q_FIPE_ANOS,
-            "queryName": "fipeAnos",
+            "queryId": Q_SEL_MODELO,
+            "queryName": "aoSelecionarModeloFipe",
             "parameters": {},
         },
         "sourceId": COMP_BY_NAME["selectModeloFipe"]["id"],
@@ -1629,8 +1762,8 @@ events = [
         "event": {
             "eventId": "onSelect",
             "actionId": "run-query",
-            "queryId": Q_FIPE_VALOR,
-            "queryName": "fipeValorSelecao",
+            "queryId": Q_SEL_ANO,
+            "queryName": "aoSelecionarAnoFipe",
             "parameters": {},
         },
         "sourceId": COMP_BY_NAME["selectAnoFipe"]["id"],

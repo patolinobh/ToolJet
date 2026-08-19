@@ -2224,7 +2224,7 @@
                   "value": "Marca"
                 },
                 "value": {
-                  "value": "{{}}"
+                  "value": "{{(variables.fipeAuto && variables.fipeAuto.marca) || ''}}"
                 },
                 "values": {
                   "value": "{{(queries.fipeMarcas.data || []).map(m => m.codigo)}}"
@@ -2303,7 +2303,7 @@
                   "value": "Modelo"
                 },
                 "value": {
-                  "value": "{{}}"
+                  "value": "{{(variables.fipeAuto && variables.fipeAuto.modelo) || ''}}"
                 },
                 "values": {
                   "value": "{{(queries.fipeModelos.data || []).map(m => m.codigo)}}"
@@ -2382,7 +2382,7 @@
                   "value": "Ano"
                 },
                 "value": {
-                  "value": "{{}}"
+                  "value": "{{(variables.fipeAuto && variables.fipeAuto.ano) || ''}}"
                 },
                 "values": {
                   "value": "{{(queries.fipeAnos.data || []).map(a => a.codigo)}}"
@@ -2643,7 +2643,7 @@
                   "value": "html"
                 },
                 "visibility": {
-                  "value": "{{true}}"
+                  "value": "{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}"
                 },
                 "loadingState": {
                   "value": "{{false}}"
@@ -2760,10 +2760,10 @@
                   "value": true
                 },
                 "visible": {
-                  "value": "{{true}}"
+                  "value": "{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}"
                 },
                 "visibility": {
-                  "value": "{{true}}"
+                  "value": "{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}"
                 },
                 "loadingState": {
                   "value": "{{queries.executarConsulta.isLoading || queries.consultaProvedor.isLoading || queries.consultaDemo.isLoading}}"
@@ -3011,8 +3011,8 @@
               "event": {
                 "eventId": "onSelect",
                 "actionId": "run-query",
-                "queryId": "01a3ce49-12e9-5531-8fbb-67c0cbf77d69",
-                "queryName": "fipeModelos",
+                "queryId": "06a02599-cbe3-5b21-b40c-7418102a081a",
+                "queryName": "aoSelecionarMarcaFipe",
                 "parameters": {}
               },
               "sourceId": "199f0c8f-dadd-5cd3-a53c-2e9b4db84a42",
@@ -3028,8 +3028,8 @@
               "event": {
                 "eventId": "onSelect",
                 "actionId": "run-query",
-                "queryId": "f15af566-d0a6-5d8f-b02c-8f25212c42b9",
-                "queryName": "fipeAnos",
+                "queryId": "58746ec8-2a63-55d3-9043-18c0568a7cd0",
+                "queryName": "aoSelecionarModeloFipe",
                 "parameters": {}
               },
               "sourceId": "b9cdcd86-e541-5328-93b2-15a387e71e69",
@@ -3045,8 +3045,8 @@
               "event": {
                 "eventId": "onSelect",
                 "actionId": "run-query",
-                "queryId": "d88dceaf-bee7-5795-91ef-a27d54379169",
-                "queryName": "fipeValorSelecao",
+                "queryId": "b32abf0a-13c3-58b9-94be-a013da3d1cce",
+                "queryName": "aoSelecionarAnoFipe",
                 "parameters": {}
               },
               "sourceId": "b8016b9e-afd2-5b7a-94be-315a58db7f34",
@@ -3078,7 +3078,7 @@
               "id": "3dfdbdb1-0365-52bf-a032-320d74a8e71f",
               "name": "executarConsulta",
               "options": {
-                "code": "// Orquestra a consulta veicular: valida a entrada, detecta o tipo de\n// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o\n// modo (provedor real ou demonstração) e consolida o resultado no formato\n// canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nlet subtipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'antiga';\n} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'mercosul';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'\n  );\n  return null;\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('subtipoPlaca', subtipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\nconst urlProvedor =\n  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL\n    ? String(constants.CONSULTA_VEICULAR_API_URL)\n    : '';\nconst apiConfigurada = urlProvedor.indexOf('http') === 0;\n// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado\n// (headers Bearer + DeviceToken; consulta somente por placa).\nconst modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;\n// Modo gratuito: sem provedor configurado, um chassi é decodificado com dados\n// reais (tabela WMI local + NHTSA vPIC); placa/Renavam caem no modo demo.\nconst modoGratuito = !apiConfigurada && tipo === 'chassi';\nawait actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);\nawait actions.setVariable('modoGratuito', modoGratuito);\n\nif (modoGratuito) {\n  // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.\n  const TABELA_WMI = {\n    '9BW': ['Volkswagen', 'Brasil'], '9BD': ['Fiat', 'Brasil'], '9BG': ['Chevrolet', 'Brasil'],\n    '9BF': ['Ford', 'Brasil'], '9BR': ['Toyota', 'Brasil'], '93H': ['Honda', 'Brasil'],\n    '93Y': ['Renault', 'Brasil'], '9BM': ['Mercedes-Benz', 'Brasil'], '95P': ['CAOA/Hyundai', 'Brasil'],\n    '9BH': ['Hyundai', 'Brasil'], '93X': ['Mitsubishi', 'Brasil'], '94D': ['Nissan', 'Brasil'],\n    '8AW': ['Volkswagen', 'Argentina'], '8AP': ['Fiat', 'Argentina'], '8AG': ['Chevrolet', 'Argentina'],\n    '8AF': ['Ford', 'Argentina'], '8A1': ['Renault', 'Argentina'], '8AJ': ['Toyota', 'Argentina'],\n    '9C2': ['Honda Motos', 'Brasil'], '9C6': ['Yamaha', 'Brasil'], '9CD': ['Suzuki Motos', 'Brasil'],\n    '9BS': ['Scania', 'Brasil'], '953': ['VW Caminhões', 'Brasil'], '9BV': ['Volvo', 'Brasil'],\n    '988': ['Jeep/Stellantis', 'Brasil'], '98R': ['Chery/CAOA', 'Brasil'], '95Y': ['BYD', 'Brasil'],\n  };\n  const PAIS_POR_INICIAL = {\n    '9': 'Brasil', '8': 'América do Sul', '3': 'México/América do Norte', '1': 'EUA', '4': 'EUA',\n    '5': 'EUA', '2': 'Canadá', 'W': 'Alemanha', 'J': 'Japão', 'K': 'Coreia do Sul', 'L': 'China',\n    'S': 'Reino Unido', 'V': 'França/Espanha', 'Z': 'Itália', 'Y': 'Suécia/Finlândia', 'T': 'Europa Central',\n  };\n  const MAPA_ANO = {\n    A: 1980, B: 1981, C: 1982, D: 1983, E: 1984, F: 1985, G: 1986, H: 1987, J: 1988, K: 1989,\n    L: 1990, M: 1991, N: 1992, P: 1993, R: 1994, S: 1995, T: 1996, V: 1997, W: 1998, X: 1999,\n    Y: 2000, 1: 2001, 2: 2002, 3: 2003, 4: 2004, 5: 2005, 6: 2006, 7: 2007, 8: 2008, 9: 2009,\n  };\n  const wmi = entrada.slice(0, 3);\n  const local = TABELA_WMI[wmi] || null;\n  const pais = local ? local[1] : PAIS_POR_INICIAL[entrada[0]] || 'Não identificado';\n  let anoLocal = MAPA_ANO[entrada[9]] !== undefined ? MAPA_ANO[entrada[9]] : null;\n  if (anoLocal) {\n    const anoAtual = new Date().getFullYear();\n    while (anoLocal + 30 <= anoAtual + 1) anoLocal += 30;\n  }\n\n  let vpic = null;\n  try {\n    await queries.decodificarVin.run();\n    vpic = queries.decodificarVin.getData();\n  } catch (erro) {\n    // vPIC é complementar; a decodificação local cobre fabricante, país e ano.\n  }\n  vpic = vpic || {};\n\n  const naoVerificado = 'Não coberto na consulta gratuita';\n  const resultadoGratuito = {\n    veiculo: {\n      chassi: entrada,\n      renavam: '—',\n      placa: '—',\n      marca: vpic.marca || (local ? local[0] : '—'),\n      modelo: vpic.modelo || (vpic.fabricante && vpic.fabricante !== vpic.marca ? vpic.fabricante : '—'),\n      anoFabricacao: '—',\n      anoModelo: vpic.anoModelo || anoLocal || '—',\n      cor: '—',\n      combustivel: vpic.combustivel || '—',\n      codigoCombustivel: null,\n      municipio: '—',\n      uf: '—',\n      codigoFipe: '',\n      procedencia: pais,\n      tipo: vpic.tipoVeiculo || '—',\n      situacao: 'Estrutura do chassi válida (decodificação WMI/vPIC)',\n    },\n    situacaoLegal: {\n      status: 'Verificação parcial',\n      rouboFurto: { indicador: null, detalhes: naoVerificado + ' — requer provedor com acesso às bases oficiais.' },\n      gravame: { status: naoVerificado, financeira: null, dataInclusao: null },\n      debitos: { ipva: naoVerificado, licenciamento: naoVerificado, multas: naoVerificado },\n      renajud: naoVerificado,\n      restricoes: [],\n    },\n    sinistros: { indicador: null, ocorrencias: [] },\n    leiloes: { indicador: null, ocorrencias: [] },\n    fipe: { codigoFipe: '', valor: '', mesReferencia: '', historico: [] },\n    metadados: {\n      fonte: 'Decodificação gratuita do chassi (tabela WMI + NHTSA vPIC)',\n      modoDemo: false,\n      consultadoEm: new Date().toLocaleString('pt-BR'),\n    },\n  };\n  await actions.setVariable('resultado', resultadoGratuito);\n  return resultadoGratuito;\n}\n\nif (modoApiBrasil && tipo !== 'placa') {\n  await actions.setVariable(\n    'erroConsulta',\n    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'\n  );\n  return null;\n}\n\nlet resultado = null;\ntry {\n  if (modoApiBrasil) {\n    await queries.consultaApiBrasil.run();\n    resultado = queries.consultaApiBrasil.getData();\n  } else if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = queries.consultaProvedor.getData();\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });\n    resultado = queries.consultaDemo.getData();\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.\nconst semValorFipe = !(resultado.fipe && resultado.fipe.valor);\nif (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nreturn resultado;\n",
+                "code": "// Orquestra a consulta veicular: valida a entrada, detecta o tipo de\n// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o\n// modo (provedor real ou demonstração) e consolida o resultado no formato\n// canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\nawait actions.setVariable('fipeAuto', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nlet subtipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'antiga';\n} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'mercosul';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'\n  );\n  return null;\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('subtipoPlaca', subtipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\nconst urlProvedor =\n  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL\n    ? String(constants.CONSULTA_VEICULAR_API_URL)\n    : '';\nconst apiConfigurada = urlProvedor.indexOf('http') === 0;\n// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado\n// (headers Bearer + DeviceToken; consulta somente por placa).\nconst modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;\n// Modo gratuito: sem provedor configurado, um chassi é decodificado com dados\n// reais (tabela WMI local + NHTSA vPIC); placa/Renavam caem no modo demo.\nconst modoGratuito = !apiConfigurada && tipo === 'chassi';\nawait actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);\nawait actions.setVariable('modoGratuito', modoGratuito);\n\nif (modoGratuito) {\n  // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.\n  const TABELA_WMI = {\n    '9BW': ['Volkswagen', 'Brasil'], '9BD': ['Fiat', 'Brasil'], '9BG': ['Chevrolet', 'Brasil'],\n    '9BF': ['Ford', 'Brasil'], '9BR': ['Toyota', 'Brasil'], '93H': ['Honda', 'Brasil'],\n    '93Y': ['Renault', 'Brasil'], '9BM': ['Mercedes-Benz', 'Brasil'], '95P': ['CAOA/Hyundai', 'Brasil'],\n    '9BH': ['Hyundai', 'Brasil'], '93X': ['Mitsubishi', 'Brasil'], '94D': ['Nissan', 'Brasil'],\n    '8AW': ['Volkswagen', 'Argentina'], '8AP': ['Fiat', 'Argentina'], '8AG': ['Chevrolet', 'Argentina'],\n    '8AF': ['Ford', 'Argentina'], '8A1': ['Renault', 'Argentina'], '8AJ': ['Toyota', 'Argentina'],\n    '9C2': ['Honda Motos', 'Brasil'], '9C6': ['Yamaha', 'Brasil'], '9CD': ['Suzuki Motos', 'Brasil'],\n    '9BS': ['Scania', 'Brasil'], '953': ['VW Caminhões', 'Brasil'], '9BV': ['Volvo', 'Brasil'],\n    '988': ['Jeep/Stellantis', 'Brasil'], '98R': ['Chery/CAOA', 'Brasil'], '95Y': ['BYD', 'Brasil'],\n  };\n  const PAIS_POR_INICIAL = {\n    '9': 'Brasil', '8': 'América do Sul', '3': 'México/América do Norte', '1': 'EUA', '4': 'EUA',\n    '5': 'EUA', '2': 'Canadá', 'W': 'Alemanha', 'J': 'Japão', 'K': 'Coreia do Sul', 'L': 'China',\n    'S': 'Reino Unido', 'V': 'França/Espanha', 'Z': 'Itália', 'Y': 'Suécia/Finlândia', 'T': 'Europa Central',\n  };\n  const MAPA_ANO = {\n    A: 1980, B: 1981, C: 1982, D: 1983, E: 1984, F: 1985, G: 1986, H: 1987, J: 1988, K: 1989,\n    L: 1990, M: 1991, N: 1992, P: 1993, R: 1994, S: 1995, T: 1996, V: 1997, W: 1998, X: 1999,\n    Y: 2000, 1: 2001, 2: 2002, 3: 2003, 4: 2004, 5: 2005, 6: 2006, 7: 2007, 8: 2008, 9: 2009,\n  };\n  const wmi = entrada.slice(0, 3);\n  const local = TABELA_WMI[wmi] || null;\n  const pais = local ? local[1] : PAIS_POR_INICIAL[entrada[0]] || 'Não identificado';\n  let anoLocal = MAPA_ANO[entrada[9]] !== undefined ? MAPA_ANO[entrada[9]] : null;\n  if (anoLocal) {\n    const anoAtual = new Date().getFullYear();\n    while (anoLocal + 30 <= anoAtual + 1) anoLocal += 30;\n  }\n\n  let vpic = null;\n  try {\n    await queries.decodificarVin.run();\n    vpic = queries.decodificarVin.getData();\n  } catch (erro) {\n    // vPIC é complementar; a decodificação local cobre fabricante, país e ano.\n  }\n  vpic = vpic || {};\n\n  const naoVerificado = 'Não coberto na consulta gratuita';\n  const resultadoGratuito = {\n    veiculo: {\n      chassi: entrada,\n      renavam: '—',\n      placa: '—',\n      marca: vpic.marca || (local ? local[0] : '—'),\n      modelo: vpic.modelo || (vpic.fabricante && vpic.fabricante !== vpic.marca ? vpic.fabricante : '—'),\n      anoFabricacao: '—',\n      anoModelo: vpic.anoModelo || anoLocal || '—',\n      cor: '—',\n      combustivel: vpic.combustivel || '—',\n      codigoCombustivel: null,\n      municipio: '—',\n      uf: '—',\n      codigoFipe: '',\n      procedencia: pais,\n      tipo: vpic.tipoVeiculo || '—',\n      situacao: 'Estrutura do chassi válida (decodificação WMI/vPIC)',\n    },\n    situacaoLegal: {\n      status: 'Verificação parcial',\n      rouboFurto: { indicador: null, detalhes: naoVerificado + ' — requer provedor com acesso às bases oficiais.' },\n      gravame: { status: naoVerificado, financeira: null, dataInclusao: null },\n      debitos: { ipva: naoVerificado, licenciamento: naoVerificado, multas: naoVerificado },\n      renajud: naoVerificado,\n      restricoes: [],\n    },\n    sinistros: { indicador: null, ocorrencias: [] },\n    leiloes: { indicador: null, ocorrencias: [] },\n    fipe: { codigoFipe: '', valor: '', mesReferencia: '', historico: [] },\n    metadados: {\n      fonte: 'Decodificação gratuita do chassi (tabela WMI + NHTSA vPIC)',\n      modoDemo: false,\n      consultadoEm: new Date().toLocaleString('pt-BR'),\n    },\n  };\n  // Avaliação FIPE automática: tenta casar a marca/modelo/ano decodificados\n  // do chassi com a tabela FIPE oficial e já preenche a aba correspondente.\n  // A seleção manual nos dropdowns continua disponível para ajustes.\n  try {\n    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n    let marcas = queries.fipeMarcas.getData();\n    if (!marcas || !marcas.length) {\n      await queries.fipeMarcas.run();\n      marcas = queries.fipeMarcas.getData() || [];\n    }\n    const alvoMarca = norm(resultadoGratuito.veiculo.marca);\n    const marcaFipe =\n      alvoMarca.length > 2\n        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)\n        : null;\n    if (marcaFipe) {\n      await actions.setVariable('fipeAuto', { marca: String(marcaFipe.codigo) });\n      await queries.fipeModelos.run();\n      const modelos = queries.fipeModelos.getData() || [];\n      const alvoModelo = norm(vpic.modelo);\n      const modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;\n      if (modeloFipe) {\n        await actions.setVariable('fipeAuto', {\n          marca: String(marcaFipe.codigo),\n          modelo: String(modeloFipe.codigo),\n        });\n        await queries.fipeAnos.run();\n        const anos = queries.fipeAnos.getData() || [];\n        const alvoAno = String(resultadoGratuito.veiculo.anoModelo || '');\n        const anoFipe = alvoAno\n          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)\n          : null;\n        if (anoFipe) {\n          await actions.setVariable('fipeAuto', {\n            marca: String(marcaFipe.codigo),\n            modelo: String(modeloFipe.codigo),\n            ano: String(anoFipe.codigo),\n          });\n          await queries.fipeValorSelecao.run();\n          const fipeOficial = queries.fipeValorSelecao.getData();\n          if (fipeOficial && fipeOficial.valor) {\n            resultadoGratuito.fipe = {\n              codigoFipe: fipeOficial.codigoFipe,\n              valor: fipeOficial.valor,\n              mesReferencia: fipeOficial.mesReferencia,\n              historico: [],\n            };\n            resultadoGratuito.veiculo.codigoFipe = fipeOficial.codigoFipe;\n            resultadoGratuito.metadados.fonte =\n              'Decodificação gratuita do chassi (WMI + NHTSA vPIC) + tabela FIPE oficial';\n          }\n        }\n      }\n    }\n  } catch (erro) {\n    // A sugestão FIPE é complementar; o usuário pode selecionar manualmente na aba.\n  }\n\n  await actions.setVariable('resultado', resultadoGratuito);\n  return resultadoGratuito;\n}\n\nif (modoApiBrasil && tipo !== 'placa') {\n  await actions.setVariable(\n    'erroConsulta',\n    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'\n  );\n  return null;\n}\n\nlet resultado = null;\ntry {\n  if (modoApiBrasil) {\n    await queries.consultaApiBrasil.run();\n    resultado = queries.consultaApiBrasil.getData();\n  } else if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = queries.consultaProvedor.getData();\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });\n    resultado = queries.consultaDemo.getData();\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.\nconst semValorFipe = !(resultado.fipe && resultado.fipe.valor);\nif (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nreturn resultado;\n",
                 "parameters": [],
                 "runOnPageLoad": false,
                 "showSuccessNotification": false,
@@ -3286,7 +3286,7 @@
               "name": "fipeModelos",
               "options": {
                 "method": "get",
-                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos'}}",
+                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos'}}",
                 "url_params": [
                   [
                     "",
@@ -3324,7 +3324,7 @@
               "name": "fipeAnos",
               "options": {
                 "method": "get",
-                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos'}}",
+                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos'}}",
                 "url_params": [
                   [
                     "",
@@ -3362,7 +3362,7 @@
               "name": "fipeValorSelecao",
               "options": {
                 "method": "get",
-                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + components.selectMarcaFipe.value + '/modelos/' + components.selectModeloFipe.value + '/anos/' + components.selectAnoFipe.value}}",
+                "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos/' + ((variables.fipeAuto && variables.fipeAuto.ano) || '')}}",
                 "url_params": [
                   [
                     "",
@@ -3391,6 +3391,51 @@
                 "notificationDuration": 5000
               },
               "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "06a02599-cbe3-5b21-b40c-7418102a081a",
+              "name": "aoSelecionarMarcaFipe",
+              "options": {
+                "code": "// Seleção manual de marca: atualiza a fonte de verdade e carrega os modelos.\nawait actions.setVariable('fipeAuto', { marca: String(components.selectMarcaFipe.value || '') });\nawait queries.fipeModelos.run();\n",
+                "parameters": [],
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "58746ec8-2a63-55d3-9043-18c0568a7cd0",
+              "name": "aoSelecionarModeloFipe",
+              "options": {
+                "code": "// Seleção manual de modelo: preserva a marca e carrega os anos.\nconst atual = variables.fipeAuto || {};\nawait actions.setVariable('fipeAuto', {\n  marca: String(atual.marca || components.selectMarcaFipe.value || ''),\n  modelo: String(components.selectModeloFipe.value || ''),\n});\nawait queries.fipeAnos.run();\n",
+                "parameters": [],
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "b32abf0a-13c3-58b9-94be-a013da3d1cce",
+              "name": "aoSelecionarAnoFipe",
+              "options": {
+                "code": "// Seleção manual de ano: completa a cadeia e busca o valor oficial.\nconst atual = variables.fipeAuto || {};\nawait actions.setVariable('fipeAuto', {\n  marca: String(atual.marca || components.selectMarcaFipe.value || ''),\n  modelo: String(atual.modelo || components.selectModeloFipe.value || ''),\n  ano: String(components.selectAnoFipe.value || ''),\n});\nawait queries.fipeValorSelecao.run();\n",
+                "parameters": [],
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
               "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
               "createdAt": "2026-08-16T12:00:00.000Z",
               "updatedAt": "2026-08-16T12:00:00.000Z"
