@@ -36,6 +36,7 @@ Q_FIPE_VALOR = uid("q-fipeValorSelecao")
 Q_SEL_MARCA = uid("q-aoSelecionarMarcaFipe")
 Q_SEL_MODELO = uid("q-aoSelecionarModeloFipe")
 Q_SEL_ANO = uid("q-aoSelecionarAnoFipe")
+Q_PLACA_GRATIS = uid("q-consultaPlacaGratuita")
 
 # ---------------------------------------------------------------------------
 # Códigos JavaScript das queries
@@ -79,6 +80,10 @@ await actions.setVariable('tipoConsulta', tipo);
 await actions.setVariable('subtipoPlaca', subtipo);
 await actions.setVariable('identificadorConsulta', entrada);
 
+// Objetos lidos de queries (getData) vêm do store do app e são imutáveis;
+// clona antes de qualquer mutação (ex.: anexar o resultado FIPE).
+const clonar = (obj) => (obj ? JSON.parse(JSON.stringify(obj)) : obj);
+
 const urlProvedor =
   typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL
     ? String(constants.CONSULTA_VEICULAR_API_URL)
@@ -87,11 +92,51 @@ const apiConfigurada = urlProvedor.indexOf('http') === 0;
 // Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado
 // (headers Bearer + DeviceToken; consulta somente por placa).
 const modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;
-// Modo gratuito: sem provedor configurado, um chassi é decodificado com dados
-// reais (tabela WMI local + NHTSA vPIC); placa/Renavam caem no modo demo.
-const modoGratuito = !apiConfigurada && tipo === 'chassi';
+// Modo gratuito: sem provedor pago configurado, um chassi é decodificado com
+// dados reais (tabela WMI local + NHTSA vPIC) e uma placa pode ser consultada
+// em um serviço com cota gratuita (constante PLACA_API_URL com o marcador
+// {placa}). Renavam — e placa sem PLACA_API_URL — caem no modo demo.
+const placaGratuitaConfigurada =
+  typeof constants !== 'undefined' &&
+  constants &&
+  constants.PLACA_API_URL &&
+  String(constants.PLACA_API_URL).indexOf('http') === 0;
+const modoGratuito =
+  !apiConfigurada && (tipo === 'chassi' || (tipo === 'placa' && placaGratuitaConfigurada));
 await actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);
 await actions.setVariable('modoGratuito', modoGratuito);
+
+if (modoGratuito && tipo === 'placa') {
+  // Consulta gratuita por placa no serviço configurado pelo usuário.
+  let resultadoPlaca = null;
+  try {
+    await queries.consultaPlacaGratuita.run();
+    resultadoPlaca = clonar(queries.consultaPlacaGratuita.getData());
+  } catch (erro) {
+    await actions.setVariable(
+      'erroConsulta',
+      'A consulta gratuita de placa falhou: ' + ((erro && erro.message) || erro) +
+        '. Verifique a cota e a chave configuradas em PLACA_API_URL.'
+    );
+    return null;
+  }
+  if (!resultadoPlaca || !resultadoPlaca.veiculo) {
+    await actions.setVariable(
+      'erroConsulta',
+      'O serviço gratuito de placa não retornou dados para esta placa. Verifique a cota diária e a chave em PLACA_API_URL.'
+    );
+    return null;
+  }
+
+  // Valoração FIPE: usa o código FIPE quando o serviço retorna; caso contrário,
+  // tenta casar marca/modelo/ano com a tabela oficial (mesma cadeia do chassi).
+  if (!(resultadoPlaca.fipe && resultadoPlaca.fipe.valor)) {
+CADEIA_FIPE(resultadoPlaca, resultadoPlaca.veiculo.marca, resultadoPlaca.veiculo.modelo, resultadoPlaca.veiculo.anoModelo)
+  }
+
+  await actions.setVariable('resultado', resultadoPlaca);
+  return resultadoPlaca;
+}
 
 if (modoGratuito) {
   // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.
@@ -171,63 +216,9 @@ if (modoGratuito) {
       consultadoEm: new Date().toLocaleString('pt-BR'),
     },
   };
-  // Avaliação FIPE automática: tenta casar a marca/modelo/ano decodificados
-  // do chassi com a tabela FIPE oficial e já preenche a aba correspondente.
-  // A seleção manual nos dropdowns continua disponível para ajustes.
-  try {
-    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    let marcas = queries.fipeMarcas.getData();
-    if (!marcas || !marcas.length) {
-      await queries.fipeMarcas.run();
-      marcas = queries.fipeMarcas.getData() || [];
-    }
-    const alvoMarca = norm(resultadoGratuito.veiculo.marca);
-    const marcaFipe =
-      alvoMarca.length > 2
-        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)
-        : null;
-    if (marcaFipe) {
-      await actions.setVariable('fipeAuto', { marca: String(marcaFipe.codigo) });
-      await queries.fipeModelos.run();
-      const modelos = queries.fipeModelos.getData() || [];
-      const alvoModelo = norm(vpic.modelo);
-      const modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;
-      if (modeloFipe) {
-        await actions.setVariable('fipeAuto', {
-          marca: String(marcaFipe.codigo),
-          modelo: String(modeloFipe.codigo),
-        });
-        await queries.fipeAnos.run();
-        const anos = queries.fipeAnos.getData() || [];
-        const alvoAno = String(resultadoGratuito.veiculo.anoModelo || '');
-        const anoFipe = alvoAno
-          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)
-          : null;
-        if (anoFipe) {
-          await actions.setVariable('fipeAuto', {
-            marca: String(marcaFipe.codigo),
-            modelo: String(modeloFipe.codigo),
-            ano: String(anoFipe.codigo),
-          });
-          await queries.fipeValorSelecao.run();
-          const fipeOficial = queries.fipeValorSelecao.getData();
-          if (fipeOficial && fipeOficial.valor) {
-            resultadoGratuito.fipe = {
-              codigoFipe: fipeOficial.codigoFipe,
-              valor: fipeOficial.valor,
-              mesReferencia: fipeOficial.mesReferencia,
-              historico: [],
-            };
-            resultadoGratuito.veiculo.codigoFipe = fipeOficial.codigoFipe;
-            resultadoGratuito.metadados.fonte =
-              'Decodificação gratuita do chassi (WMI + NHTSA vPIC) + tabela FIPE oficial';
-          }
-        }
-      }
-    }
-  } catch (erro) {
-    // A sugestão FIPE é complementar; o usuário pode selecionar manualmente na aba.
-  }
+  // Avaliação FIPE automática: casa a marca/modelo/ano decodificados do chassi
+  // com a tabela FIPE oficial.
+CADEIA_FIPE(resultadoGratuito, resultadoGratuito.veiculo.marca, vpic.modelo, resultadoGratuito.veiculo.anoModelo)
 
   await actions.setVariable('resultado', resultadoGratuito);
   return resultadoGratuito;
@@ -245,13 +236,13 @@ let resultado = null;
 try {
   if (modoApiBrasil) {
     await queries.consultaApiBrasil.run();
-    resultado = queries.consultaApiBrasil.getData();
+    resultado = clonar(queries.consultaApiBrasil.getData());
   } else if (apiConfigurada) {
     await queries.consultaProvedor.run();
-    resultado = queries.consultaProvedor.getData();
+    resultado = clonar(queries.consultaProvedor.getData());
   } else {
     await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });
-    resultado = queries.consultaDemo.getData();
+    resultado = clonar(queries.consultaDemo.getData());
   }
 } catch (erro) {
   await actions.setVariable(
@@ -292,6 +283,79 @@ if (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.
 await actions.setVariable('resultado', resultado);
 return resultado;
 """
+
+
+
+def _cadeia_fipe_js(alvo, marca, modelo, ano):
+    """Emite o bloco JS da cadeia FIPE automática (marca → modelo → ano → valor).
+
+    Reuso em tempo de geração: a cadeia precisa rodar inline no orquestrador
+    porque resultados de queries disparadas por uma query runjs aninhada não
+    ficam visíveis no snapshot de estado de quem a chamou.
+    """
+    return f"""  try {{
+    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    let marcas = queries.fipeMarcas.getData();
+    if (!marcas || !marcas.length) {{
+      await queries.fipeMarcas.run();
+      marcas = queries.fipeMarcas.getData() || [];
+    }}
+    const alvoMarca = norm({marca});
+    const marcaFipe =
+      alvoMarca.length > 2
+        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)
+        : null;
+    if (marcaFipe) {{
+      await actions.setVariable('fipeAuto', {{ marca: String(marcaFipe.codigo) }});
+      await queries.fipeModelos.run();
+      const modelos = queries.fipeModelos.getData() || [];
+      const alvoModelo = norm({modelo});
+      let modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;
+      if (!modeloFipe && alvoModelo.length > 1) {{
+        const primeira = norm(String({modelo} || '').split(/[\\s/]+/)[0]);
+        if (primeira.length > 2) modeloFipe = modelos.find((m) => norm(m.nome).indexOf(primeira) !== -1);
+      }}
+      if (modeloFipe) {{
+        await actions.setVariable('fipeAuto', {{ marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) }});
+        await queries.fipeAnos.run();
+        const anos = queries.fipeAnos.getData() || [];
+        const alvoAno = String({ano} || '').replace(/[^0-9]/g, '').slice(0, 4);
+        const anoFipe = alvoAno
+          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)
+          : null;
+        if (anoFipe) {{
+          await actions.setVariable('fipeAuto', {{
+            marca: String(marcaFipe.codigo),
+            modelo: String(modeloFipe.codigo),
+            ano: String(anoFipe.codigo),
+          }});
+          await queries.fipeValorSelecao.run();
+          const fipeOficial = queries.fipeValorSelecao.getData();
+          if (fipeOficial && fipeOficial.valor) {{
+            {alvo}.fipe = {{
+              codigoFipe: fipeOficial.codigoFipe,
+              valor: fipeOficial.valor,
+              mesReferencia: fipeOficial.mesReferencia,
+              historico: [],
+            }};
+            {alvo}.veiculo.codigoFipe = fipeOficial.codigoFipe;
+          }}
+        }}
+      }}
+    }}
+  }} catch (erro) {{
+    // A valoração FIPE é complementar; o usuário pode usar a aba Tabela FIPE.
+  }}"""
+
+
+import re as _re
+
+CODE_ORQUESTRADOR = _re.sub(
+    r"^CADEIA_FIPE\(([^,]+), ([^,]+), ([^,]+), ([^)]+)\)$",
+    lambda m: _cadeia_fipe_js(m.group(1).strip(), m.group(2).strip(), m.group(3).strip(), m.group(4).strip()),
+    CODE_ORQUESTRADOR,
+    flags=_re.M,
+)
 
 CODE_DEMO = r"""// Modo demonstração: gera um laudo veicular simulado e determinístico a
 // partir do identificador informado, seguindo o mesmo contrato de dados do
@@ -977,9 +1041,9 @@ components.append(
     texto_html(
         "bannerGratuito",
         "<div style='background:#eef4ff;border:1px solid #b2ccff;border-radius:8px;padding:10px 14px;"
-        "color:#1d4ed8;font-size:13px'>🆓 <b>Modo gratuito:</b> chassi decodificado com dados reais "
-        "(padrão VIN + base NHTSA vPIC) e tabela FIPE oficial na aba correspondente. Situação legal, "
-        "sinistros e leilões requerem um provedor pago.</div>",
+        "color:#1d4ed8;font-size:13px'>🆓 <b>Modo gratuito:</b> dados reais de fontes gratuitas — "
+        "decodificação do chassi (padrão VIN + base NHTSA vPIC), consulta de placa no serviço configurado "
+        "e tabela FIPE oficial. Situação legal completa, sinistros e leilões requerem um provedor pago.</div>",
         (1, 158, 41, 40),
         (1, 205, 41, 60),
         visibility="{{!variables.erroConsulta && variables.modoGratuito === true && !!variables.resultado}}",
@@ -1319,8 +1383,12 @@ components.append(
         "font-size:12px;color:#687076;line-height:1.6'>"
         "<b style='color:#1b1f31'>Fontes de dados</b><br/>"
         "<b>Modo gratuito (padrão):</b> chassi decodificado com dados reais (padrão VIN/WMI + base pública NHTSA vPIC) "
-        "e valores oficiais da tabela FIPE na aba correspondente (API pública Parallelum). Placa e Renavam usam dados "
+        "e valores oficiais da tabela FIPE na aba correspondente (API pública Parallelum). Renavam usa dados "
         "simulados até haver provedor configurado.<br/>"
+        "<b>Placa com cota gratuita (opcional):</b> serviços como wdapi2, API Placas, FipeAPI Placas e PlacaAPI oferecem "
+        "consultas gratuitas diárias mediante cadastro. Crie a constante <code>PLACA_API_URL</code> com a URL do serviço "
+        "usando <code>{placa}</code> como marcador (ex.: <code>https://wdapi2.com.br/consulta/{placa}/SUA_CHAVE</code>) e a "
+        "consulta por placa passa a retornar dados reais, com valoração FIPE automática.<br/>"
         "<b>Fase 1 — APIBrasil (pago; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a "
         "<i>API Placa Dados</i> e, em <b>Workspace settings → Workspace constants</b>, crie a constante "
         "<code>CONSULTA_VEICULAR_API_URL</code> = <code>https://gateway.apibrasil.io/api/v2/vehicles/dados</code> e os secrets "
@@ -1666,6 +1734,123 @@ data_queries = [
             "notificationDuration": 5000,
         },
         "dataSourceId": DS_RUNJS,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_PLACA_GRATIS,
+        "name": "consultaPlacaGratuita",
+        "options": {
+            "method": "get",
+            "url": "{{String(constants.PLACA_API_URL).replace('{placa}', variables.identificadorConsulta)}}",
+            "url_params": [["", ""]],
+            "headers": [["Accept", "application/json"]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": r"""// Normaliza a resposta de serviços gratuitos de consulta por placa
+// (wdapi2, API Placas, FipeAPI Placas, PlacaAPI — formatos semelhantes) para
+// o contrato canônico do app.
+if (data && (data.error === true || data.erro === true)) {
+  throw new Error(data.message || data.mensagem || 'O serviço de placa retornou erro.');
+}
+const raiz = (data && (data.response || data.dados || data.data)) || data || {};
+const v = raiz.veiculo || raiz;
+const extra = v.extra || raiz.extra || {};
+const msg = String(v.mensagemRetorno || raiz.mensagemRetorno || '');
+if (/nao encontrado|não encontrado|sem dados/i.test(msg)) {
+  throw new Error(msg);
+}
+const fipeBruto = raiz.fipe && (raiz.fipe.dados || raiz.fipe);
+const fipeItem = (Array.isArray(fipeBruto) ? fipeBruto[0] : fipeBruto) || {};
+
+const texto = (valor, padrao) => {
+  if (valor === undefined || valor === null || valor === '') return padrao;
+  return String(valor);
+};
+
+const situacao = texto(v.situacao || extra.situacao_veiculo, '');
+const situacaoMin = situacao.toLowerCase();
+let indicadorRouboFurto = null;
+if (situacaoMin.indexOf('roubo') !== -1 || situacaoMin.indexOf('furto') !== -1) indicadorRouboFurto = true;
+else if (situacaoMin.indexOf('sem restri') !== -1 || situacaoMin.indexOf('circula') !== -1) indicadorRouboFurto = false;
+
+const restricoes = [];
+[v, extra].forEach((origem) => {
+  Object.keys(origem || {}).forEach((chave) => {
+    if (/^restricao/i.test(chave)) {
+      const valor = texto(origem[chave], '');
+      if (valor && !/^sem restri/i.test(valor) && valor !== '0') {
+        restricoes.push({ tipo: valor, descricao: 'Apontamento retornado pela base consultada.', orgao: '—' });
+      }
+    }
+  });
+});
+
+const naoCoberto = 'Não coberto na consulta gratuita';
+return {
+  veiculo: {
+    chassi: texto(v.chassi || extra.chassi, '—'),
+    renavam: texto(v.renavam || extra.renavam, '—'),
+    placa: texto(v.placa, variables.identificadorConsulta),
+    marca: texto(v.marca || v.MARCA || fipeItem.texto_marca, '—'),
+    modelo: texto(v.modelo || v.MODELO || v.SUBMODELO || fipeItem.texto_modelo, '—'),
+    anoFabricacao: texto(v.ano || v.anoFabricacao || extra.ano_fabricacao, '—'),
+    anoModelo: texto(v.anoModelo || v.ano_modelo || extra.ano_modelo || fipeItem.ano_modelo, ''),
+    cor: texto(v.cor || extra.cor_veiculo, '—'),
+    combustivel: texto(v.combustivel || extra.combustivel || fipeItem.combustivel, '—'),
+    codigoCombustivel: null,
+    municipio: texto(v.municipio || extra.municipio, '—'),
+    uf: texto(v.uf || extra.uf || extra.uf_placa, '—'),
+    codigoFipe: texto(fipeItem.codigo_fipe || fipeItem.codigoFipe || v.codigo_fipe, ''),
+    procedencia: texto(v.procedencia || extra.procedencia, '—'),
+    tipo: texto(v.tipo_veiculo || extra.tipo_veiculo || v.segmento, '—'),
+    situacao: texto(situacao, '—'),
+  },
+  situacaoLegal: {
+    status:
+      indicadorRouboFurto || restricoes.length > 0
+        ? 'Com restrições'
+        : indicadorRouboFurto === false
+        ? 'Regular'
+        : 'Verificação parcial',
+    rouboFurto: {
+      indicador: indicadorRouboFurto,
+      detalhes:
+        indicadorRouboFurto === true
+          ? 'Constam registros de roubo ou furto na base consultada.'
+          : indicadorRouboFurto === false
+          ? 'Nada consta na base consultada.'
+          : naoCoberto + ' — requer provedor com acesso às bases oficiais.',
+    },
+    gravame: { status: texto(extra.gravame || v.gravame, naoCoberto), financeira: null, dataInclusao: null },
+    debitos: { ipva: naoCoberto, licenciamento: naoCoberto, multas: naoCoberto },
+    renajud: naoCoberto,
+    restricoes: restricoes,
+  },
+  sinistros: { indicador: null, ocorrencias: [] },
+  leiloes: { indicador: null, ocorrencias: [] },
+  fipe: {
+    codigoFipe: texto(fipeItem.codigo_fipe || fipeItem.codigoFipe, ''),
+    valor: texto(fipeItem.texto_valor || fipeItem.valor, ''),
+    mesReferencia: texto(fipeItem.mes_referencia || fipeItem.mesReferencia, ''),
+    historico: [],
+  },
+  metadados: {
+    fonte: 'Consulta gratuita de placa (serviço configurado em PLACA_API_URL)',
+    modoDemo: false,
+    consultadoEm: new Date().toLocaleString('pt-BR'),
+  },
+};
+""",
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
         "appVersionId": VERSION_ID,
         "createdAt": TS,
         "updatedAt": TS,

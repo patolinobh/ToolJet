@@ -44,10 +44,19 @@ Sem nenhuma configuração, o app já entrega **dados reais gratuitos** em duas 
   ano (API pública Parallelum v1), retornando valor vigente, código FIPE e mês de
   referência.
 
-**Consulta por placa ou Renavam** não tem fonte gratuita legítima no Brasil; nesses
-casos o app roda a query `consultaDemo`, que gera um laudo **simulado e
-determinístico** cobrindo cenários variados, com um banner identificando claramente
-que os dados são fictícios.
+- **Consulta por placa com cota gratuita (opcional)** — serviços como wdapi2,
+  API Placas, FipeAPI Placas e PlacaAPI oferecem consultas gratuitas diárias
+  mediante cadastro, todos com formatos de resposta semelhantes. Basta criar a
+  constante `PLACA_API_URL` com a URL do serviço usando `{placa}` como marcador
+  (ex.: `https://wdapi2.com.br/consulta/{placa}/SUA_CHAVE`) e a consulta por
+  placa passa a usar a query `consultaPlacaGratuita`, com transformação
+  defensiva multi-formato e valoração FIPE automática (pelo código FIPE
+  retornado ou pela cadeia marca → modelo → ano).
+
+**Consulta por Renavam** — e por placa sem `PLACA_API_URL` configurada — não tem
+fonte gratuita; nesses casos o app roda a query `consultaDemo`, que gera um laudo
+**simulado e determinístico** cobrindo cenários variados, com um banner
+identificando claramente que os dados são fictícios.
 
 ### 2. Modo provedor real
 
@@ -153,6 +162,7 @@ Toda a interface lê a variável de página `resultado`, definida pelo orquestra
 | --- | --- | --- |
 | `executarConsulta` | Run JavaScript | Orquestrador: valida a entrada, detecta o tipo, escolhe o modo (gratuito / APIBrasil / provedor genérico / demo), decodifica chassi (WMI local), dispara consultas e publica `variables.resultado`. |
 | `decodificarVin` | REST API | Modo gratuito: `GET` na base pública NHTSA vPIC (`DecodeVinValues`) para decodificar o chassi. |
+| `consultaPlacaGratuita` | REST API | Modo gratuito: `GET` no serviço de placa com cota gratuita configurado em `PLACA_API_URL` (marcador `{placa}`), com transformação multi-formato. |
 | `fipeMarcas` / `fipeModelos` / `fipeAnos` / `fipeValorSelecao` | REST API | Aba Tabela FIPE: navegação marca → modelo → ano e valor oficial vigente (API pública Parallelum v1). |
 | `consultaDemo` | Run JavaScript | Gera o laudo simulado determinístico (placa/Renavam sem provedor configurado). |
 | `consultaApiBrasil` | REST API | Fase 1: `POST` na APIBrasil (*API Placa Dados*) com headers `Authorization: Bearer` + `DeviceToken`; transformação normaliza para o contrato canônico. |
