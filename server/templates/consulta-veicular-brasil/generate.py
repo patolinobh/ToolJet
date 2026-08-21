@@ -22,6 +22,9 @@ ENV_STG = uid("env-staging")
 ENV_PROD = uid("env-production")
 DS_RESTAPI = uid("ds-restapi")
 DS_RUNJS = uid("ds-runjs")
+DS_TJDB = uid("ds-tooljetdb")
+PAGE2_ID = uid("page-historico")
+TABELA_CONSULTAS_ID = uid("tjdb-consultas-veiculares")
 
 Q_ORQUESTRADOR = uid("q-executarConsulta")
 Q_PROVEDOR = uid("q-consultaProvedor")
@@ -38,6 +41,8 @@ Q_SEL_MODELO = uid("q-aoSelecionarModeloFipe")
 Q_SEL_ANO = uid("q-aoSelecionarAnoFipe")
 Q_PLACA_GRATIS = uid("q-consultaPlacaGratuita")
 Q_SEL_TIPO = uid("q-aoSelecionarTipoFipe")
+Q_REGISTRAR = uid("q-registrarConsulta")
+Q_LISTAR = uid("q-listarConsultas")
 Q_FIPE_HIST = uid("q-fipeHistorico")
 Q_LAUDO = uid("q-gerarLaudoPdf")
 
@@ -105,6 +110,30 @@ await actions.setVariable('identificadorConsulta', entrada);
 // clona antes de qualquer mutação (ex.: anexar o resultado FIPE).
 const clonar = (obj) => (obj ? JSON.parse(JSON.stringify(obj)) : obj);
 
+// Registra a consulta no histórico (ToolJet Database) — melhor esforço: uma
+// falha aqui (ex.: ToolJet DB indisponível) não afeta a consulta em si.
+const registrarNoHistorico = async (res, modo) => {
+  try {
+    await actions.setVariable('registroConsulta', {
+      consultadoEm: new Date().toLocaleString('pt-BR'),
+      identificador: entrada,
+      tipo: tipo,
+      modo: modo,
+      marca: (res.veiculo && res.veiculo.marca) || '—',
+      modelo: (res.veiculo && res.veiculo.modelo) || '—',
+      ano: String((res.veiculo && (res.veiculo.anoModelo || res.veiculo.anoFabricacao)) || ''),
+      placa: (res.veiculo && res.veiculo.placa) || '—',
+      statusLegal: (res.situacaoLegal && res.situacaoLegal.status) || '—',
+      valorFipe: (res.fipe && res.fipe.valor) || '',
+      fonte: (res.metadados && res.metadados.fonte) || '',
+    });
+    await queries.registrarConsulta.run();
+    await queries.listarConsultas.run();
+  } catch (erro) {
+    // Histórico é complementar.
+  }
+};
+
 const urlProvedor =
   typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL
     ? String(constants.CONSULTA_VEICULAR_API_URL)
@@ -163,6 +192,7 @@ CADEIA_FIPE(resultadoPlaca, resultadoPlaca.veiculo.marca, resultadoPlaca.veiculo
   }
 
   await actions.setVariable('resultado', resultadoPlaca);
+  await registrarNoHistorico(resultadoPlaca, 'placa-gratuita');
   return resultadoPlaca;
 }
 
@@ -256,6 +286,7 @@ if (modoGratuito) {
 CADEIA_FIPE(resultadoGratuito, resultadoGratuito.veiculo.marca, vpic.modelo, resultadoGratuito.veiculo.anoModelo, tipoFipeChassi)
 
   await actions.setVariable('resultado', resultadoGratuito);
+  await registrarNoHistorico(resultadoGratuito, 'chassi-gratuito');
   return resultadoGratuito;
 }
 
@@ -316,6 +347,7 @@ if (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.
 }
 
 await actions.setVariable('resultado', resultado);
+await registrarNoHistorico(resultado, modoApiBrasil ? 'apibrasil' : apiConfigurada ? 'provedor' : 'demo');
 return resultado;
 """
 
@@ -856,13 +888,13 @@ def layout(comp_id, name, desktop, mobile=None):
     ]
 
 
-def component(name, ctype, desktop, mobile=None, parent=None, properties=None, styles=None, validation=None):
+def component(name, ctype, desktop, mobile=None, parent=None, properties=None, styles=None, validation=None, page=None):
     cid = uid("component-" + name)
     return {
         "id": cid,
         "name": name,
         "type": ctype,
-        "pageId": PAGE_ID,
+        "pageId": page or PAGE_ID,
         "parent": parent,
         "properties": properties or {},
         "general": {},
@@ -879,7 +911,7 @@ def component(name, ctype, desktop, mobile=None, parent=None, properties=None, s
     }
 
 
-def texto_html(name, html, desktop, mobile=None, parent=None, visibility="{{true}}", extra_styles=None):
+def texto_html(name, html, desktop, mobile=None, parent=None, visibility="{{true}}", extra_styles=None, page=None):
     styles = {
         "backgroundColor": {"value": "#ffffff00"},
         "textColor": {"value": "#1b1f31"},
@@ -898,6 +930,7 @@ def texto_html(name, html, desktop, mobile=None, parent=None, visibility="{{true
         desktop,
         mobile,
         parent=parent,
+        page=page,
         properties={
             "text": {"value": html},
             "textFormat": {"value": "html"},
@@ -909,7 +942,7 @@ def texto_html(name, html, desktop, mobile=None, parent=None, visibility="{{true
     )
 
 
-def tabela(name, data_expr, columns, desktop, parent=None, mobile=None, visibility="{{true}}"):
+def tabela(name, data_expr, columns, desktop, parent=None, mobile=None, visibility="{{true}}", page=None, loading_expr=None):
     cols = []
     for i, (col_name, key) in enumerate(columns):
         cols.append(
@@ -928,6 +961,7 @@ def tabela(name, data_expr, columns, desktop, parent=None, mobile=None, visibili
         desktop,
         mobile,
         parent=parent,
+        page=page,
         properties={
             "title": {"value": "Table"},
             "data": {"value": data_expr},
@@ -939,7 +973,7 @@ def tabela(name, data_expr, columns, desktop, parent=None, mobile=None, visibili
             "autogenerateColumns": {"value": True},
             "visible": {"value": visibility},
             "visibility": {"value": visibility},
-            "loadingState": {"value": CARREGANDO},
+            "loadingState": {"value": loading_expr or CARREGANDO},
             "rowsPerPage": {"value": "{{10}}"},
             "enablePagination": {"value": "{{true}}"},
             "serverSidePagination": {"value": "{{false}}"},
@@ -1515,6 +1549,47 @@ components.append(
     )
 )
 
+# ---------------------------------------------------------------------------
+# Página 2 — Histórico de consultas (ToolJet Database)
+# ---------------------------------------------------------------------------
+
+components.append(
+    texto_html(
+        "tituloHistorico",
+        "<div style='padding-top:6px'>"
+        "<div style='font-size:26px;font-weight:800;color:#1b1f31'>🗂 Histórico de consultas</div>"
+        "<div style='margin-top:4px;font-size:14px;color:#687076'>"
+        "Todas as consultas realizadas neste workspace, registradas automaticamente no ToolJet Database "
+        "(<b>{{(queries.listarConsultas.data || []).length}}</b> registros)."
+        "</div></div>",
+        (1, 20, 41, 80),
+        (1, 10, 41, 90),
+        page=PAGE2_ID,
+    )
+)
+components.append(
+    tabela(
+        "tabelaHistoricoConsultas",
+        "{{queries.listarConsultas.data || []}}",
+        [
+            ("Data/hora", "consultado_em"),
+            ("Identificador", "identificador"),
+            ("Tipo", "tipo"),
+            ("Modo", "modo"),
+            ("Marca", "marca"),
+            ("Modelo", "modelo"),
+            ("Ano", "ano"),
+            ("Placa", "placa"),
+            ("Situação", "status_legal"),
+            ("Valor FIPE", "valor_fipe"),
+        ],
+        (1, 110, 41, 560),
+        mobile=(1, 110, 41, 560),
+        page=PAGE2_ID,
+        loading_expr="{{queries.listarConsultas.isLoading}}",
+    )
+)
+
 COMP_BY_NAME = {c["name"]: c for c in components}
 
 # ---------------------------------------------------------------------------
@@ -1526,6 +1601,18 @@ data_sources = [
         "id": DS_RESTAPI,
         "name": "restapidefault",
         "kind": "restapi",
+        "type": "static",
+        "pluginId": None,
+        "appVersionId": VERSION_ID,
+        "organizationId": None,
+        "scope": "local",
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": DS_TJDB,
+        "name": "tooljetdbdefault",
+        "kind": "tooljetdb",
         "type": "static",
         "pluginId": None,
         "appVersionId": VERSION_ID,
@@ -2166,6 +2253,61 @@ return { gerado: true };
         "updatedAt": TS,
     },
     {
+        "id": Q_REGISTRAR,
+        "name": "registrarConsulta",
+        "options": {
+            "operation": "create_row",
+            "transformationLanguage": "javascript",
+            "enableTransformation": False,
+            "organization_id": ORG_ID,
+            "table_id": TABELA_CONSULTAS_ID,
+            "create_row": {
+                "0": {"column": "consultado_em", "value": "{{(variables.registroConsulta && variables.registroConsulta.consultadoEm) || ''}}"},
+                "1": {"column": "identificador", "value": "{{(variables.registroConsulta && variables.registroConsulta.identificador) || ''}}"},
+                "2": {"column": "tipo", "value": "{{(variables.registroConsulta && variables.registroConsulta.tipo) || ''}}"},
+                "3": {"column": "modo", "value": "{{(variables.registroConsulta && variables.registroConsulta.modo) || ''}}"},
+                "4": {"column": "marca", "value": "{{(variables.registroConsulta && variables.registroConsulta.marca) || ''}}"},
+                "5": {"column": "modelo", "value": "{{(variables.registroConsulta && variables.registroConsulta.modelo) || ''}}"},
+                "6": {"column": "ano", "value": "{{(variables.registroConsulta && variables.registroConsulta.ano) || ''}}"},
+                "7": {"column": "placa", "value": "{{(variables.registroConsulta && variables.registroConsulta.placa) || ''}}"},
+                "8": {"column": "status_legal", "value": "{{(variables.registroConsulta && variables.registroConsulta.statusLegal) || ''}}"},
+                "9": {"column": "valor_fipe", "value": "{{(variables.registroConsulta && variables.registroConsulta.valorFipe) || ''}}"},
+                "10": {"column": "fonte", "value": "{{(variables.registroConsulta && variables.registroConsulta.fonte) || ''}}"}
+            },
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_TJDB,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_LISTAR,
+        "name": "listarConsultas",
+        "options": {
+            "operation": "list_rows",
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": (
+                "// Ordena o histórico da consulta mais recente para a mais antiga.\n"
+                "const linhas = (data && data.result) || data || [];\n"
+                "return [...linhas].sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));\n"
+            ),
+            "organization_id": ORG_ID,
+            "table_id": TABELA_CONSULTAS_ID,
+            "list_rows": {},
+            "runOnPageLoad": True,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_TJDB,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
         "id": Q_FIPE,
         "name": "consultarFipe",
         "options": {
@@ -2340,10 +2482,10 @@ app_version = {
     },
     "pageSettings": {
         "properties": {
-            "disableMenu": {"value": "{{true}}", "fxActive": False},
+            "disableMenu": {"value": "{{false}}", "fxActive": False},
         }
     },
-    "showViewerNavigation": False,
+    "showViewerNavigation": True,
     "homePageId": PAGE_ID,
     "appId": APP_ID,
     "currentEnvironmentId": ENV_DEV,
@@ -2386,7 +2528,23 @@ app_v2 = {
             "pageGroupIndex": None,
             "pageGroupId": None,
             "isPageGroup": False,
-        }
+        },
+        {
+            "id": PAGE2_ID,
+            "name": "Histórico",
+            "handle": "historico",
+            "index": 2,
+            "disabled": False,
+            "hidden": False,
+            "icon": None,
+            "createdAt": TS,
+            "updatedAt": TS,
+            "autoComputeLayout": True,
+            "appVersionId": VERSION_ID,
+            "pageGroupIndex": None,
+            "pageGroupId": None,
+            "isPageGroup": False,
+        },
     ],
     "events": events,
     "dataQueries": data_queries,
@@ -2444,7 +2602,45 @@ app_v2 = {
 }
 
 definition = {
-    "tooljet_database": [],
+    "tooljet_database": [
+        {
+            "id": TABELA_CONSULTAS_ID,
+            "table_name": "consultas_veiculares",
+            "schema": {
+                "columns": [
+                    {
+                        "column_name": "id",
+                        "data_type": "integer",
+                        "column_default": "nextval('\"" + TABELA_CONSULTAS_ID + "_id_seq\"'::regclass)",
+                        "character_maximum_length": None,
+                        "numeric_precision": 32,
+                        "is_nullable": "NO",
+                        "constraint_type": "PRIMARY KEY",
+                        "keytype": "PRIMARY KEY",
+                        "constraints_type": {"is_not_null": True, "is_primary_key": True, "is_unique": False},
+                    },
+                ]
+                + [
+                    {
+                        "column_name": nome,
+                        "data_type": "character varying",
+                        "column_default": None,
+                        "character_maximum_length": None,
+                        "numeric_precision": None,
+                        "is_nullable": "YES",
+                        "constraint_type": None,
+                        "keytype": "",
+                        "constraints_type": {"is_not_null": False, "is_primary_key": False, "is_unique": False},
+                    }
+                    for nome in [
+                        "consultado_em", "identificador", "tipo", "modo", "marca",
+                        "modelo", "ano", "placa", "status_legal", "valor_fipe", "fonte",
+                    ]
+                ],
+                "foreign_keys": [],
+            },
+        }
+    ],
     "app": [{"definition": {"appV2": app_v2}}],
     "tooljet_version": "3.0.17-cloud-lts",
 }
@@ -2456,6 +2652,7 @@ manifest = {
     "sources": [
         {"name": "RestAPI", "id": "restapi"},
         {"name": "Run JavaScript", "id": "runjs"},
+        {"name": "ToolJet Database", "id": "tooljetdb"},
     ],
     "id": "consulta-veicular-brasil",
     "category": "operations",

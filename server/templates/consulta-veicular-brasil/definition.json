@@ -1,5 +1,195 @@
 {
-  "tooljet_database": [],
+  "tooljet_database": [
+    {
+      "id": "2fcf61ef-54f2-5524-a8c7-46a3662862bb",
+      "table_name": "consultas_veiculares",
+      "schema": {
+        "columns": [
+          {
+            "column_name": "id",
+            "data_type": "integer",
+            "column_default": "nextval('\"2fcf61ef-54f2-5524-a8c7-46a3662862bb_id_seq\"'::regclass)",
+            "character_maximum_length": null,
+            "numeric_precision": 32,
+            "is_nullable": "NO",
+            "constraint_type": "PRIMARY KEY",
+            "keytype": "PRIMARY KEY",
+            "constraints_type": {
+              "is_not_null": true,
+              "is_primary_key": true,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "consultado_em",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "identificador",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "tipo",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "modo",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "marca",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "modelo",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "ano",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "placa",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "status_legal",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "valor_fipe",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          },
+          {
+            "column_name": "fonte",
+            "data_type": "character varying",
+            "column_default": null,
+            "character_maximum_length": null,
+            "numeric_precision": null,
+            "is_nullable": "YES",
+            "constraint_type": null,
+            "keytype": "",
+            "constraints_type": {
+              "is_not_null": false,
+              "is_primary_key": false,
+              "is_unique": false
+            }
+          }
+        ],
+        "foreign_keys": []
+      }
+    }
+  ],
   "app": [
     {
       "definition": {
@@ -36,12 +226,12 @@
             "pageSettings": {
               "properties": {
                 "disableMenu": {
-                  "value": "{{true}}",
+                  "value": "{{false}}",
                   "fxActive": false
                 }
               }
             },
-            "showViewerNavigation": false,
+            "showViewerNavigation": true,
             "homePageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
             "appId": "1ffa56fa-0919-5f76-8162-cf3d04b5c03f",
             "currentEnvironmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
@@ -3048,6 +3238,317 @@
                   "updatedAt": "2026-08-16T12:00:00.000Z"
                 }
               ]
+            },
+            {
+              "id": "b8805642-e265-577c-afb2-8146730c291f",
+              "name": "tituloHistorico",
+              "type": "Text",
+              "pageId": "5549e81e-02bb-5065-91ed-4d4ea64e0fc5",
+              "parent": null,
+              "properties": {
+                "text": {
+                  "value": "<div style='padding-top:6px'><div style='font-size:26px;font-weight:800;color:#1b1f31'>🗂 Histórico de consultas</div><div style='margin-top:4px;font-size:14px;color:#687076'>Todas as consultas realizadas neste workspace, registradas automaticamente no ToolJet Database (<b>{{(queries.listarConsultas.data || []).length}}</b> registros).</div></div>"
+                },
+                "textFormat": {
+                  "value": "html"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{false}}"
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "backgroundColor": {
+                  "value": "#ffffff00"
+                },
+                "textColor": {
+                  "value": "#1b1f31"
+                },
+                "textSize": {
+                  "value": "14"
+                },
+                "textAlign": {
+                  "value": "left"
+                },
+                "fontWeight": {
+                  "value": "normal"
+                },
+                "decoration": {
+                  "value": "none"
+                },
+                "transformation": {
+                  "value": "none"
+                },
+                "fontStyle": {
+                  "value": "normal"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "ed775be7-cc11-5bbd-abf5-af0c6688ca9a",
+                  "type": "desktop",
+                  "top": 20,
+                  "left": 1,
+                  "width": 41,
+                  "height": 80,
+                  "componentId": "b8805642-e265-577c-afb2-8146730c291f",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "649723d0-842a-5699-bfe8-c940c38be7bd",
+                  "type": "mobile",
+                  "top": 10,
+                  "left": 1,
+                  "width": 41,
+                  "height": 90,
+                  "componentId": "b8805642-e265-577c-afb2-8146730c291f",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
+            },
+            {
+              "id": "9d552b74-6861-5a45-a3e9-3748f2d6caaa",
+              "name": "tabelaHistoricoConsultas",
+              "type": "Table",
+              "pageId": "5549e81e-02bb-5065-91ed-4d4ea64e0fc5",
+              "parent": null,
+              "properties": {
+                "title": {
+                  "value": "Table"
+                },
+                "data": {
+                  "value": "{{queries.listarConsultas.data || []}}"
+                },
+                "columns": {
+                  "value": [
+                    {
+                      "id": "eabfe484-a071-5acd-bae9-a778bf2b7f9e",
+                      "name": "Data/hora",
+                      "key": "consultado_em",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "bd9adf01-6627-5440-a899-463c8f5b4001",
+                      "name": "Identificador",
+                      "key": "identificador",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "12d1303d-6ad0-500a-b620-9490a335c503",
+                      "name": "Tipo",
+                      "key": "tipo",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "3b116fef-057a-5341-8608-8c781509aa0c",
+                      "name": "Modo",
+                      "key": "modo",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "ab16746e-efc7-5ba7-ad0e-aabb7b0af52b",
+                      "name": "Marca",
+                      "key": "marca",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "c82733a9-ee1f-5e99-9745-0445eb1bba45",
+                      "name": "Modelo",
+                      "key": "modelo",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "6660bda8-6908-5f21-93ff-9d54c5aed3c2",
+                      "name": "Ano",
+                      "key": "ano",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "95a98128-38bc-53c8-90f9-f344b759596c",
+                      "name": "Placa",
+                      "key": "placa",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "586ea027-6b5a-571c-a96a-3923b8766449",
+                      "name": "Situação",
+                      "key": "status_legal",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    },
+                    {
+                      "id": "8e0510d7-e8af-53c1-9664-b21a092ec158",
+                      "name": "Valor FIPE",
+                      "key": "valor_fipe",
+                      "columnType": "string",
+                      "isEditable": "{{false}}",
+                      "fxActiveFields": []
+                    }
+                  ]
+                },
+                "useDynamicColumn": {
+                  "value": "{{false}}"
+                },
+                "autogenerateColumns": {
+                  "value": true
+                },
+                "visible": {
+                  "value": "{{true}}"
+                },
+                "visibility": {
+                  "value": "{{true}}"
+                },
+                "loadingState": {
+                  "value": "{{queries.listarConsultas.isLoading}}"
+                },
+                "rowsPerPage": {
+                  "value": "{{10}}"
+                },
+                "enablePagination": {
+                  "value": "{{true}}"
+                },
+                "serverSidePagination": {
+                  "value": "{{false}}"
+                },
+                "displaySearchBox": {
+                  "value": "{{false}}"
+                },
+                "showFilterButton": {
+                  "value": "{{false}}"
+                },
+                "showDownloadButton": {
+                  "value": "{{true}}"
+                },
+                "showBulkUpdateActions": {
+                  "value": "{{false}}"
+                },
+                "showBulkSelector": {
+                  "value": "{{false}}"
+                },
+                "highlightSelectedRow": {
+                  "value": "{{false}}"
+                },
+                "allowSelection": {
+                  "value": "{{false}}"
+                },
+                "hideColumnSelectorButton": {
+                  "value": "{{true}}"
+                },
+                "showAddNewRowButton": {
+                  "value": "{{false}}"
+                },
+                "enabledSort": {
+                  "value": "{{true}}"
+                },
+                "columnSizes": {
+                  "value": {}
+                },
+                "actions": {
+                  "value": []
+                },
+                "disabledState": {
+                  "value": "{{false}}"
+                }
+              },
+              "general": {},
+              "styles": {
+                "borderRadius": {
+                  "value": "8"
+                },
+                "tableType": {
+                  "value": "table-classic"
+                },
+                "cellSize": {
+                  "value": "regular"
+                },
+                "contentWrap": {
+                  "value": "{{true}}"
+                },
+                "columnHeaderWrap": {
+                  "value": "fixed"
+                }
+              },
+              "generalStyles": {
+                "boxShadow": {
+                  "value": "0px 0px 0px 0px #00000040"
+                }
+              },
+              "displayPreferences": {
+                "showOnDesktop": {
+                  "value": "{{true}}"
+                },
+                "showOnMobile": {
+                  "value": "{{true}}"
+                }
+              },
+              "validation": {},
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "layouts": [
+                {
+                  "id": "14a201b7-99f6-5b4d-b4fa-d926ed6d9270",
+                  "type": "desktop",
+                  "top": 110,
+                  "left": 1,
+                  "width": 41,
+                  "height": 560,
+                  "componentId": "9d552b74-6861-5a45-a3e9-3748f2d6caaa",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                },
+                {
+                  "id": "2539782e-84dd-59e8-b267-1f507495f318",
+                  "type": "mobile",
+                  "top": 110,
+                  "left": 1,
+                  "width": 41,
+                  "height": 560,
+                  "componentId": "9d552b74-6861-5a45-a3e9-3748f2d6caaa",
+                  "dimensionUnit": "count",
+                  "updatedAt": "2026-08-16T12:00:00.000Z"
+                }
+              ]
             }
           ],
           "pages": [
@@ -3056,6 +3557,22 @@
               "name": "Consulta",
               "handle": "consulta",
               "index": 1,
+              "disabled": false,
+              "hidden": false,
+              "icon": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z",
+              "autoComputeLayout": true,
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "pageGroupIndex": null,
+              "pageGroupId": null,
+              "isPageGroup": false
+            },
+            {
+              "id": "5549e81e-02bb-5065-91ed-4d4ea64e0fc5",
+              "name": "Histórico",
+              "handle": "historico",
+              "index": 2,
               "disabled": false,
               "hidden": false,
               "icon": null,
@@ -3194,7 +3711,7 @@
               "id": "3dfdbdb1-0365-52bf-a032-320d74a8e71f",
               "name": "executarConsulta",
               "options": {
-                "code": "// Orquestra a consulta veicular: valida a entrada, detecta o tipo de\n// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o\n// modo (provedor real ou demonstração) e consolida o resultado no formato\n// canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\nawait actions.setVariable('fipeAuto', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nlet subtipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'antiga';\n} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'mercosul';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'\n  );\n  return null;\n}\n\n// Renavam tem dígito verificador oficial (módulo 11): valida offline para\n// barrar erros de digitação antes de qualquer consulta.\nif (tipo === 'renavam') {\n  const d = entrada.padStart(11, '0');\n  const corpo = d.slice(0, 10).split('').reverse();\n  let soma = 0;\n  for (let i = 0; i < 10; i++) soma += Number(corpo[i]) * (2 + (i % 8));\n  let dv = (soma * 10) % 11;\n  if (dv === 10) dv = 0;\n  if (Number(d) === 0 || dv !== Number(d[10])) {\n    await actions.setVariable(\n      'erroConsulta',\n      'Renavam inválido: o dígito verificador não confere. Confira a digitação no CRLV do veículo.'\n    );\n    return null;\n  }\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('subtipoPlaca', subtipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\n// Objetos lidos de queries (getData) vêm do store do app e são imutáveis;\n// clona antes de qualquer mutação (ex.: anexar o resultado FIPE).\nconst clonar = (obj) => (obj ? JSON.parse(JSON.stringify(obj)) : obj);\n\nconst urlProvedor =\n  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL\n    ? String(constants.CONSULTA_VEICULAR_API_URL)\n    : '';\nconst apiConfigurada = urlProvedor.indexOf('http') === 0;\n// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado\n// (headers Bearer + DeviceToken; consulta somente por placa).\nconst modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;\n// Modo gratuito: sem provedor pago configurado, um chassi é decodificado com\n// dados reais (tabela WMI local + NHTSA vPIC) e uma placa pode ser consultada\n// em um serviço com cota gratuita (constante PLACA_API_URL com o marcador\n// {placa}). Renavam — e placa sem PLACA_API_URL — caem no modo demo.\nconst placaGratuitaConfigurada =\n  typeof constants !== 'undefined' &&\n  constants &&\n  constants.PLACA_API_URL &&\n  String(constants.PLACA_API_URL).indexOf('http') === 0;\nconst modoGratuito =\n  !apiConfigurada && (tipo === 'chassi' || (tipo === 'placa' && placaGratuitaConfigurada));\nawait actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);\nawait actions.setVariable('modoGratuito', modoGratuito);\n\nif (modoGratuito && tipo === 'placa') {\n  // Consulta gratuita por placa no serviço configurado pelo usuário.\n  let resultadoPlaca = null;\n  try {\n    await queries.consultaPlacaGratuita.run();\n    resultadoPlaca = clonar(queries.consultaPlacaGratuita.getData());\n  } catch (erro) {\n    await actions.setVariable(\n      'erroConsulta',\n      'A consulta gratuita de placa falhou: ' + ((erro && erro.message) || erro) +\n        '. Verifique a cota e a chave configuradas em PLACA_API_URL.'\n    );\n    return null;\n  }\n  if (!resultadoPlaca || !resultadoPlaca.veiculo) {\n    await actions.setVariable(\n      'erroConsulta',\n      'O serviço gratuito de placa não retornou dados para esta placa. Verifique a cota diária e a chave em PLACA_API_URL.'\n    );\n    return null;\n  }\n\n  // Valoração FIPE: usa o código FIPE quando o serviço retorna; caso contrário,\n  // tenta casar marca/modelo/ano com a tabela oficial (mesma cadeia do chassi).\n  const tipoTextoPlaca = String(resultadoPlaca.veiculo.tipo || '').toUpperCase();\n  const tipoFipePlaca =\n    tipoTextoPlaca.indexOf('MOTO') !== -1\n      ? 'motos'\n      : tipoTextoPlaca.indexOf('CAMINH') !== -1 || tipoTextoPlaca.indexOf('TRATOR') !== -1\n      ? 'caminhoes'\n      : 'carros';\n  if (!(resultadoPlaca.fipe && resultadoPlaca.fipe.valor)) {\n  try {\n    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n    let marcas = queries.fipeMarcas.getData();\n    if (!marcas || !marcas.length) {\n      await queries.fipeMarcas.run();\n      marcas = queries.fipeMarcas.getData() || [];\n    }\n    const alvoMarca = norm(resultadoPlaca.veiculo.marca);\n    const marcaFipe =\n      alvoMarca.length > 2\n        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)\n        : null;\n    if (marcaFipe) {\n      await actions.setVariable('fipeAuto', { tipo: tipoFipePlaca, marca: String(marcaFipe.codigo) });\n      await queries.fipeModelos.run();\n      const modelos = queries.fipeModelos.getData() || [];\n      const alvoModelo = norm(resultadoPlaca.veiculo.modelo);\n      let modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;\n      if (!modeloFipe && alvoModelo.length > 1) {\n        const primeira = norm(String(resultadoPlaca.veiculo.modelo || '').split(/[\\s/]+/)[0]);\n        if (primeira.length > 2) modeloFipe = modelos.find((m) => norm(m.nome).indexOf(primeira) !== -1);\n      }\n      if (modeloFipe) {\n        await actions.setVariable('fipeAuto', { tipo: tipoFipePlaca, marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) });\n        await queries.fipeAnos.run();\n        const anos = queries.fipeAnos.getData() || [];\n        const alvoAno = String(resultadoPlaca.veiculo.anoModelo || '').replace(/[^0-9]/g, '').slice(0, 4);\n        const anoFipe = alvoAno\n          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)\n          : null;\n        if (anoFipe) {\n          await actions.setVariable('fipeAuto', {\n            tipo: tipoFipePlaca,\n            marca: String(marcaFipe.codigo),\n            modelo: String(modeloFipe.codigo),\n            ano: String(anoFipe.codigo),\n          });\n          await queries.fipeValorSelecao.run();\n          const fipeOficial = queries.fipeValorSelecao.getData();\n          if (fipeOficial && fipeOficial.valor) {\n            resultadoPlaca.fipe = {\n              codigoFipe: fipeOficial.codigoFipe,\n              valor: fipeOficial.valor,\n              mesReferencia: fipeOficial.mesReferencia,\n              historico: [],\n            };\n            resultadoPlaca.veiculo.codigoFipe = fipeOficial.codigoFipe;\n            // Evolução de valores: com a constante FIPE_API_TOKEN (chave gratuita\n            // da Parallelum v2), busca o histórico real para o gráfico.\n            const temTokenFipe =\n              typeof constants !== 'undefined' && constants && constants.FIPE_API_TOKEN;\n            if (temTokenFipe && fipeOficial.codigoFipe) {\n              await actions.setVariable('fipeAuto', {\n                tipo: tipoFipePlaca,\n                marca: String(marcaFipe.codigo),\n                modelo: String(modeloFipe.codigo),\n                ano: String(anoFipe.codigo),\n                codigoFipe: String(fipeOficial.codigoFipe),\n              });\n              try {\n                await queries.fipeHistorico.run();\n                const historicoReal = queries.fipeHistorico.getData();\n                if (historicoReal && historicoReal.length) {\n                  resultadoPlaca.fipe.historico = historicoReal;\n                }\n              } catch (erroHist) {\n                // Histórico é complementar ao valor vigente.\n              }\n            }\n          }\n        }\n      }\n    }\n  } catch (erro) {\n    // A valoração FIPE é complementar; o usuário pode usar a aba Tabela FIPE.\n  }\n  }\n\n  await actions.setVariable('resultado', resultadoPlaca);\n  return resultadoPlaca;\n}\n\nif (modoGratuito) {\n  // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.\n  const TABELA_WMI = {\n    '9BW': ['Volkswagen', 'Brasil'], '9BD': ['Fiat', 'Brasil'], '9BG': ['Chevrolet', 'Brasil'],\n    '9BF': ['Ford', 'Brasil'], '9BR': ['Toyota', 'Brasil'], '93H': ['Honda', 'Brasil'],\n    '93Y': ['Renault', 'Brasil'], '9BM': ['Mercedes-Benz', 'Brasil'], '95P': ['CAOA/Hyundai', 'Brasil'],\n    '9BH': ['Hyundai', 'Brasil'], '93X': ['Mitsubishi', 'Brasil'], '94D': ['Nissan', 'Brasil'],\n    '8AW': ['Volkswagen', 'Argentina'], '8AP': ['Fiat', 'Argentina'], '8AG': ['Chevrolet', 'Argentina'],\n    '8AF': ['Ford', 'Argentina'], '8A1': ['Renault', 'Argentina'], '8AJ': ['Toyota', 'Argentina'],\n    '9C2': ['Honda Motos', 'Brasil'], '9C6': ['Yamaha', 'Brasil'], '9CD': ['Suzuki Motos', 'Brasil'],\n    '9BS': ['Scania', 'Brasil'], '953': ['VW Caminhões', 'Brasil'], '9BV': ['Volvo', 'Brasil'],\n    '988': ['Jeep/Stellantis', 'Brasil'], '98R': ['Chery/CAOA', 'Brasil'], '95Y': ['BYD', 'Brasil'],\n  };\n  const PAIS_POR_INICIAL = {\n    '9': 'Brasil', '8': 'América do Sul', '3': 'México/América do Norte', '1': 'EUA', '4': 'EUA',\n    '5': 'EUA', '2': 'Canadá', 'W': 'Alemanha', 'J': 'Japão', 'K': 'Coreia do Sul', 'L': 'China',\n    'S': 'Reino Unido', 'V': 'França/Espanha', 'Z': 'Itália', 'Y': 'Suécia/Finlândia', 'T': 'Europa Central',\n  };\n  const MAPA_ANO = {\n    A: 1980, B: 1981, C: 1982, D: 1983, E: 1984, F: 1985, G: 1986, H: 1987, J: 1988, K: 1989,\n    L: 1990, M: 1991, N: 1992, P: 1993, R: 1994, S: 1995, T: 1996, V: 1997, W: 1998, X: 1999,\n    Y: 2000, 1: 2001, 2: 2002, 3: 2003, 4: 2004, 5: 2005, 6: 2006, 7: 2007, 8: 2008, 9: 2009,\n  };\n  const wmi = entrada.slice(0, 3);\n  const local = TABELA_WMI[wmi] || null;\n  const pais = local ? local[1] : PAIS_POR_INICIAL[entrada[0]] || 'Não identificado';\n  let anoLocal = MAPA_ANO[entrada[9]] !== undefined ? MAPA_ANO[entrada[9]] : null;\n  if (anoLocal) {\n    const anoAtual = new Date().getFullYear();\n    while (anoLocal + 30 <= anoAtual + 1) anoLocal += 30;\n  }\n\n  let vpic = null;\n  try {\n    await queries.decodificarVin.run();\n    vpic = queries.decodificarVin.getData();\n  } catch (erro) {\n    // vPIC é complementar; a decodificação local cobre fabricante, país e ano.\n  }\n  vpic = vpic || {};\n\n  const naoVerificado = 'Não coberto na consulta gratuita';\n  const resultadoGratuito = {\n    veiculo: {\n      chassi: entrada,\n      renavam: '—',\n      placa: '—',\n      marca: vpic.marca || (local ? local[0] : '—'),\n      modelo: vpic.modelo || (vpic.fabricante && vpic.fabricante !== vpic.marca ? vpic.fabricante : '—'),\n      anoFabricacao: '—',\n      anoModelo: vpic.anoModelo || anoLocal || '—',\n      cor: '—',\n      combustivel: vpic.combustivel || '—',\n      codigoCombustivel: null,\n      municipio: '—',\n      uf: '—',\n      codigoFipe: '',\n      procedencia: pais,\n      tipo: vpic.tipoVeiculo || '—',\n      situacao: 'Estrutura do chassi válida (decodificação WMI/vPIC)',\n    },\n    situacaoLegal: {\n      status: 'Verificação parcial',\n      rouboFurto: { indicador: null, detalhes: naoVerificado + ' — requer provedor com acesso às bases oficiais.' },\n      gravame: { status: naoVerificado, financeira: null, dataInclusao: null },\n      debitos: { ipva: naoVerificado, licenciamento: naoVerificado, multas: naoVerificado },\n      renajud: naoVerificado,\n      restricoes: [],\n    },\n    sinistros: { indicador: null, ocorrencias: [] },\n    leiloes: { indicador: null, ocorrencias: [] },\n    fipe: { codigoFipe: '', valor: '', mesReferencia: '', historico: [] },\n    metadados: {\n      fonte: 'Decodificação gratuita do chassi (tabela WMI + NHTSA vPIC)',\n      modoDemo: false,\n      consultadoEm: new Date().toLocaleString('pt-BR'),\n    },\n  };\n  // Avaliação FIPE automática: casa a marca/modelo/ano decodificados do chassi\n  // com a tabela FIPE oficial, no segmento correto (carros/motos/caminhões).\n  const tipoVpic = String(vpic.tipoVeiculo || '').toUpperCase();\n  const tipoFipeChassi =\n    ['9C2', '9C6', '9CD'].indexOf(wmi) !== -1 || tipoVpic.indexOf('MOTORCYCLE') !== -1\n      ? 'motos'\n      : ['9BS', '953', '9BV'].indexOf(wmi) !== -1 || tipoVpic.indexOf('TRUCK') !== -1\n      ? 'caminhoes'\n      : 'carros';\n  try {\n    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n    let marcas = queries.fipeMarcas.getData();\n    if (!marcas || !marcas.length) {\n      await queries.fipeMarcas.run();\n      marcas = queries.fipeMarcas.getData() || [];\n    }\n    const alvoMarca = norm(resultadoGratuito.veiculo.marca);\n    const marcaFipe =\n      alvoMarca.length > 2\n        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)\n        : null;\n    if (marcaFipe) {\n      await actions.setVariable('fipeAuto', { tipo: tipoFipeChassi, marca: String(marcaFipe.codigo) });\n      await queries.fipeModelos.run();\n      const modelos = queries.fipeModelos.getData() || [];\n      const alvoModelo = norm(vpic.modelo);\n      let modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;\n      if (!modeloFipe && alvoModelo.length > 1) {\n        const primeira = norm(String(vpic.modelo || '').split(/[\\s/]+/)[0]);\n        if (primeira.length > 2) modeloFipe = modelos.find((m) => norm(m.nome).indexOf(primeira) !== -1);\n      }\n      if (modeloFipe) {\n        await actions.setVariable('fipeAuto', { tipo: tipoFipeChassi, marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) });\n        await queries.fipeAnos.run();\n        const anos = queries.fipeAnos.getData() || [];\n        const alvoAno = String(resultadoGratuito.veiculo.anoModelo || '').replace(/[^0-9]/g, '').slice(0, 4);\n        const anoFipe = alvoAno\n          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)\n          : null;\n        if (anoFipe) {\n          await actions.setVariable('fipeAuto', {\n            tipo: tipoFipeChassi,\n            marca: String(marcaFipe.codigo),\n            modelo: String(modeloFipe.codigo),\n            ano: String(anoFipe.codigo),\n          });\n          await queries.fipeValorSelecao.run();\n          const fipeOficial = queries.fipeValorSelecao.getData();\n          if (fipeOficial && fipeOficial.valor) {\n            resultadoGratuito.fipe = {\n              codigoFipe: fipeOficial.codigoFipe,\n              valor: fipeOficial.valor,\n              mesReferencia: fipeOficial.mesReferencia,\n              historico: [],\n            };\n            resultadoGratuito.veiculo.codigoFipe = fipeOficial.codigoFipe;\n            // Evolução de valores: com a constante FIPE_API_TOKEN (chave gratuita\n            // da Parallelum v2), busca o histórico real para o gráfico.\n            const temTokenFipe =\n              typeof constants !== 'undefined' && constants && constants.FIPE_API_TOKEN;\n            if (temTokenFipe && fipeOficial.codigoFipe) {\n              await actions.setVariable('fipeAuto', {\n                tipo: tipoFipeChassi,\n                marca: String(marcaFipe.codigo),\n                modelo: String(modeloFipe.codigo),\n                ano: String(anoFipe.codigo),\n                codigoFipe: String(fipeOficial.codigoFipe),\n              });\n              try {\n                await queries.fipeHistorico.run();\n                const historicoReal = queries.fipeHistorico.getData();\n                if (historicoReal && historicoReal.length) {\n                  resultadoGratuito.fipe.historico = historicoReal;\n                }\n              } catch (erroHist) {\n                // Histórico é complementar ao valor vigente.\n              }\n            }\n          }\n        }\n      }\n    }\n  } catch (erro) {\n    // A valoração FIPE é complementar; o usuário pode usar a aba Tabela FIPE.\n  }\n\n  await actions.setVariable('resultado', resultadoGratuito);\n  return resultadoGratuito;\n}\n\nif (modoApiBrasil && tipo !== 'placa') {\n  await actions.setVariable(\n    'erroConsulta',\n    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'\n  );\n  return null;\n}\n\nlet resultado = null;\ntry {\n  if (modoApiBrasil) {\n    await queries.consultaApiBrasil.run();\n    resultado = clonar(queries.consultaApiBrasil.getData());\n  } else if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = clonar(queries.consultaProvedor.getData());\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });\n    resultado = clonar(queries.consultaDemo.getData());\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.\nconst semValorFipe = !(resultado.fipe && resultado.fipe.valor);\nif (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nreturn resultado;\n",
+                "code": "// Orquestra a consulta veicular: valida a entrada, detecta o tipo de\n// identificador (chassi/VIN, Renavam ou placa antiga/Mercosul), escolhe o\n// modo (provedor real ou demonstração) e consolida o resultado no formato\n// canônico usado por toda a interface.\nconst bruto = components.inputIdentificador.value || '';\nconst entrada = bruto.toUpperCase().replace(/[^A-Z0-9]/g, '');\n\nawait actions.setVariable('erroConsulta', '');\nawait actions.setVariable('resultado', null);\nawait actions.setVariable('fipeAuto', null);\n\nconst somenteDigitos = /^[0-9]+$/.test(entrada);\nlet tipo = null;\nlet subtipo = null;\nif (entrada.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(entrada)) {\n  tipo = 'chassi';\n} else if (somenteDigitos && entrada.length >= 9 && entrada.length <= 11) {\n  tipo = 'renavam';\n} else if (/^[A-Z]{3}[0-9]{4}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'antiga';\n} else if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(entrada)) {\n  tipo = 'placa';\n  subtipo = 'mercosul';\n}\n\nif (!tipo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Identificador inválido. Informe um chassi/VIN com 17 caracteres (sem as letras I, O e Q), um Renavam com 9 a 11 dígitos ou uma placa no padrão antigo (ABC1234) ou Mercosul (ABC1D23).'\n  );\n  return null;\n}\n\n// Renavam tem dígito verificador oficial (módulo 11): valida offline para\n// barrar erros de digitação antes de qualquer consulta.\nif (tipo === 'renavam') {\n  const d = entrada.padStart(11, '0');\n  const corpo = d.slice(0, 10).split('').reverse();\n  let soma = 0;\n  for (let i = 0; i < 10; i++) soma += Number(corpo[i]) * (2 + (i % 8));\n  let dv = (soma * 10) % 11;\n  if (dv === 10) dv = 0;\n  if (Number(d) === 0 || dv !== Number(d[10])) {\n    await actions.setVariable(\n      'erroConsulta',\n      'Renavam inválido: o dígito verificador não confere. Confira a digitação no CRLV do veículo.'\n    );\n    return null;\n  }\n}\n\nawait actions.setVariable('tipoConsulta', tipo);\nawait actions.setVariable('subtipoPlaca', subtipo);\nawait actions.setVariable('identificadorConsulta', entrada);\n\n// Objetos lidos de queries (getData) vêm do store do app e são imutáveis;\n// clona antes de qualquer mutação (ex.: anexar o resultado FIPE).\nconst clonar = (obj) => (obj ? JSON.parse(JSON.stringify(obj)) : obj);\n\n// Registra a consulta no histórico (ToolJet Database) — melhor esforço: uma\n// falha aqui (ex.: ToolJet DB indisponível) não afeta a consulta em si.\nconst registrarNoHistorico = async (res, modo) => {\n  try {\n    await actions.setVariable('registroConsulta', {\n      consultadoEm: new Date().toLocaleString('pt-BR'),\n      identificador: entrada,\n      tipo: tipo,\n      modo: modo,\n      marca: (res.veiculo && res.veiculo.marca) || '—',\n      modelo: (res.veiculo && res.veiculo.modelo) || '—',\n      ano: String((res.veiculo && (res.veiculo.anoModelo || res.veiculo.anoFabricacao)) || ''),\n      placa: (res.veiculo && res.veiculo.placa) || '—',\n      statusLegal: (res.situacaoLegal && res.situacaoLegal.status) || '—',\n      valorFipe: (res.fipe && res.fipe.valor) || '',\n      fonte: (res.metadados && res.metadados.fonte) || '',\n    });\n    await queries.registrarConsulta.run();\n    await queries.listarConsultas.run();\n  } catch (erro) {\n    // Histórico é complementar.\n  }\n};\n\nconst urlProvedor =\n  typeof constants !== 'undefined' && constants && constants.CONSULTA_VEICULAR_API_URL\n    ? String(constants.CONSULTA_VEICULAR_API_URL)\n    : '';\nconst apiConfigurada = urlProvedor.indexOf('http') === 0;\n// Fase 1: quando a URL aponta para a APIBrasil, usa o adaptador dedicado\n// (headers Bearer + DeviceToken; consulta somente por placa).\nconst modoApiBrasil = apiConfigurada && urlProvedor.toLowerCase().indexOf('apibrasil') !== -1;\n// Modo gratuito: sem provedor pago configurado, um chassi é decodificado com\n// dados reais (tabela WMI local + NHTSA vPIC) e uma placa pode ser consultada\n// em um serviço com cota gratuita (constante PLACA_API_URL com o marcador\n// {placa}). Renavam — e placa sem PLACA_API_URL — caem no modo demo.\nconst placaGratuitaConfigurada =\n  typeof constants !== 'undefined' &&\n  constants &&\n  constants.PLACA_API_URL &&\n  String(constants.PLACA_API_URL).indexOf('http') === 0;\nconst modoGratuito =\n  !apiConfigurada && (tipo === 'chassi' || (tipo === 'placa' && placaGratuitaConfigurada));\nawait actions.setVariable('modoDemo', !apiConfigurada && !modoGratuito);\nawait actions.setVariable('modoGratuito', modoGratuito);\n\nif (modoGratuito && tipo === 'placa') {\n  // Consulta gratuita por placa no serviço configurado pelo usuário.\n  let resultadoPlaca = null;\n  try {\n    await queries.consultaPlacaGratuita.run();\n    resultadoPlaca = clonar(queries.consultaPlacaGratuita.getData());\n  } catch (erro) {\n    await actions.setVariable(\n      'erroConsulta',\n      'A consulta gratuita de placa falhou: ' + ((erro && erro.message) || erro) +\n        '. Verifique a cota e a chave configuradas em PLACA_API_URL.'\n    );\n    return null;\n  }\n  if (!resultadoPlaca || !resultadoPlaca.veiculo) {\n    await actions.setVariable(\n      'erroConsulta',\n      'O serviço gratuito de placa não retornou dados para esta placa. Verifique a cota diária e a chave em PLACA_API_URL.'\n    );\n    return null;\n  }\n\n  // Valoração FIPE: usa o código FIPE quando o serviço retorna; caso contrário,\n  // tenta casar marca/modelo/ano com a tabela oficial (mesma cadeia do chassi).\n  const tipoTextoPlaca = String(resultadoPlaca.veiculo.tipo || '').toUpperCase();\n  const tipoFipePlaca =\n    tipoTextoPlaca.indexOf('MOTO') !== -1\n      ? 'motos'\n      : tipoTextoPlaca.indexOf('CAMINH') !== -1 || tipoTextoPlaca.indexOf('TRATOR') !== -1\n      ? 'caminhoes'\n      : 'carros';\n  if (!(resultadoPlaca.fipe && resultadoPlaca.fipe.valor)) {\n  try {\n    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n    let marcas = queries.fipeMarcas.getData();\n    if (!marcas || !marcas.length) {\n      await queries.fipeMarcas.run();\n      marcas = queries.fipeMarcas.getData() || [];\n    }\n    const alvoMarca = norm(resultadoPlaca.veiculo.marca);\n    const marcaFipe =\n      alvoMarca.length > 2\n        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)\n        : null;\n    if (marcaFipe) {\n      await actions.setVariable('fipeAuto', { tipo: tipoFipePlaca, marca: String(marcaFipe.codigo) });\n      await queries.fipeModelos.run();\n      const modelos = queries.fipeModelos.getData() || [];\n      const alvoModelo = norm(resultadoPlaca.veiculo.modelo);\n      let modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;\n      if (!modeloFipe && alvoModelo.length > 1) {\n        const primeira = norm(String(resultadoPlaca.veiculo.modelo || '').split(/[\\s/]+/)[0]);\n        if (primeira.length > 2) modeloFipe = modelos.find((m) => norm(m.nome).indexOf(primeira) !== -1);\n      }\n      if (modeloFipe) {\n        await actions.setVariable('fipeAuto', { tipo: tipoFipePlaca, marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) });\n        await queries.fipeAnos.run();\n        const anos = queries.fipeAnos.getData() || [];\n        const alvoAno = String(resultadoPlaca.veiculo.anoModelo || '').replace(/[^0-9]/g, '').slice(0, 4);\n        const anoFipe = alvoAno\n          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)\n          : null;\n        if (anoFipe) {\n          await actions.setVariable('fipeAuto', {\n            tipo: tipoFipePlaca,\n            marca: String(marcaFipe.codigo),\n            modelo: String(modeloFipe.codigo),\n            ano: String(anoFipe.codigo),\n          });\n          await queries.fipeValorSelecao.run();\n          const fipeOficial = queries.fipeValorSelecao.getData();\n          if (fipeOficial && fipeOficial.valor) {\n            resultadoPlaca.fipe = {\n              codigoFipe: fipeOficial.codigoFipe,\n              valor: fipeOficial.valor,\n              mesReferencia: fipeOficial.mesReferencia,\n              historico: [],\n            };\n            resultadoPlaca.veiculo.codigoFipe = fipeOficial.codigoFipe;\n            // Evolução de valores: com a constante FIPE_API_TOKEN (chave gratuita\n            // da Parallelum v2), busca o histórico real para o gráfico.\n            const temTokenFipe =\n              typeof constants !== 'undefined' && constants && constants.FIPE_API_TOKEN;\n            if (temTokenFipe && fipeOficial.codigoFipe) {\n              await actions.setVariable('fipeAuto', {\n                tipo: tipoFipePlaca,\n                marca: String(marcaFipe.codigo),\n                modelo: String(modeloFipe.codigo),\n                ano: String(anoFipe.codigo),\n                codigoFipe: String(fipeOficial.codigoFipe),\n              });\n              try {\n                await queries.fipeHistorico.run();\n                const historicoReal = queries.fipeHistorico.getData();\n                if (historicoReal && historicoReal.length) {\n                  resultadoPlaca.fipe.historico = historicoReal;\n                }\n              } catch (erroHist) {\n                // Histórico é complementar ao valor vigente.\n              }\n            }\n          }\n        }\n      }\n    }\n  } catch (erro) {\n    // A valoração FIPE é complementar; o usuário pode usar a aba Tabela FIPE.\n  }\n  }\n\n  await actions.setVariable('resultado', resultadoPlaca);\n  await registrarNoHistorico(resultadoPlaca, 'placa-gratuita');\n  return resultadoPlaca;\n}\n\nif (modoGratuito) {\n  // Tabela WMI (3 primeiros caracteres) dos fabricantes mais comuns no Brasil.\n  const TABELA_WMI = {\n    '9BW': ['Volkswagen', 'Brasil'], '9BD': ['Fiat', 'Brasil'], '9BG': ['Chevrolet', 'Brasil'],\n    '9BF': ['Ford', 'Brasil'], '9BR': ['Toyota', 'Brasil'], '93H': ['Honda', 'Brasil'],\n    '93Y': ['Renault', 'Brasil'], '9BM': ['Mercedes-Benz', 'Brasil'], '95P': ['CAOA/Hyundai', 'Brasil'],\n    '9BH': ['Hyundai', 'Brasil'], '93X': ['Mitsubishi', 'Brasil'], '94D': ['Nissan', 'Brasil'],\n    '8AW': ['Volkswagen', 'Argentina'], '8AP': ['Fiat', 'Argentina'], '8AG': ['Chevrolet', 'Argentina'],\n    '8AF': ['Ford', 'Argentina'], '8A1': ['Renault', 'Argentina'], '8AJ': ['Toyota', 'Argentina'],\n    '9C2': ['Honda Motos', 'Brasil'], '9C6': ['Yamaha', 'Brasil'], '9CD': ['Suzuki Motos', 'Brasil'],\n    '9BS': ['Scania', 'Brasil'], '953': ['VW Caminhões', 'Brasil'], '9BV': ['Volvo', 'Brasil'],\n    '988': ['Jeep/Stellantis', 'Brasil'], '98R': ['Chery/CAOA', 'Brasil'], '95Y': ['BYD', 'Brasil'],\n  };\n  const PAIS_POR_INICIAL = {\n    '9': 'Brasil', '8': 'América do Sul', '3': 'México/América do Norte', '1': 'EUA', '4': 'EUA',\n    '5': 'EUA', '2': 'Canadá', 'W': 'Alemanha', 'J': 'Japão', 'K': 'Coreia do Sul', 'L': 'China',\n    'S': 'Reino Unido', 'V': 'França/Espanha', 'Z': 'Itália', 'Y': 'Suécia/Finlândia', 'T': 'Europa Central',\n  };\n  const MAPA_ANO = {\n    A: 1980, B: 1981, C: 1982, D: 1983, E: 1984, F: 1985, G: 1986, H: 1987, J: 1988, K: 1989,\n    L: 1990, M: 1991, N: 1992, P: 1993, R: 1994, S: 1995, T: 1996, V: 1997, W: 1998, X: 1999,\n    Y: 2000, 1: 2001, 2: 2002, 3: 2003, 4: 2004, 5: 2005, 6: 2006, 7: 2007, 8: 2008, 9: 2009,\n  };\n  const wmi = entrada.slice(0, 3);\n  const local = TABELA_WMI[wmi] || null;\n  const pais = local ? local[1] : PAIS_POR_INICIAL[entrada[0]] || 'Não identificado';\n  let anoLocal = MAPA_ANO[entrada[9]] !== undefined ? MAPA_ANO[entrada[9]] : null;\n  if (anoLocal) {\n    const anoAtual = new Date().getFullYear();\n    while (anoLocal + 30 <= anoAtual + 1) anoLocal += 30;\n  }\n\n  let vpic = null;\n  try {\n    await queries.decodificarVin.run();\n    vpic = queries.decodificarVin.getData();\n  } catch (erro) {\n    // vPIC é complementar; a decodificação local cobre fabricante, país e ano.\n  }\n  vpic = vpic || {};\n\n  const naoVerificado = 'Não coberto na consulta gratuita';\n  const resultadoGratuito = {\n    veiculo: {\n      chassi: entrada,\n      renavam: '—',\n      placa: '—',\n      marca: vpic.marca || (local ? local[0] : '—'),\n      modelo: vpic.modelo || (vpic.fabricante && vpic.fabricante !== vpic.marca ? vpic.fabricante : '—'),\n      anoFabricacao: '—',\n      anoModelo: vpic.anoModelo || anoLocal || '—',\n      cor: '—',\n      combustivel: vpic.combustivel || '—',\n      codigoCombustivel: null,\n      municipio: '—',\n      uf: '—',\n      codigoFipe: '',\n      procedencia: pais,\n      tipo: vpic.tipoVeiculo || '—',\n      situacao: 'Estrutura do chassi válida (decodificação WMI/vPIC)',\n    },\n    situacaoLegal: {\n      status: 'Verificação parcial',\n      rouboFurto: { indicador: null, detalhes: naoVerificado + ' — requer provedor com acesso às bases oficiais.' },\n      gravame: { status: naoVerificado, financeira: null, dataInclusao: null },\n      debitos: { ipva: naoVerificado, licenciamento: naoVerificado, multas: naoVerificado },\n      renajud: naoVerificado,\n      restricoes: [],\n    },\n    sinistros: { indicador: null, ocorrencias: [] },\n    leiloes: { indicador: null, ocorrencias: [] },\n    fipe: { codigoFipe: '', valor: '', mesReferencia: '', historico: [] },\n    metadados: {\n      fonte: 'Decodificação gratuita do chassi (tabela WMI + NHTSA vPIC)',\n      modoDemo: false,\n      consultadoEm: new Date().toLocaleString('pt-BR'),\n    },\n  };\n  // Avaliação FIPE automática: casa a marca/modelo/ano decodificados do chassi\n  // com a tabela FIPE oficial, no segmento correto (carros/motos/caminhões).\n  const tipoVpic = String(vpic.tipoVeiculo || '').toUpperCase();\n  const tipoFipeChassi =\n    ['9C2', '9C6', '9CD'].indexOf(wmi) !== -1 || tipoVpic.indexOf('MOTORCYCLE') !== -1\n      ? 'motos'\n      : ['9BS', '953', '9BV'].indexOf(wmi) !== -1 || tipoVpic.indexOf('TRUCK') !== -1\n      ? 'caminhoes'\n      : 'carros';\n  try {\n    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');\n    let marcas = queries.fipeMarcas.getData();\n    if (!marcas || !marcas.length) {\n      await queries.fipeMarcas.run();\n      marcas = queries.fipeMarcas.getData() || [];\n    }\n    const alvoMarca = norm(resultadoGratuito.veiculo.marca);\n    const marcaFipe =\n      alvoMarca.length > 2\n        ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)\n        : null;\n    if (marcaFipe) {\n      await actions.setVariable('fipeAuto', { tipo: tipoFipeChassi, marca: String(marcaFipe.codigo) });\n      await queries.fipeModelos.run();\n      const modelos = queries.fipeModelos.getData() || [];\n      const alvoModelo = norm(vpic.modelo);\n      let modeloFipe = alvoModelo.length > 1 ? modelos.find((m) => norm(m.nome).indexOf(alvoModelo) !== -1) : null;\n      if (!modeloFipe && alvoModelo.length > 1) {\n        const primeira = norm(String(vpic.modelo || '').split(/[\\s/]+/)[0]);\n        if (primeira.length > 2) modeloFipe = modelos.find((m) => norm(m.nome).indexOf(primeira) !== -1);\n      }\n      if (modeloFipe) {\n        await actions.setVariable('fipeAuto', { tipo: tipoFipeChassi, marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) });\n        await queries.fipeAnos.run();\n        const anos = queries.fipeAnos.getData() || [];\n        const alvoAno = String(resultadoGratuito.veiculo.anoModelo || '').replace(/[^0-9]/g, '').slice(0, 4);\n        const anoFipe = alvoAno\n          ? anos.find((a) => String(a.codigo).indexOf(alvoAno) === 0 || String(a.nome).indexOf(alvoAno) !== -1)\n          : null;\n        if (anoFipe) {\n          await actions.setVariable('fipeAuto', {\n            tipo: tipoFipeChassi,\n            marca: String(marcaFipe.codigo),\n            modelo: String(modeloFipe.codigo),\n            ano: String(anoFipe.codigo),\n          });\n          await queries.fipeValorSelecao.run();\n          const fipeOficial = queries.fipeValorSelecao.getData();\n          if (fipeOficial && fipeOficial.valor) {\n            resultadoGratuito.fipe = {\n              codigoFipe: fipeOficial.codigoFipe,\n              valor: fipeOficial.valor,\n              mesReferencia: fipeOficial.mesReferencia,\n              historico: [],\n            };\n            resultadoGratuito.veiculo.codigoFipe = fipeOficial.codigoFipe;\n            // Evolução de valores: com a constante FIPE_API_TOKEN (chave gratuita\n            // da Parallelum v2), busca o histórico real para o gráfico.\n            const temTokenFipe =\n              typeof constants !== 'undefined' && constants && constants.FIPE_API_TOKEN;\n            if (temTokenFipe && fipeOficial.codigoFipe) {\n              await actions.setVariable('fipeAuto', {\n                tipo: tipoFipeChassi,\n                marca: String(marcaFipe.codigo),\n                modelo: String(modeloFipe.codigo),\n                ano: String(anoFipe.codigo),\n                codigoFipe: String(fipeOficial.codigoFipe),\n              });\n              try {\n                await queries.fipeHistorico.run();\n                const historicoReal = queries.fipeHistorico.getData();\n                if (historicoReal && historicoReal.length) {\n                  resultadoGratuito.fipe.historico = historicoReal;\n                }\n              } catch (erroHist) {\n                // Histórico é complementar ao valor vigente.\n              }\n            }\n          }\n        }\n      }\n    }\n  } catch (erro) {\n    // A valoração FIPE é complementar; o usuário pode usar a aba Tabela FIPE.\n  }\n\n  await actions.setVariable('resultado', resultadoGratuito);\n  await registrarNoHistorico(resultadoGratuito, 'chassi-gratuito');\n  return resultadoGratuito;\n}\n\nif (modoApiBrasil && tipo !== 'placa') {\n  await actions.setVariable(\n    'erroConsulta',\n    'Na integração atual (APIBrasil — Fase 1), a consulta com dados reais é feita pela placa do veículo. Informe a placa, ou configure um provedor completo para consultar por chassi ou Renavam.'\n  );\n  return null;\n}\n\nlet resultado = null;\ntry {\n  if (modoApiBrasil) {\n    await queries.consultaApiBrasil.run();\n    resultado = clonar(queries.consultaApiBrasil.getData());\n  } else if (apiConfigurada) {\n    await queries.consultaProvedor.run();\n    resultado = clonar(queries.consultaProvedor.getData());\n  } else {\n    await queries.consultaDemo.run({ identificador: entrada, tipo: tipo, subtipo: subtipo });\n    resultado = clonar(queries.consultaDemo.getData());\n  }\n} catch (erro) {\n  await actions.setVariable(\n    'erroConsulta',\n    'Falha ao consultar o veículo: ' + ((erro && erro.message) || erro)\n  );\n  return null;\n}\n\nif (!resultado || !resultado.veiculo) {\n  await actions.setVariable(\n    'erroConsulta',\n    'A consulta não retornou dados para o identificador informado. Verifique o número e tente novamente.'\n  );\n  return null;\n}\n\n// Enriquecimento opcional: consulta o valor vigente na tabela FIPE (API\n// pública Parallelum) quando o provedor devolve o código FIPE mas não o valor.\nconst semValorFipe = !(resultado.fipe && resultado.fipe.valor);\nif (apiConfigurada && semValorFipe && resultado.veiculo.codigoFipe && resultado.veiculo.anoModelo) {\n  try {\n    await actions.setVariable('fipeParams', {\n      codigo: String(resultado.veiculo.codigoFipe).trim(),\n      anoCodigo:\n        String(resultado.veiculo.anoModelo) + '-' + (resultado.veiculo.codigoCombustivel || 1),\n    });\n    await queries.consultarFipe.run();\n    const fipeAoVivo = queries.consultarFipe.getData();\n    if (fipeAoVivo && fipeAoVivo.valor) {\n      resultado.fipe = Object.assign({}, resultado.fipe || {}, fipeAoVivo);\n    }\n  } catch (erro) {\n    // A consulta FIPE é complementar; mantém o valor informado pelo provedor.\n  }\n}\n\nawait actions.setVariable('resultado', resultado);\nawait registrarNoHistorico(resultado, modoApiBrasil ? 'apibrasil' : apiConfigurada ? 'provedor' : 'demo');\nreturn resultado;\n",
                 "parameters": [],
                 "runOnPageLoad": false,
                 "showSuccessNotification": false,
@@ -3663,6 +4180,90 @@
               "updatedAt": "2026-08-16T12:00:00.000Z"
             },
             {
+              "id": "9bcbaf1b-8519-5090-8cf4-dd3318fff3fa",
+              "name": "registrarConsulta",
+              "options": {
+                "operation": "create_row",
+                "transformationLanguage": "javascript",
+                "enableTransformation": false,
+                "organization_id": "a81bad3e-3d37-5888-a0b3-7a02184f48ee",
+                "table_id": "2fcf61ef-54f2-5524-a8c7-46a3662862bb",
+                "create_row": {
+                  "0": {
+                    "column": "consultado_em",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.consultadoEm) || ''}}"
+                  },
+                  "1": {
+                    "column": "identificador",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.identificador) || ''}}"
+                  },
+                  "2": {
+                    "column": "tipo",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.tipo) || ''}}"
+                  },
+                  "3": {
+                    "column": "modo",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.modo) || ''}}"
+                  },
+                  "4": {
+                    "column": "marca",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.marca) || ''}}"
+                  },
+                  "5": {
+                    "column": "modelo",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.modelo) || ''}}"
+                  },
+                  "6": {
+                    "column": "ano",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.ano) || ''}}"
+                  },
+                  "7": {
+                    "column": "placa",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.placa) || ''}}"
+                  },
+                  "8": {
+                    "column": "status_legal",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.statusLegal) || ''}}"
+                  },
+                  "9": {
+                    "column": "valor_fipe",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.valorFipe) || ''}}"
+                  },
+                  "10": {
+                    "column": "fonte",
+                    "value": "{{(variables.registroConsulta && variables.registroConsulta.fonte) || ''}}"
+                  }
+                },
+                "runOnPageLoad": false,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "88bcb72c-0f21-52db-94be-89420014e32f",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "a2e2f4e2-27c5-5c3b-902d-23ceed2a6db0",
+              "name": "listarConsultas",
+              "options": {
+                "operation": "list_rows",
+                "transformationLanguage": "javascript",
+                "enableTransformation": true,
+                "transformation": "// Ordena o histórico da consulta mais recente para a mais antiga.\nconst linhas = (data && data.result) || data || [];\nreturn [...linhas].sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));\n",
+                "organization_id": "a81bad3e-3d37-5888-a0b3-7a02184f48ee",
+                "table_id": "2fcf61ef-54f2-5524-a8c7-46a3662862bb",
+                "list_rows": {},
+                "runOnPageLoad": true,
+                "showSuccessNotification": false,
+                "notificationDuration": 5000
+              },
+              "dataSourceId": "88bcb72c-0f21-52db-94be-89420014e32f",
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
               "id": "b65e58e7-4ce4-5953-9602-4940d6290330",
               "name": "consultarFipe",
               "options": {
@@ -3715,6 +4316,18 @@
               "updatedAt": "2026-08-16T12:00:00.000Z"
             },
             {
+              "id": "88bcb72c-0f21-52db-94be-89420014e32f",
+              "name": "tooljetdbdefault",
+              "kind": "tooljetdb",
+              "type": "static",
+              "pluginId": null,
+              "appVersionId": "3bfb36ab-1578-5617-916b-597cae3f2ac0",
+              "organizationId": null,
+              "scope": "local",
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
               "id": "4996aaf9-9141-5894-a1d7-72d229db6bf7",
               "name": "runjsdefault",
               "kind": "runjs",
@@ -3745,12 +4358,12 @@
               "pageSettings": {
                 "properties": {
                   "disableMenu": {
-                    "value": "{{true}}",
+                    "value": "{{false}}",
                     "fxActive": false
                   }
                 }
               },
-              "showViewerNavigation": false,
+              "showViewerNavigation": true,
               "homePageId": "b2183232-827f-5b6a-b2fe-86472441b4be",
               "appId": "1ffa56fa-0919-5f76-8162-cf3d04b5c03f",
               "currentEnvironmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
@@ -3811,6 +4424,30 @@
             {
               "id": "e02bb0b6-7e21-5515-b75d-ee064e3b054c",
               "dataSourceId": "f9f90fe9-1662-5936-b5db-f81fba8520f5",
+              "environmentId": "4869815a-29b4-5b5d-a0cf-39db7d295a56",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "dce25a2a-57fd-5213-b6e2-1faa20c9317c",
+              "dataSourceId": "88bcb72c-0f21-52db-94be-89420014e32f",
+              "environmentId": "8a7aa05d-6139-540e-824a-11dd3dc1e11f",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "5093025d-d2ee-5703-82ff-a26e9c51a6d1",
+              "dataSourceId": "88bcb72c-0f21-52db-94be-89420014e32f",
+              "environmentId": "e605c4ab-3aa8-5271-aa56-a69a00cb9a92",
+              "options": null,
+              "createdAt": "2026-08-16T12:00:00.000Z",
+              "updatedAt": "2026-08-16T12:00:00.000Z"
+            },
+            {
+              "id": "26f2a678-a6e5-5d7f-9b3a-beb975f5981f",
+              "dataSourceId": "88bcb72c-0f21-52db-94be-89420014e32f",
               "environmentId": "4869815a-29b4-5b5d-a0cf-39db7d295a56",
               "options": null,
               "createdAt": "2026-08-16T12:00:00.000Z",

@@ -53,6 +53,12 @@ Sem nenhuma configuração, o app já entrega **dados reais gratuitos** em duas 
   veículo, situação legal, sinistros, leilões, avaliação FIPE com histórico e
   aviso legal) e abre o diálogo de impressão do navegador (Destino → Salvar como
   PDF), sem dependências externas.
+- **Histórico de consultas** — toda consulta bem-sucedida (em qualquer modo) é
+  registrada automaticamente na tabela `consultas_veiculares` do **ToolJet
+  Database** (criada na importação do template), e a página **Histórico** lista
+  os registros com data/hora, identificador, tipo, modo, veículo, situação e
+  valor FIPE. O registro é melhor esforço: falhas no ToolJet DB não afetam a
+  consulta.
 
 - **Consulta por placa com cota gratuita (opcional)** — serviços como wdapi2,
   API Placas, FipeAPI Placas e PlacaAPI oferecem consultas gratuitas diárias
