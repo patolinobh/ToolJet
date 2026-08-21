@@ -1,0 +1,62 @@
+# ToolJet CE em produção no Oracle Cloud Always Free (VM Ampere A1 / ARM).
+# Constrói a imagem a partir DESTE fork — o template "Consulta veicular Brasil"
+# já vem embutido na galeria. Veja o passo a passo completo no README.md.
+services:
+  tooljet:
+    build:
+      context: ../..
+      dockerfile: docker/ce-production.Dockerfile
+    image: tooljet-ce-fork:producao
+    restart: always
+    env_file: .env
+    environment:
+      TOOLJET_EDITION: ce
+      SERVE_CLIENT: "true"
+      PORT: "3000"
+      PG_HOST: postgres
+      TOOLJET_DB_HOST: postgres
+      PGRST_HOST: http://postgrest:3001
+      DEPLOYMENT_PLATFORM: docker
+    depends_on:
+      - postgres
+    command: npm run start:prod
+
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  postgrest:
+    image: postgrest/postgrest:v12.2.3
+    restart: always
+    environment:
+      PGRST_DB_URI: postgres://${PG_USER}:${PG_PASS}@postgres:5432/${TOOLJET_DB}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET}
+      PGRST_DB_PRE_CONFIG: postgrest.pre_config
+      PGRST_SERVER_PORT: "3001"
+    depends_on:
+      - postgres
+
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      TOOLJET_DOMINIO: ${TOOLJET_DOMINIO}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - tooljet
+
+volumes:
+  pg-data:
+  caddy-data:
+  caddy-config:

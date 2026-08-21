@@ -1,0 +1,5 @@
+# HTTPS automático (Let's Encrypt) para o domínio definido em TOOLJET_DOMINIO.
+{$TOOLJET_DOMINIO}
+
+encode gzip
+reverse_proxy tooljet:3000
