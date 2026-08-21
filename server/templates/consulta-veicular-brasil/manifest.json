@@ -1,0 +1,20 @@
+{
+  "name": "Consulta veicular Brasil",
+  "description": "Consulte a situação completa de um veículo brasileiro a partir do chassi/VIN, do Renavam ou da placa (antiga ou Mercosul): dados cadastrais, situação legal (roubo/furto, gravame, RENAJUD, débitos), sinistros, leilões e valor de referência na tabela FIPE.",
+  "widgets": [
+    "Table",
+    "Tabs"
+  ],
+  "sources": [
+    {
+      "name": "RestAPI",
+      "id": "restapi"
+    },
+    {
+      "name": "Run JavaScript",
+      "id": "runjs"
+    }
+  ],
+  "id": "consulta-veicular-brasil",
+  "category": "operations"
+}
