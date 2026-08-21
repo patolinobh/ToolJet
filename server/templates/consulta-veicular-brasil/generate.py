@@ -650,7 +650,8 @@ TRANSFORM_APIBRASIL = r"""// Normaliza a resposta da APIBrasil (API Placa Dados 
 if (data && data.error === true) {
   throw new Error(data.message || 'A APIBrasil retornou erro para esta consulta.');
 }
-const raiz = (data && (data.response || data.dados)) || data || {};
+const candidatoRaiz = data && (data.response || data.dados);
+const raiz = (candidatoRaiz && typeof candidatoRaiz === 'object' ? candidatoRaiz : data) || {};
 const v = raiz.veiculo || raiz;
 const extra = v.extra || raiz.extra || {};
 const fipeBruto = raiz.fipe && (raiz.fipe.dados || raiz.fipe);
@@ -1757,7 +1758,11 @@ data_queries = [
 if (data && (data.error === true || data.erro === true)) {
   throw new Error(data.message || data.mensagem || 'O serviço de placa retornou erro.');
 }
-const raiz = (data && (data.response || data.dados || data.data)) || data || {};
+// Desembrulha envelopes comuns ({response}/{dados}/{data}) — mas somente
+// quando o candidato é um objeto: o wdapi2 tem um campo 'data' que é a data
+// da consulta em texto e não pode ser confundido com envelope.
+const candidatoRaiz = data && (data.response || data.dados || data.data);
+const raiz = (candidatoRaiz && typeof candidatoRaiz === 'object' ? candidatoRaiz : data) || {};
 const v = raiz.veiculo || raiz;
 const extra = v.extra || raiz.extra || {};
 const msg = String(v.mensagemRetorno || raiz.mensagemRetorno || '');
@@ -1769,14 +1774,17 @@ const fipeItem = (Array.isArray(fipeBruto) ? fipeBruto[0] : fipeBruto) || {};
 
 const texto = (valor, padrao) => {
   if (valor === undefined || valor === null || valor === '') return padrao;
-  return String(valor);
+  return String(valor).trim();
 };
 
 const situacao = texto(v.situacao || extra.situacao_veiculo, '');
 const situacaoMin = situacao.toLowerCase();
+const codigoSituacao = texto(v.codigoSituacao !== undefined ? v.codigoSituacao : extra.codigoSituacao, '');
 let indicadorRouboFurto = null;
 if (situacaoMin.indexOf('roubo') !== -1 || situacaoMin.indexOf('furto') !== -1) indicadorRouboFurto = true;
 else if (situacaoMin.indexOf('sem restri') !== -1 || situacaoMin.indexOf('circula') !== -1) indicadorRouboFurto = false;
+// wdapi2: codigoSituacao "0" = sem ocorrência de roubo/furto na base consultada.
+else if (codigoSituacao === '0') indicadorRouboFurto = false;
 
 const restricoes = [];
 [v, extra].forEach((origem) => {
