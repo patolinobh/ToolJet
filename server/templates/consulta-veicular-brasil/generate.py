@@ -37,6 +37,9 @@ Q_SEL_MARCA = uid("q-aoSelecionarMarcaFipe")
 Q_SEL_MODELO = uid("q-aoSelecionarModeloFipe")
 Q_SEL_ANO = uid("q-aoSelecionarAnoFipe")
 Q_PLACA_GRATIS = uid("q-consultaPlacaGratuita")
+Q_SEL_TIPO = uid("q-aoSelecionarTipoFipe")
+Q_FIPE_HIST = uid("q-fipeHistorico")
+Q_LAUDO = uid("q-gerarLaudoPdf")
 
 # ---------------------------------------------------------------------------
 # Códigos JavaScript das queries
@@ -130,8 +133,15 @@ if (modoGratuito && tipo === 'placa') {
 
   // Valoração FIPE: usa o código FIPE quando o serviço retorna; caso contrário,
   // tenta casar marca/modelo/ano com a tabela oficial (mesma cadeia do chassi).
+  const tipoTextoPlaca = String(resultadoPlaca.veiculo.tipo || '').toUpperCase();
+  const tipoFipePlaca =
+    tipoTextoPlaca.indexOf('MOTO') !== -1
+      ? 'motos'
+      : tipoTextoPlaca.indexOf('CAMINH') !== -1 || tipoTextoPlaca.indexOf('TRATOR') !== -1
+      ? 'caminhoes'
+      : 'carros';
   if (!(resultadoPlaca.fipe && resultadoPlaca.fipe.valor)) {
-CADEIA_FIPE(resultadoPlaca, resultadoPlaca.veiculo.marca, resultadoPlaca.veiculo.modelo, resultadoPlaca.veiculo.anoModelo)
+CADEIA_FIPE(resultadoPlaca, resultadoPlaca.veiculo.marca, resultadoPlaca.veiculo.modelo, resultadoPlaca.veiculo.anoModelo, tipoFipePlaca)
   }
 
   await actions.setVariable('resultado', resultadoPlaca);
@@ -217,8 +227,15 @@ if (modoGratuito) {
     },
   };
   // Avaliação FIPE automática: casa a marca/modelo/ano decodificados do chassi
-  // com a tabela FIPE oficial.
-CADEIA_FIPE(resultadoGratuito, resultadoGratuito.veiculo.marca, vpic.modelo, resultadoGratuito.veiculo.anoModelo)
+  // com a tabela FIPE oficial, no segmento correto (carros/motos/caminhões).
+  const tipoVpic = String(vpic.tipoVeiculo || '').toUpperCase();
+  const tipoFipeChassi =
+    ['9C2', '9C6', '9CD'].indexOf(wmi) !== -1 || tipoVpic.indexOf('MOTORCYCLE') !== -1
+      ? 'motos'
+      : ['9BS', '953', '9BV'].indexOf(wmi) !== -1 || tipoVpic.indexOf('TRUCK') !== -1
+      ? 'caminhoes'
+      : 'carros';
+CADEIA_FIPE(resultadoGratuito, resultadoGratuito.veiculo.marca, vpic.modelo, resultadoGratuito.veiculo.anoModelo, tipoFipeChassi)
 
   await actions.setVariable('resultado', resultadoGratuito);
   return resultadoGratuito;
@@ -286,7 +303,7 @@ return resultado;
 
 
 
-def _cadeia_fipe_js(alvo, marca, modelo, ano):
+def _cadeia_fipe_js(alvo, marca, modelo, ano, tipo):
     """Emite o bloco JS da cadeia FIPE automática (marca → modelo → ano → valor).
 
     Reuso em tempo de geração: a cadeia precisa rodar inline no orquestrador
@@ -306,7 +323,7 @@ def _cadeia_fipe_js(alvo, marca, modelo, ano):
         ? marcas.find((m) => norm(m.nome).indexOf(alvoMarca) !== -1 || alvoMarca.indexOf(norm(m.nome)) !== -1)
         : null;
     if (marcaFipe) {{
-      await actions.setVariable('fipeAuto', {{ marca: String(marcaFipe.codigo) }});
+      await actions.setVariable('fipeAuto', {{ tipo: {tipo}, marca: String(marcaFipe.codigo) }});
       await queries.fipeModelos.run();
       const modelos = queries.fipeModelos.getData() || [];
       const alvoModelo = norm({modelo});
@@ -316,7 +333,7 @@ def _cadeia_fipe_js(alvo, marca, modelo, ano):
         if (primeira.length > 2) modeloFipe = modelos.find((m) => norm(m.nome).indexOf(primeira) !== -1);
       }}
       if (modeloFipe) {{
-        await actions.setVariable('fipeAuto', {{ marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) }});
+        await actions.setVariable('fipeAuto', {{ tipo: {tipo}, marca: String(marcaFipe.codigo), modelo: String(modeloFipe.codigo) }});
         await queries.fipeAnos.run();
         const anos = queries.fipeAnos.getData() || [];
         const alvoAno = String({ano} || '').replace(/[^0-9]/g, '').slice(0, 4);
@@ -325,6 +342,7 @@ def _cadeia_fipe_js(alvo, marca, modelo, ano):
           : null;
         if (anoFipe) {{
           await actions.setVariable('fipeAuto', {{
+            tipo: {tipo},
             marca: String(marcaFipe.codigo),
             modelo: String(modeloFipe.codigo),
             ano: String(anoFipe.codigo),
@@ -339,6 +357,28 @@ def _cadeia_fipe_js(alvo, marca, modelo, ano):
               historico: [],
             }};
             {alvo}.veiculo.codigoFipe = fipeOficial.codigoFipe;
+            // Evolução de valores: com a constante FIPE_API_TOKEN (chave gratuita
+            // da Parallelum v2), busca o histórico real para o gráfico.
+            const temTokenFipe =
+              typeof constants !== 'undefined' && constants && constants.FIPE_API_TOKEN;
+            if (temTokenFipe && fipeOficial.codigoFipe) {{
+              await actions.setVariable('fipeAuto', {{
+                tipo: {tipo},
+                marca: String(marcaFipe.codigo),
+                modelo: String(modeloFipe.codigo),
+                ano: String(anoFipe.codigo),
+                codigoFipe: String(fipeOficial.codigoFipe),
+              }});
+              try {{
+                await queries.fipeHistorico.run();
+                const historicoReal = queries.fipeHistorico.getData();
+                if (historicoReal && historicoReal.length) {{
+                  {alvo}.fipe.historico = historicoReal;
+                }}
+              }} catch (erroHist) {{
+                // Histórico é complementar ao valor vigente.
+              }}
+            }}
           }}
         }}
       }}
@@ -351,8 +391,10 @@ def _cadeia_fipe_js(alvo, marca, modelo, ano):
 import re as _re
 
 CODE_ORQUESTRADOR = _re.sub(
-    r"^CADEIA_FIPE\(([^,]+), ([^,]+), ([^,]+), ([^)]+)\)$",
-    lambda m: _cadeia_fipe_js(m.group(1).strip(), m.group(2).strip(), m.group(3).strip(), m.group(4).strip()),
+    r"^CADEIA_FIPE\(([^,]+), ([^,]+), ([^,]+), ([^,]+), ([^)]+)\)$",
+    lambda m: _cadeia_fipe_js(
+        m.group(1).strip(), m.group(2).strip(), m.group(3).strip(), m.group(4).strip(), m.group(5).strip()
+    ),
     CODE_ORQUESTRADOR,
     flags=_re.M,
 )
@@ -974,6 +1016,29 @@ components.append(
 
 components.append(
     component(
+        "botaoLaudo",
+        "Button",
+        (34, 30, 8, 40),
+        (22, 10, 19, 40),
+        properties={
+            "text": {"value": "🖨 Gerar laudo (PDF)"},
+            "loadingState": {"value": "{{queries.gerarLaudoPdf.isLoading}}", "fxActive": True},
+            "visibility": {"value": "{{!!variables.resultado}}"},
+            "disabledState": {"value": "{{false}}"},
+            "tooltip": {"value": "Abre o laudo em uma nova janela; use Salvar como PDF no diálogo de impressão."},
+        },
+        styles={
+            "backgroundColor": {"value": "#ffffff"},
+            "textColor": {"value": "#3e63dd"},
+            "borderRadius": {"value": "{{8}}"},
+            "borderColor": {"value": "#3e63dd"},
+            "loaderColor": {"value": "#3e63dd"},
+            "padding": {"value": "default"},
+        },
+    )
+)
+components.append(
+    component(
         "botaoConsultar",
         "Button",
         (24, 110, 7, 40),
@@ -1276,10 +1341,22 @@ components.append(
     texto_html(
         "tituloFipeLive",
         "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Avaliação FIPE oficial "
-        "<span style='color:#687076;font-weight:400'>(gratuita — selecione marca, modelo e ano)</span></div>",
+        "<span style='color:#687076;font-weight:400'>(gratuita — selecione tipo, marca, modelo e ano)</span></div>",
         (1, 10, 39, 30),
         (1, 10, 39, 30),
         parent=f"{TABS_ID}-3",
+    )
+)
+components.append(
+    dropdown_fipe(
+        "selectTipoFipe",
+        "Tipo",
+        '{{["carros","motos","caminhoes"]}}',
+        '{{["Carros","Motos","Caminhões"]}}',
+        "{{false}}",
+        "{{(variables.fipeAuto && variables.fipeAuto.tipo) || 'carros'}}",
+        (1, 45, 8, 40),
+        (1, 45, 39, 40),
     )
 )
 components.append(
@@ -1290,8 +1367,8 @@ components.append(
         "{{(queries.fipeMarcas.data || []).map(m => m.nome)}}",
         "{{queries.fipeMarcas.isLoading}}",
         "{{(variables.fipeAuto && variables.fipeAuto.marca) || ''}}",
-        (1, 45, 13, 40),
-        (1, 45, 39, 40),
+        (10, 45, 10, 40),
+        (1, 90, 39, 40),
     )
 )
 components.append(
@@ -1302,8 +1379,8 @@ components.append(
         "{{(queries.fipeModelos.data || []).map(m => m.nome)}}",
         "{{queries.fipeModelos.isLoading}}",
         "{{(variables.fipeAuto && variables.fipeAuto.modelo) || ''}}",
-        (15, 45, 15, 40),
-        (1, 90, 39, 40),
+        (21, 45, 11, 40),
+        (1, 135, 39, 40),
     )
 )
 components.append(
@@ -1314,8 +1391,8 @@ components.append(
         "{{(queries.fipeAnos.data || []).map(a => a.nome)}}",
         "{{queries.fipeAnos.isLoading}}",
         "{{(variables.fipeAuto && variables.fipeAuto.ano) || ''}}",
-        (31, 45, 9, 40),
-        (1, 135, 39, 40),
+        (33, 45, 7, 40),
+        (1, 180, 39, 40),
     )
 )
 components.append(
@@ -1331,7 +1408,7 @@ components.append(
         "'<span style=\"color:#687076;font-size:13px\">Selecione marca, modelo e ano acima para consultar o valor oficial da tabela FIPE.</span>'}}"
         "</div>",
         (1, 95, 39, 70),
-        (1, 180, 39, 90),
+        (1, 225, 39, 90),
         parent=f"{TABS_ID}-3",
     )
 )
@@ -1351,29 +1428,35 @@ components.append(
         f"<div style='margin-top:4px;font-weight:700;color:#1b1f31'>{{{{({R} && {R}.fipe.mesReferencia) || '—'}}}}</div></div>"
         "</div>",
         (1, 175, 39, 90),
-        (1, 280, 39, 140),
+        (1, 325, 39, 140),
         parent=f"{TABS_ID}-3",
     )
 )
 components.append(
     texto_html(
         "tituloHistoricoFipe",
-        "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Histórico de valores (12 meses)</div>",
+        "<div style='font-size:14px;font-weight:700;color:#1b1f31'>Evolução do valor FIPE</div>",
         (1, 270, 39, 30),
-        (1, 425, 39, 30),
+        (1, 470, 39, 30),
         parent=f"{TABS_ID}-3",
-        visibility="{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}",
+        visibility="{{(((queries.fipeHistorico.data && queries.fipeHistorico.data.length) ? queries.fipeHistorico.data : ((variables.resultado && variables.resultado.fipe.historico) || []))).length > 1}}",
     )
 )
 components.append(
-    tabela(
-        "tabelaHistoricoFipe",
-        f"{{{{(({R} && {R}.fipe.historico) || [])}}}}",
-        [("Mês de referência", "mes"), ("Valor", "valor")],
-        (1, 305, 39, 245),
+    component(
+        "graficoHistoricoFipe",
+        "Chart",
+        (1, 305, 39, 250),
+        (1, 505, 39, 250),
         parent=f"{TABS_ID}-3",
-        mobile=(1, 460, 39, 250),
-        visibility="{{((variables.resultado && variables.resultado.fipe.historico) || []).length > 0}}",
+        properties={
+            "title": {"value": ""},
+            "plotFromJson": {"value": "{{true}}"},
+            "jsonDescription": {"value": "{{(() => { const h = (((queries.fipeHistorico.data && queries.fipeHistorico.data.length) ? queries.fipeHistorico.data : ((variables.resultado && variables.resultado.fipe.historico) || []))); const y = h.map((i) => Number(String(i.valor).replace(/[^0-9,]/g, '').replace(',', '.'))); return JSON.stringify({ data: [ { x: h.map((i) => i.mes), y: y, type: 'scatter', mode: 'lines+markers', line: { color: '#3e63dd', width: 3, shape: 'spline' }, marker: { size: 6, color: '#3e63dd' }, hovertemplate: '%{x}: %{y:,.0f}<extra></extra>' } ], layout: { margin: { t: 12, r: 16, b: 64, l: 72 }, yaxis: { tickprefix: 'R$ ' } } } ); } )()}}"},
+            "loadingState": {"value": "{{queries.fipeHistorico.isLoading}}"},
+            "visibility": {"value": "{{(((queries.fipeHistorico.data && queries.fipeHistorico.data.length) ? queries.fipeHistorico.data : ((variables.resultado && variables.resultado.fipe.historico) || []))).length > 1}}"},
+        },
+        styles={"padding": {"value": "6"}, "borderRadius": {"value": "8"}},
     )
 )
 
@@ -1390,6 +1473,8 @@ components.append(
         "consultas gratuitas diárias mediante cadastro. Crie a constante <code>PLACA_API_URL</code> com a URL do serviço "
         "usando <code>{placa}</code> como marcador (ex.: <code>https://wdapi2.com.br/consulta/{placa}/SUA_CHAVE</code>) e a "
         "consulta por placa passa a retornar dados reais, com valoração FIPE automática.<br/>"
+        "<b>Gráfico de evolução FIPE (opcional):</b> crie a constante <code>FIPE_API_TOKEN</code> com a chave gratuita da "
+        "Parallelum (fipe.online) para o gráfico usar o histórico oficial de valores.<br/>"
         "<b>Fase 1 — APIBrasil (pago; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a "
         "<i>API Placa Dados</i> e, em <b>Workspace settings → Workspace constants</b>, crie a constante "
         "<code>CONSULTA_VEICULAR_API_URL</code> = <code>https://gateway.apibrasil.io/api/v2/vehicles/dados</code> e os secrets "
@@ -1574,7 +1659,7 @@ data_queries = [
         "name": "fipeMarcas",
         "options": {
             "method": "get",
-            "url": "https://parallelum.com.br/fipe/api/v1/carros/marcas",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/' + ((variables.fipeAuto && variables.fipeAuto.tipo) || 'carros') + '/marcas'}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1597,7 +1682,7 @@ data_queries = [
         "name": "fipeModelos",
         "options": {
             "method": "get",
-            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos'}}",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/' + ((variables.fipeAuto && variables.fipeAuto.tipo) || 'carros') + '/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos'}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1620,7 +1705,7 @@ data_queries = [
         "name": "fipeAnos",
         "options": {
             "method": "get",
-            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos'}}",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/' + ((variables.fipeAuto && variables.fipeAuto.tipo) || 'carros') + '/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos'}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1643,7 +1728,7 @@ data_queries = [
         "name": "fipeValorSelecao",
         "options": {
             "method": "get",
-            "url": "{{'https://parallelum.com.br/fipe/api/v1/carros/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos/' + ((variables.fipeAuto && variables.fipeAuto.ano) || '')}}",
+            "url": "{{'https://parallelum.com.br/fipe/api/v1/' + ((variables.fipeAuto && variables.fipeAuto.tipo) || 'carros') + '/marcas/' + ((variables.fipeAuto && variables.fipeAuto.marca) || '') + '/modelos/' + ((variables.fipeAuto && variables.fipeAuto.modelo) || '') + '/anos/' + ((variables.fipeAuto && variables.fipeAuto.ano) || '')}}",
             "url_params": [["", ""]],
             "headers": [["", ""]],
             "body": [["", ""]],
@@ -1679,7 +1764,8 @@ data_queries = [
         "options": {
             "code": (
                 "// Seleção manual de marca: atualiza a fonte de verdade e carrega os modelos.\n"
-                "await actions.setVariable('fipeAuto', { marca: String(components.selectMarcaFipe.value || '') });\n"
+                "const tipoAtual = String((variables.fipeAuto && variables.fipeAuto.tipo) || components.selectTipoFipe.value || 'carros');\n"
+                "await actions.setVariable('fipeAuto', { tipo: tipoAtual, marca: String(components.selectMarcaFipe.value || '') });\n"
                 "await queries.fipeModelos.run();\n"
             ),
             "parameters": [],
@@ -1697,9 +1783,10 @@ data_queries = [
         "name": "aoSelecionarModeloFipe",
         "options": {
             "code": (
-                "// Seleção manual de modelo: preserva a marca e carrega os anos.\n"
+                "// Seleção manual de modelo: preserva tipo/marca e carrega os anos.\n"
                 "const atual = variables.fipeAuto || {};\n"
                 "await actions.setVariable('fipeAuto', {\n"
+                "  tipo: String(atual.tipo || components.selectTipoFipe.value || 'carros'),\n"
                 "  marca: String(atual.marca || components.selectMarcaFipe.value || ''),\n"
                 "  modelo: String(components.selectModeloFipe.value || ''),\n"
                 "});\n"
@@ -1720,14 +1807,23 @@ data_queries = [
         "name": "aoSelecionarAnoFipe",
         "options": {
             "code": (
-                "// Seleção manual de ano: completa a cadeia e busca o valor oficial.\n"
+                "// Seleção manual de ano: completa a cadeia, busca o valor oficial e,\n"
+                "// havendo FIPE_API_TOKEN, o histórico para o gráfico.\n"
                 "const atual = variables.fipeAuto || {};\n"
-                "await actions.setVariable('fipeAuto', {\n"
+                "const base = {\n"
+                "  tipo: String(atual.tipo || components.selectTipoFipe.value || 'carros'),\n"
                 "  marca: String(atual.marca || components.selectMarcaFipe.value || ''),\n"
                 "  modelo: String(atual.modelo || components.selectModeloFipe.value || ''),\n"
                 "  ano: String(components.selectAnoFipe.value || ''),\n"
-                "});\n"
+                "};\n"
+                "await actions.setVariable('fipeAuto', base);\n"
                 "await queries.fipeValorSelecao.run();\n"
+                "const valorSel = queries.fipeValorSelecao.getData();\n"
+                "const temToken = typeof constants !== 'undefined' && constants && constants.FIPE_API_TOKEN;\n"
+                "if (temToken && valorSel && valorSel.codigoFipe) {\n"
+                "  await actions.setVariable('fipeAuto', Object.assign({}, base, { codigoFipe: String(valorSel.codigoFipe) }));\n"
+                "  try { await queries.fipeHistorico.run(); } catch (e) { /* histórico é complementar */ }\n"
+                "}\n"
             ),
             "parameters": [],
             "runOnPageLoad": False,
@@ -1864,6 +1960,188 @@ return {
         "updatedAt": TS,
     },
     {
+        "id": Q_SEL_TIPO,
+        "name": "aoSelecionarTipoFipe",
+        "options": {
+            "code": (
+                "// Troca do segmento (carros/motos/caminhões): reinicia a cadeia e\n"
+                "// recarrega as marcas do novo tipo.\n"
+                "await actions.setVariable('fipeAuto', { tipo: String(components.selectTipoFipe.value || 'carros') });\n"
+                "await queries.fipeMarcas.run();\n"
+            ),
+            "parameters": [],
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RUNJS,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_FIPE_HIST,
+        "name": "fipeHistorico",
+        "options": {
+            "method": "get",
+            "url": (
+                "{{'https://parallelum.com.br/fipe/api/v2/' + "
+                "({carros: 'cars', motos: 'motorcycles', caminhoes: 'trucks'}[(variables.fipeAuto && variables.fipeAuto.tipo) || 'carros']) + "
+                "'/' + ((variables.fipeAuto && variables.fipeAuto.codigoFipe) || '') + "
+                "'/years/' + ((variables.fipeAuto && variables.fipeAuto.ano) || '') + '/history'}}"
+            ),
+            "url_params": [["", ""]],
+            "headers": [["X-Subscription-Token", "{{constants.FIPE_API_TOKEN}}"]],
+            "body": [["", ""]],
+            "json_body": None,
+            "body_toggle": False,
+            "transformationLanguage": "javascript",
+            "enableTransformation": True,
+            "transformation": (
+                "// Normaliza o histórico de valores da FIPE (Parallelum v2 /history)\n"
+                "// para a série usada pelo gráfico: [{ mes, valor }].\n"
+                "const lista = (data && (data.priceHistory || data.historico || data.history)) || [];\n"
+                "return lista\n"
+                "  .map((h) => ({\n"
+                "    mes: String(h.month || h.mes || (h.reference && (h.reference.month || h.reference)) || ''),\n"
+                "    valor: String(h.price || h.valor || ''),\n"
+                "  }))\n"
+                "  .filter((h) => h.mes && h.valor)\n"
+                "  .reverse();\n"
+            ),
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RESTAPI,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": Q_LAUDO,
+        "name": "gerarLaudoPdf",
+        "options": {
+            "code": r"""// Gera o laudo veicular em layout A4 e abre o diálogo de impressão do
+// navegador (Destino → "Salvar como PDF"). Sem dependências externas.
+const r = variables.resultado;
+if (!r || !r.veiculo) {
+  return null;
+}
+const esc = (s) =>
+  String(s === undefined || s === null || s === '' ? '—' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const indicador = (v, sim, nao, nd) => (v === true ? sim : v === false ? nao : nd);
+const corIndicador = (v) => (v === true ? '#b42318' : v === false ? '#027a48' : '#475467');
+
+const v = r.veiculo;
+const sl = r.situacaoLegal || {};
+const linhasRestricoes = (sl.restricoes || [])
+  .map((x) => '<tr><td>' + esc(x.tipo) + '</td><td>' + esc(x.descricao) + '</td><td>' + esc(x.orgao) + '</td></tr>')
+  .join('');
+const linhasSinistros = ((r.sinistros && r.sinistros.ocorrencias) || [])
+  .map((x) => '<tr><td>' + esc(x.data) + '</td><td>' + esc(x.tipo) + '</td><td>' + esc(x.gravidade) + '</td><td>' + esc(x.uf) + '</td><td>' + esc(x.descricao) + '</td></tr>')
+  .join('');
+const linhasLeiloes = ((r.leiloes && r.leiloes.ocorrencias) || [])
+  .map((x) => '<tr><td>' + esc(x.data) + '</td><td>' + esc(x.leiloeiro) + '</td><td>' + esc(x.comitente) + '</td><td>' + esc(x.lote) + '</td><td>' + esc(x.condicao) + '</td><td>' + esc(x.notaAvaliacao) + '</td></tr>')
+  .join('');
+const linhasHistorico = ((r.fipe && r.fipe.historico) || [])
+  .map((h) => '<tr><td>' + esc(h.mes) + '</td><td style="text-align:right">' + esc(h.valor) + '</td></tr>')
+  .join('');
+
+const campo = (rotulo, valor) =>
+  '<div class="campo"><div class="rotulo">' + rotulo + '</div><div class="valor">' + esc(valor) + '</div></div>';
+
+const html = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"/>' +
+  '<title>Laudo de Consulta Veicular — ' + esc(v.placa !== '—' ? v.placa : v.chassi) + '</title>' +
+  '<style>' +
+  '@page { size: A4; margin: 16mm 14mm; }' +
+  '* { box-sizing: border-box; } body { font-family: Arial, Helvetica, sans-serif; color: #1b1f31; margin: 0; font-size: 12px; }' +
+  '.cabecalho { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #3e63dd; padding-bottom: 10px; }' +
+  '.titulo { font-size: 22px; font-weight: 800; } .subtitulo { color: #687076; margin-top: 2px; }' +
+  '.meta { text-align: right; color: #475467; font-size: 11px; line-height: 1.6; }' +
+  'h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: #3e63dd; border-bottom: 1px solid #e6e8eb; padding-bottom: 4px; margin: 18px 0 8px; }' +
+  '.grade { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 14px; }' +
+  '.campo .rotulo { font-size: 9px; text-transform: uppercase; color: #687076; letter-spacing: .05em; }' +
+  '.campo .valor { font-weight: 700; margin-top: 1px; }' +
+  '.selo { display: inline-block; padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }' +
+  'table { width: 100%; border-collapse: collapse; margin-top: 4px; } th { text-align: left; font-size: 10px; text-transform: uppercase; color: #687076; }' +
+  'th, td { border-bottom: 1px solid #edeff5; padding: 5px 6px; vertical-align: top; }' +
+  '.aviso { margin-top: 22px; padding: 10px 12px; background: #f8f9fc; border: 1px solid #e6e8eb; border-radius: 6px; color: #475467; font-size: 10px; line-height: 1.6; }' +
+  '.fipe-destaque { font-size: 20px; font-weight: 800; color: #1d4ed8; }' +
+  '</style></head><body>' +
+  '<div class="cabecalho"><div><div class="titulo">🚗 Laudo de Consulta Veicular</div>' +
+  '<div class="subtitulo">Consulta Veicular Brasil — relatório informativo</div></div>' +
+  '<div class="meta">Emitido em: ' + esc(new Date().toLocaleString('pt-BR')) + '<br/>' +
+  'Identificador consultado: <b>' + esc(variables.identificadorConsulta) + '</b><br/>' +
+  'Fonte: ' + esc(r.metadados && r.metadados.fonte) + '</div></div>' +
+
+  '<h2>Dados do veículo</h2><div class="grade">' +
+  campo('Marca', v.marca) + campo('Modelo', v.modelo) + campo('Ano fabricação/modelo', esc(v.anoFabricacao) + '/' + esc(v.anoModelo)) + campo('Cor', v.cor) +
+  campo('Placa', v.placa) + campo('Chassi', v.chassi) + campo('Renavam', v.renavam) + campo('Combustível', v.combustivel) +
+  campo('Município/UF', esc(v.municipio) + '/' + esc(v.uf)) + campo('Procedência', v.procedencia) + campo('Tipo', v.tipo) + campo('Código FIPE', v.codigoFipe || '—') +
+  '</div>' +
+
+  '<h2>Situação legal</h2>' +
+  '<p>Status geral: <span class="selo" style="background:#f2f4f7;color:' +
+  (sl.status === 'Regular' ? '#027a48' : sl.status === 'Com restrições' ? '#b54708' : sl.status === 'Alerta' ? '#b42318' : '#475467') + '">' + esc(sl.status) + '</span></p>' +
+  '<div class="grade">' +
+  '<div class="campo"><div class="rotulo">Roubo / Furto</div><div class="valor" style="color:' + corIndicador(sl.rouboFurto && sl.rouboFurto.indicador) + '">' +
+  indicador(sl.rouboFurto && sl.rouboFurto.indicador, 'Consta ocorrência', 'Nada consta', 'Não verificado') + '</div></div>' +
+  campo('Gravame (SNG)', sl.gravame && sl.gravame.status) + campo('RENAJUD', sl.renajud) +
+  campo('IPVA', sl.debitos && sl.debitos.ipva) + campo('Licenciamento', sl.debitos && sl.debitos.licenciamento) + campo('Multas', sl.debitos && sl.debitos.multas) +
+  '</div>' +
+  (linhasRestricoes
+    ? '<h2>Restrições registradas</h2><table><tr><th>Tipo</th><th>Descrição</th><th>Órgão</th></tr>' + linhasRestricoes + '</table>'
+    : '') +
+
+  '<h2>Sinistros</h2><p style="color:' + corIndicador(r.sinistros && r.sinistros.indicador) + ';font-weight:700">' +
+  indicador(r.sinistros && r.sinistros.indicador, 'Constam registros de sinistro.', 'Nada consta.', 'Não coberto pela fonte consultada.') + '</p>' +
+  (linhasSinistros
+    ? '<table><tr><th>Data</th><th>Tipo</th><th>Gravidade</th><th>UF</th><th>Descrição</th></tr>' + linhasSinistros + '</table>'
+    : '') +
+
+  '<h2>Leilões</h2><p style="color:' + corIndicador(r.leiloes && r.leiloes.indicador) + ';font-weight:700">' +
+  indicador(r.leiloes && r.leiloes.indicador, 'Consta passagem por leilão.', 'Nada consta.', 'Não coberto pela fonte consultada.') + '</p>' +
+  (linhasLeiloes
+    ? '<table><tr><th>Data</th><th>Leiloeiro</th><th>Comitente</th><th>Lote</th><th>Condição</th><th>Nota</th></tr>' + linhasLeiloes + '</table>'
+    : '') +
+
+  '<h2>Avaliação FIPE</h2>' +
+  (r.fipe && r.fipe.valor
+    ? '<p><span class="fipe-destaque">' + esc(r.fipe.valor) + '</span> &nbsp; <span style="color:#687076">Código FIPE ' +
+      esc(r.fipe.codigoFipe) + ' • Referência: ' + esc(r.fipe.mesReferencia) + '</span></p>'
+    : '<p style="color:#687076">Valor de referência não disponível para esta consulta.</p>') +
+  (linhasHistorico
+    ? '<table style="max-width:70%"><tr><th>Mês de referência</th><th style="text-align:right">Valor</th></tr>' + linhasHistorico + '</table>'
+    : '') +
+
+  '<div class="aviso"><b>Aviso legal:</b> este laudo tem caráter meramente informativo e reflete as fontes indicadas na data de emissão. ' +
+  'Não substitui a certidão oficial do Detran do estado de registro do veículo nem laudos de vistoria presencial. ' +
+  'Itens marcados como "não verificado" ou "não coberto" exigem consulta a provedor com acesso às bases correspondentes.</div>' +
+  '</body></html>';
+
+const janela = window.open('', '_blank');
+if (!janela) {
+  throw new Error('O navegador bloqueou a janela do laudo. Permita pop-ups para este endereço e tente novamente.');
+}
+janela.document.write(html);
+janela.document.close();
+janela.focus();
+setTimeout(() => { try { janela.print(); } catch (e) {} }, 400);
+return { gerado: true };
+""",
+            "parameters": [],
+            "runOnPageLoad": False,
+            "showSuccessNotification": False,
+            "notificationDuration": 5000,
+        },
+        "dataSourceId": DS_RUNJS,
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
         "id": Q_FIPE,
         "name": "consultarFipe",
         "options": {
@@ -1909,6 +2187,40 @@ events = [
             "parameters": {},
         },
         "sourceId": COMP_BY_NAME["botaoConsultar"]["id"],
+        "target": "component",
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": uid("event-tipo-fipe"),
+        "name": "onSelect",
+        "index": 0,
+        "event": {
+            "eventId": "onSelect",
+            "actionId": "run-query",
+            "queryId": Q_SEL_TIPO,
+            "queryName": "aoSelecionarTipoFipe",
+            "parameters": {},
+        },
+        "sourceId": COMP_BY_NAME["selectTipoFipe"]["id"],
+        "target": "component",
+        "appVersionId": VERSION_ID,
+        "createdAt": TS,
+        "updatedAt": TS,
+    },
+    {
+        "id": uid("event-botao-laudo"),
+        "name": "onClick",
+        "index": 0,
+        "event": {
+            "eventId": "onClick",
+            "actionId": "run-query",
+            "queryId": Q_LAUDO,
+            "queryName": "gerarLaudoPdf",
+            "parameters": {},
+        },
+        "sourceId": COMP_BY_NAME["botaoLaudo"]["id"],
         "target": "component",
         "appVersionId": VERSION_ID,
         "createdAt": TS,

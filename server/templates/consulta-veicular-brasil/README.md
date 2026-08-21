@@ -40,9 +40,19 @@ Sem nenhuma configuração, o app já entrega **dados reais gratuitos** em duas 
   base pública [NHTSA vPIC](https://vpic.nhtsa.dot.gov/api/) (gratuita, sem
   cadastro). Situação legal, sinistros e leilões aparecem como "não coberto na
   consulta gratuita" — nunca como falso "nada consta".
-- **Aba Tabela FIPE** — avaliação oficial gratuita com seleção marca → modelo →
-  ano (API pública Parallelum v1), retornando valor vigente, código FIPE e mês de
-  referência.
+- **Aba Tabela FIPE** — avaliação oficial gratuita com seleção tipo (carros,
+  motos ou caminhões) → marca → modelo → ano (API pública Parallelum v1),
+  retornando valor vigente, código FIPE e mês de referência. O segmento é
+  inferido automaticamente do chassi (WMI de motos/caminhões e VehicleType do
+  vPIC) e da descrição do veículo na consulta por placa.
+- **Gráfico de evolução do valor** — com a constante opcional `FIPE_API_TOKEN`
+  (chave gratuita da Parallelum v2), a query `fipeHistorico` busca o histórico
+  oficial de valores e o widget de gráfico plota a série; no modo demonstração a
+  série simulada de 12 meses é usada.
+- **Laudo em PDF** — o botão "Gerar laudo (PDF)" monta um relatório A4 (dados do
+  veículo, situação legal, sinistros, leilões, avaliação FIPE com histórico e
+  aviso legal) e abre o diálogo de impressão do navegador (Destino → Salvar como
+  PDF), sem dependências externas.
 
 - **Consulta por placa com cota gratuita (opcional)** — serviços como wdapi2,
   API Placas, FipeAPI Placas e PlacaAPI oferecem consultas gratuitas diárias
