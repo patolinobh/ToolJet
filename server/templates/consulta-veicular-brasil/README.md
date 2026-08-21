@@ -63,10 +63,18 @@ Sem nenhuma configuração, o app já entrega **dados reais gratuitos** em duas 
   defensiva multi-formato e valoração FIPE automática (pelo código FIPE
   retornado ou pela cadeia marca → modelo → ano).
 
-**Consulta por Renavam** — e por placa sem `PLACA_API_URL` configurada — não tem
-fonte gratuita; nesses casos o app roda a query `consultaDemo`, que gera um laudo
-**simulado e determinístico** cobrindo cenários variados, com um banner
-identificando claramente que os dados são fictícios.
+**Consulta por Renavam** — não existe API pública gratuita: o proprietário pode
+consultar os próprios veículos sem custo no [Portal de Serviços
+Senatran](https://portalservicos.senatran.serpro.gov.br/) (login gov.br, sem
+API), e o acesso programático oficial à base Renavam
+([WSDenatran/Consulta Online Senatran](https://www.gov.br/conecta/catalogo/apis/wsdenatran),
+via SERPRO) exige termo de autorização no Denatran. O app **valida offline o
+dígito verificador oficial (módulo 11)** — números com DV inválido são
+rejeitados com mensagem clara antes de qualquer consulta — e os agregadores da
+Fase 2 aceitam Renavam como entrada. Com DV válido e sem provedor configurado
+(assim como placa sem `PLACA_API_URL`), o app roda a query `consultaDemo`, que
+gera um laudo **simulado e determinístico** com um banner identificando
+claramente que os dados são fictícios.
 
 ### 2. Modo provedor real
 

@@ -79,6 +79,24 @@ if (!tipo) {
   return null;
 }
 
+// Renavam tem dígito verificador oficial (módulo 11): valida offline para
+// barrar erros de digitação antes de qualquer consulta.
+if (tipo === 'renavam') {
+  const d = entrada.padStart(11, '0');
+  const corpo = d.slice(0, 10).split('').reverse();
+  let soma = 0;
+  for (let i = 0; i < 10; i++) soma += Number(corpo[i]) * (2 + (i % 8));
+  let dv = (soma * 10) % 11;
+  if (dv === 10) dv = 0;
+  if (Number(d) === 0 || dv !== Number(d[10])) {
+    await actions.setVariable(
+      'erroConsulta',
+      'Renavam inválido: o dígito verificador não confere. Confira a digitação no CRLV do veículo.'
+    );
+    return null;
+  }
+}
+
 await actions.setVariable('tipoConsulta', tipo);
 await actions.setVariable('subtipoPlaca', subtipo);
 await actions.setVariable('identificadorConsulta', entrada);
@@ -1065,7 +1083,9 @@ DETECTA = (
     "{{(() => { const e = (components.inputIdentificador.value || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); "
     "if (!e) return ''; "
     "if (e.length === 17 && /^[A-HJ-NPR-Z0-9]{17}$/.test(e)) return '✔ Chassi detectado'; "
-    "if (/^[0-9]{9,11}$/.test(e)) return '✔ Renavam detectado'; "
+    "if (/^[0-9]{9,11}$/.test(e)) { const d = e.padStart(11, '0'); const c = d.slice(0, 10).split('').reverse(); "
+    "let s = 0; for (let i = 0; i < 10; i++) s += Number(c[i]) * (2 + (i % 8)); let dv = (s * 10) % 11; if (dv === 10) dv = 0; "
+    "return dv === Number(d[10]) ? '✔ Renavam válido (DV confere)' : '⚠ Renavam com dígito verificador inválido'; } "
     "if (/^[A-Z]{3}[0-9]{4}$/.test(e)) return '✔ Placa antiga detectada'; "
     "if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(e)) return '✔ Placa Mercosul detectada'; "
     "return '… identificador incompleto'; })()}}"
@@ -1124,7 +1144,7 @@ components.append(
         "<div style='font-size:34px'>🔎</div>"
         "<div style='margin-top:8px;font-size:16px;font-weight:600;color:#1b1f31'>Informe um chassi/VIN, Renavam ou placa para começar</div>"
         "<div style='margin-top:6px;font-size:13px'>Chassi: <code>9BWZZZ377VT004251</code> &nbsp;•&nbsp; "
-        "Renavam: <code>12345678901</code> &nbsp;•&nbsp; "
+        "Renavam: <code>12345678900</code> &nbsp;•&nbsp; "
         "Placa antiga: <code>ABC-1234</code> &nbsp;•&nbsp; Placa Mercosul: <code>ABC1D23</code></div>"
         "<div style='margin-top:6px;font-size:13px'>A consulta retorna dados cadastrais, situação legal, "
         "restrições, histórico de sinistros e leilões, além do valor de referência na tabela FIPE.</div></div>",
@@ -1473,6 +1493,10 @@ components.append(
         "consultas gratuitas diárias mediante cadastro. Crie a constante <code>PLACA_API_URL</code> com a URL do serviço "
         "usando <code>{placa}</code> como marcador (ex.: <code>https://wdapi2.com.br/consulta/{placa}/SUA_CHAVE</code>) e a "
         "consulta por placa passa a retornar dados reais, com valoração FIPE automática.<br/>"
+        "<b>Renavam:</b> não há API pública gratuita — o proprietário consulta seus veículos sem custo no "
+        "Portal de Serviços Senatran (login gov.br); a API oficial (WSDenatran/Consulta Online Senatran, via SERPRO) "
+        "exige termo de autorização no Denatran, e os agregadores da Fase 2 também aceitam Renavam. O app valida o "
+        "dígito verificador offline.<br/>"
         "<b>Gráfico de evolução FIPE (opcional):</b> crie a constante <code>FIPE_API_TOKEN</code> com a chave gratuita da "
         "Parallelum (fipe.online) para o gráfico usar o histórico oficial de valores.<br/>"
         "<b>Fase 1 — APIBrasil (pago; consulta por placa):</b> crie uma conta em app.apibrasil.io, ative a "
